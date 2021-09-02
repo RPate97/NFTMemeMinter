@@ -53,7 +53,7 @@ const templates = [
         height: 451,
     },
     {
-        src: '/images/fry.png',
+        src: '/images/fry.jpg',
         numTextSpaces: 1,
         width: 552,
         height: 414,
@@ -169,7 +169,9 @@ export const Gallery = () => {
                 aria-labelledby="simple-modal-title"
                 aria-describedby="simple-modal-description"
             >
-                <MemeMinter meme={templates[selectedMeme]} />
+                <div>
+                    <MemeMinter meme={templates[selectedMeme]} />
+                </div>
             </Modal>
         </div>
     )
