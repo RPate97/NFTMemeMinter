@@ -2,69 +2,80 @@ import React, { useState, useEffect, useRef } from 'react'
 import { FormGroup, Label } from 'reactstrap'
 import { styles } from '../styles/styles'
 import Slider from '@material-ui/core/Slider'
-import { Rnd } from "react-rnd"
-import { Textfit } from 'react-textfit'
 import { MinterAutoSizedText } from './MinterAutoSizedText'
+import Button from '@material-ui/core/Button';
 
-export const MemeMinter = (props) => {
-    const [borderStyle, setBorderStyle] = useState({
-        border: "solid 1px #ddd",
-        borderStyle: "dashed",
-        borderRadius: 10,
-    });
-    // const [textLocations, setTextLocations] = useState(() => {
-    //     return [
-    //         {
-    //             x: (600 - 400) / 2,
-    //             y: (600 / (props.meme.width / props.meme.height)) / 20,
-    //             text: "hello world",
-    //             rotation: 0,
-    //             height: 60,
-    //             width: 400,
-    //         },
-    //         {
-    //             x: (600 - 400) / 2,
-    //             y: (600 / (props.meme.width / props.meme.height)) - (600 / (props.meme.width / props.meme.height)) / 6.5,
-    //             text: "hello world",
-    //             rotation: 0,
-    //             height: 60,
-    //             width: 400,
-    //         }
-    //     ];
-    // });
+export default class MemeMinter extends React.Component {
+    constructor(props) {
+        super(props);
+        var memeHeight = (600 / (this.props.meme.width / this.props.meme.height));
+        this.state = {
+            borderStyle: {
+                border: "solid 1px #ddd",
+                borderStyle: "dashed",
+                borderRadius: 10,
+            },
+            textLocations: [
+                {
+                    x: (600 - 400) / 2,
+                    y: (600 / (props.meme.width / props.meme.height)) / 20,
+                    text: "Caption 1",
+                    rotation: 0,
+                    height: 60,
+                    width: 400,
+                    key: 0,
+                },
+                {
+                    x: (600 - 400) / 2,
+                    y: (600 / (props.meme.width / props.meme.height)) - (600 / (props.meme.width / props.meme.height)) / 6.5,
+                    text: "Caption 2",
+                    rotation: 0,
+                    height: 60,
+                    width: 400,
+                    key: 1,
+                }
+            ],
+            base64URL: "",
+            memeWidth: 600,
+            memeHeight: memeHeight,
+        };
+        this.svgRef = React.createRef();
+    }
 
-    const [topX, setTopX] = useState(() => {
-        return (600 - 400) / 2;
-    });
-    const [topY, setTopY] = useState(() => {
-        return (600 / (props.meme.width / props.meme.height)) / 20;
-    });
-    const [bottomX, setBottomX] = useState(() => {
-        return (600 - 400) / 2;
-    });
-    const [bottomY, setBottomY] = useState(() => {
-        return (600 / (props.meme.width / props.meme.height)) - (600 / (props.meme.width / props.meme.height)) / 6.5;
-    });
-    const [topText, setTopText] = useState("");
-    const [bottomText, setBottomText] = useState("");
-    const [topTextRotation, setTopTextRotation] = useState(0);
-    const [bottomTextRotation, setBottomTextRotation] = useState(0);
-    const [topTextWidth, setTopTextWidth] = useState(400);
-    const [topTextHeight, setTopTextHeight] = useState(60);
-    const [bottomTextWidth, setBottomTextWidth] = useState(400);
-    const [bottomTextHeight, setBottomTextHeight] = useState(60);
-    const [base64URL, setBase64URL] = useState(null);
-    const svgRef = useRef(null);
+    getBase64Image(imgUrl, callback) {
+        var img = new Image();    
+        img.onload = function(){
+            var canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            var dataURL = canvas.toDataURL("image/png");
+            callback(dataURL); // the base64 string
+        }
+        img.src = imgUrl;
+    }
 
-    useEffect(() => {
-        getBase64Image(props.meme.src, function(base64image) {
-            setBase64URL(base64image);
-        });
-    }, []);
+    componentDidMount = () => {
+        var img = new Image();    
+        img.onload = () => {
+            var canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            var dataURL = canvas.toDataURL("image/png");
+            this.setState(prevState => ({
+                ...prevState,
+                base64URL: dataURL,
+            }));            
+        }
+        img.src = this.props.meme.src;
+    }
 
-    useEffect(() => {
-        if (borderStyle.border !== "solid 1px #ddd") {
-            let svg = svgRef.current;
+    componentDidUpdate() {
+        if (this.state.borderStyle.border !== "solid 1px #ddd") {
+            let svg = this.svgRef.current;
             let svgData = new XMLSerializer().serializeToString(svg);
             const canvas = document.createElement("canvas");
             canvas.setAttribute("id", "canvas");
@@ -73,7 +84,7 @@ export const MemeMinter = (props) => {
             canvas.height = svgSize.height;
             const img = document.createElement("img");
             img.setAttribute("src", "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData))));
-            img.onload = function() {
+            img.onload = () => {
                 canvas.getContext("2d").drawImage(img, 0, 0);
                 const canvasdata = canvas.toDataURL("image/png");
                 const a = document.createElement("a");
@@ -82,174 +93,89 @@ export const MemeMinter = (props) => {
                 a.href = canvasdata;
                 document.body.appendChild(a);
                 a.click();
-                setBorderStyle({border: "solid 1px #ddd", borderStyle: "dashed", borderRadius: 10});
+                this.updateBorderStyle({border: "solid 1px #ddd", borderStyle: "dashed", borderRadius: 10});
             };             
         }
-    }, [borderStyle]);
-
-    function changeText(event, textIndex) {
-        if (textIndex == 0) {
-            setTopText(event.currentTarget.value);
-        } else {
-            setBottomText(event.currentTarget.value);
-        }
     }
 
-    function getBase64Image(imgUrl, callback) {
-        var img = new Image();    
-        img.onload = function(){
-          var canvas = document.createElement("canvas");
-          canvas.width = img.width;
-          canvas.height = img.height;
-          var ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0);
-          var dataURL = canvas.toDataURL("image/png");
-          callback(dataURL); // the base64 string
-        };
-        img.src = imgUrl;
+    updateBorderStyle(newBorderStyleObject) {
+        this.setState(prevState => ({
+            ...prevState,
+            borderStyle: newBorderStyleObject,
+        }));
     }
 
-    function convertSvgToImage() {
-        setBorderStyle({
-            border: "solid 0px #ddd",
-        });
+    changeText(newText, index) {
+        this.setState(prevState => ({
+            ...prevState,
+            textLocations: prevState.textLocations.map(el => el.key === index ? { ...el, text: newText } : el)
+        }));
     }
 
-    const handleTopChange = (event, newValue) => {
-        setTopTextRotation(newValue);
-    };
+    changeRotation(newRotation, index) {
+        this.setState(prevState => ({
+            ...prevState,
+            textLocations: prevState.textLocations.map(el => el.key === index ? { ...el, rotation: newRotation } : el)
+        }));
+    }
 
-    const handleBottomChange = (event, newValue) => {
-        setBottomTextRotation(newValue);
-    };
+    changeSectionSize = (newWidth, newHeight, index) => {
+        this.state.textLocations[index].height = newHeight;
+        this.state.textLocations[index].width = newWidth;
+    }
 
-    return (
-        <div>
-            <svg
-                ref={svgRef}
-                width={600}
-                id="svg_ref"
-                height={600 / (props.meme.width / props.meme.height)}
-                xmlns="http://www.w3.org/2000/svg"
-                xmlnsXlink="http://www.w3.org/1999/xlink">
-                <image
-                    xlinkHref={base64URL}
-                    height={600 / (props.meme.width / props.meme.height)}
+    changeSectionLocation = (newX, newY, index) => {
+        this.state.textLocations[index].x = newX;
+        this.state.textLocations[index].y = newY;
+    }
+
+    render() {
+        return (
+            <div>
+                <svg
+                    ref={this.svgRef}
                     width={600}
-                />
-                <foreignObject width={`${props.meme.width}`} height={`${props.meme.height}`}>
-                    <MinterAutoSizedText 
-                        borderStyle={borderStyle}
-                        text={topText} 
-                        rotation={topTextRotation} 
-                        height={topTextHeight} 
-                        width={topTextWidth} 
-                        x={topX}
-                        y={topY}
-                        id={0}/>
-                    <MinterAutoSizedText 
-                        borderStyle={borderStyle}
-                        text={bottomText} 
-                        rotation={bottomTextRotation} 
-                        height={bottomTextHeight} 
-                        width={bottomTextWidth} 
-                        x={bottomX}
-                        y={bottomY}
-                        id={1}/>
-                    {/* <Rnd
-                        id="topResizable"
-                        style={borderStyle}
-                        size={{
-                            width:topTextWidth,
-                            height:topTextHeight, 
-                        }}
-                        default={{
-                            x: topX,
-                            y: topY,
-                        }}
-                        onResizeStart={(e) => {setIsResizing(true); e.preventDefault(); e.stopPropagation()}}
-                        onResizeStop={(e, direction, ref, d) => {
-                            setIsResizing(false); 
-                            e.preventDefault(); 
-                            e.stopPropagation();
-                            var el = document.getElementById("topResizable"); // or other selector like querySelector()
-                            var rect = el.getBoundingClientRect();
-                            setTopTextWidth(rect.width);
-                            setTopTextHeight(rect.height);
-                        }}
-                        onResize={(e, direction, ref, d) => {
-                            e.preventDefault(); 
-                            e.stopPropagation();
-                            var el = document.getElementById("topResizable"); // or other selector like querySelector()
-                            var rect = el.getBoundingClientRect();
-                            setTopTextWidth(rect.width);
-                            setTopTextHeight(rect.height);
-                        }}
-                        >
-                        <div>
-                            <Textfit mode="multi" min={12} max={50} style={{height: topTextHeight}}>
-                                <p style={{...styles.memeText, transform: `rotate(${topTextRotation}deg)`}}>{topText}</p>
-                            </Textfit>                            
-                        </div>
-                    </Rnd>
-                    <Rnd
-                        id="bottomResizable"
-                        style={borderStyle}
-                        size={{
-                            width:bottomTextWidth,
-                            height:bottomTextHeight, 
-                        }}
-                        default={{
-                            x: bottomX,
-                            y: bottomY,
-                        }}
-                        onResizeStart={(e) => {setIsResizing(true); e.preventDefault(); e.stopPropagation()}}
-                        onResizeStop={(e, direction, ref, d) => {
-                            setIsResizing(false); 
-                            e.preventDefault(); 
-                            e.stopPropagation();
-                            var el = document.getElementById("bottomResizable"); // or other selector like querySelector()
-                            var rect = el.getBoundingClientRect();
-                            setBottomTextWidth(rect.width);
-                            setBottomTextHeight(rect.height);
-                        }}
-                        onResize={(e, direction, ref, d) => {
-                            e.preventDefault(); 
-                            e.stopPropagation();
-                            var el = document.getElementById("bottomResizable"); // or other selector like querySelector()
-                            var rect = el.getBoundingClientRect();
-                            setBottomTextWidth(rect.width);
-                            setBottomTextHeight(rect.height);
-                        }}
-                        >
-                        <div>
-                            <Textfit mode="multi" min={12} max={50} style={{height: bottomTextHeight}}>
-                                <p style={{...styles.memeText, transform: `rotate(${bottomTextRotation}deg)`}}>{bottomText}</p>
-                            </Textfit>                                
-                        </div>
-                    </Rnd>                      */}
-                </foreignObject>
-                <text style={styles.watermark} x="10" y={`${props.meme.height - 20}`}>
-                    Minted with NFTMemeMinter.com, Creator: Pate
-                </text>
-            </svg>
-            <div className="meme-form">
-                <FormGroup>
-                    <Label style={{color: "#fff"}} for="toptext">Top Text: </Label>
-                    <input className="form-control" type="text" name="toptext" id="toptext" placeholder="Add text to the top" onChange={(e) => changeText(e, 0)} />
-                    <Slider style={{width: 200, marginLeft: 20, transform: "translate(0, 35%)"}} value={topTextRotation} onChange={handleTopChange} aria-labelledby="continuous-slider" min={-180} max={180} />
-                </FormGroup>
-                <FormGroup>
-                    <Label style={{color: "#fff"}} for="bottomtext">Bottom Text: </Label>
-                    <input className="form-control" type="text" name="bottomtext" id="bottomtext" placeholder="Add text to the bottom" onChange={(e) => changeText(e, 1)} />
-                    <Slider style={{width: 200, marginLeft: 20, transform: "translate(0, 35%)"}} value={bottomTextRotation} onChange={handleBottomChange} aria-labelledby="continuous-slider" min={-180} max={180} />
-                </FormGroup>
-                <button onClick={() => convertSvgToImage()} className="btn btn-primary">Mint Meme NFT!</button>
+                    id="svg_ref"
+                    height={600 / (this.props.meme.width / this.props.meme.height)}
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlnsXlink="http://www.w3.org/1999/xlink">
+                    <image
+                        xlinkHref={this.state.base64URL}
+                        height={600 / (this.props.meme.width / this.props.meme.height)}
+                        width={600}
+                    />
+                    <foreignObject width={`${this.state.memeWidth}`} height={`${this.state.memeHeight}`}>
+                        {this.state.textLocations.map((el, index) => (
+                            <MinterAutoSizedText 
+                                borderStyle={this.state.borderStyle}
+                                text={el.text} 
+                                rotation={el.rotation} 
+                                height={el.height} 
+                                width={el.width} 
+                                x={el.x}
+                                y={el.y}
+                                id={el.key}
+                                key={el.key}
+                                changeSectionLocation={this.changeSectionLocation}
+                                changeSectionSize={this.changeSectionSize}
+                                />                            
+                        ))}
+                    </foreignObject>
+                    <text style={styles.watermark} x="10" y={`${this.state.memeHeight - 10}`}>
+                        Minted with NFTMemeMinter.com, Creator: Pate
+                    </text>
+                </svg>
+                <div className="meme-form">
+                    {this.state.textLocations.map((el, index) => (
+                        <FormGroup key={el.key}>
+                            <Label style={{color: "#fff"}} for={"toptext" + el.key}>Caption: {el.key + 1}</Label>
+                            <input className="form-control" type="text" name={"toptext" + el.key} id={"toptext" + el.key} placeholder="Add a caption" onChange={(e) => this.changeText(e.currentTarget.value, index)} />
+                            <Slider style={{width: 200, marginLeft: 20, transform: "translate(0, 35%)"}} value={el.rotation} onChange={(e, val) => this.changeRotation(val, el.key)} aria-labelledby="continuous-slider" min={-180} max={180} />
+                        </FormGroup>                        
+                    ))}
+                    <Button onClick={() => this.updateBorderStyle({border: "solid 0px #ddd"})} className="btn btn-primary">Mint Meme NFT!</Button>
+                </div>
             </div>
-        </div>
-    )
-}
-
-MemeMinter.propTypes = {
-
+        )        
+    }; 
 }

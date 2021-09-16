@@ -3,7 +3,7 @@ import { Rnd } from "react-rnd"
 import { Textfit } from 'react-textfit'
 import { styles } from '../styles/styles'
 
-export const MinterAutoSizedText = ({borderStyle, text, rotation, width, height, x, y, id}) => {
+export const MinterAutoSizedText = ({borderStyle, text, rotation, width, height, x, y, id, changeSectionSize, changeSectionLocation}) => {
     const [textWidth, setTextWidth] = useState(width);
     const [textHeight, setTextHeight] = useState(height);
 
@@ -26,6 +26,7 @@ export const MinterAutoSizedText = ({borderStyle, text, rotation, width, height,
                 var rect = el.getBoundingClientRect();
                 setTextWidth(rect.width);
                 setTextHeight(rect.height);
+                changeSectionSize(rect.width, rect.height, id);
             }}
             onResize={(e, direction, ref, d) => {
                 e.preventDefault(); 
@@ -34,6 +35,9 @@ export const MinterAutoSizedText = ({borderStyle, text, rotation, width, height,
                 var rect = el.getBoundingClientRect();
                 setTextWidth(rect.width);
                 setTextHeight(rect.height);
+            }}
+            onDragStop={(e, d) => {
+                changeSectionLocation(d.x, d.y, id);
             }}
             >
             <div>
