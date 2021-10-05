@@ -4,6 +4,7 @@ import { styles } from '../styles/styles'
 import Slider from '@material-ui/core/Slider'
 import { MinterAutoSizedText } from './MinterAutoSizedText'
 import Button from '@material-ui/core/Button';
+const axios = require('axios');
 
 // template db spec
 // {
@@ -32,6 +33,7 @@ export default class TemplateMaker extends React.Component {
             },
             textLocations: [],
             base64URL: "",
+            selectedFile: null,
             memeWidth: 600,
             memeHeight: 600,
         };
@@ -60,13 +62,17 @@ export default class TemplateMaker extends React.Component {
     }
 
     changeSectionSize = (newWidth, newHeight, index) => {
-        this.state.textLocations[index].height = newHeight;
+        /*eslint-disable */
+        this.state.textLocations[index].height = newHeight; 
         this.state.textLocations[index].width = newWidth;
+        /*eslint-enable */
     }
 
     changeSectionLocation = (newX, newY, index) => {
+        /*eslint-disable */
         this.state.textLocations[index].x = newX;
         this.state.textLocations[index].y = newY;
+        /*eslint-enable */
     }
 
     removeImage() {
@@ -91,6 +97,7 @@ export default class TemplateMaker extends React.Component {
                 this.setState(prevState => ({
                     ...prevState,
                     base64URL: dataURL,
+                    selectedFile: event.target.files[0],
                     memeWidth: 500,
                     memeHeight: height,
                 }));            
@@ -147,11 +154,10 @@ export default class TemplateMaker extends React.Component {
                 canvas.getContext("2d").drawImage(img, 0, 0);
                 const canvasdata = canvas.toDataURL("image/png");
                 const a = document.createElement("a");
-                console.log(img.src); // send this in a post to the server
                 a.download = "meme.png";
                 a.href = canvasdata;
                 document.body.appendChild(a);
-                a.click();
+                // a.click();
                 this.updateBorderStyle({border: "solid 1px #ddd", borderStyle: "dashed", borderRadius: 10});
             };             
         }
@@ -161,19 +167,43 @@ export default class TemplateMaker extends React.Component {
         this.updateBorderStyle({visibility: "hidden"});
     }
 
-    saveTemplate() {
+    uploadPhoto = async () => {
+        const file = this.state.selectedFile;
+        const filename = encodeURIComponent(file.name);
+        const res = await fetch(`/api/uploadGCloud?file=${filename}`);
+        const { url, fields } = await res.json();
+        const formData = new FormData();
+    
+        Object.entries({ ...fields, file }).forEach(([key, value]) => {
+          formData.append(key, value);
+        });
+    
+        const upload = await axios.post(`/api/uploadGCloud?file=${filename}`, formData);
+
+        return upload.data.filePath;
+    };
+
+    async saveTemplate() {
         this.resizeImg();
         // resize image
         // upload image to object store
-        var src = "";
+        const url = await this.uploadPhoto();
         var template = {
-            src: src,
+            src: url,
             width: this.state.memeWidth,
             height: this.state.memeHeight,
             textLocations: this.state.textLocations,
         };
         console.log(template);
-        // upload image to mongodb
+
+        // upload template to mongodb
+        await axios.post('/api/createTemplate', template)
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
     }
 
     render() {
