@@ -4,6 +4,7 @@ import { styles } from '../styles/styles'
 import Slider from '@material-ui/core/Slider'
 import { MinterAutoSizedText } from './MinterAutoSizedText'
 import Button from '@material-ui/core/Button';
+const axios = require('axios');
 
 export default class MemeMinter extends React.Component {
     constructor(props) {
@@ -36,6 +37,7 @@ export default class MemeMinter extends React.Component {
                 }
             ],
             base64URL: "",
+            base64Meme: "",
             memeWidth: 600,
             memeHeight: memeHeight,
         };
@@ -73,6 +75,14 @@ export default class MemeMinter extends React.Component {
         img.src = this.props.meme.src;
     }
 
+    async mintMeme(base64Meme) {
+        let captions = [];
+        this.state.textLocations.forEach((el) => {
+            captions.push(el.text);
+        });
+        const res = await axios.post('/api/mintMeme', {base64Meme: base64Meme, captions: captions, templateId: 0, name: "test.jpeg", description: "a description"});
+    }
+
     componentDidUpdate() {
         if (this.state.borderStyle.border !== "solid 1px #ddd") {
             let svg = this.svgRef.current;
@@ -88,17 +98,20 @@ export default class MemeMinter extends React.Component {
                 canvas.getContext("2d").drawImage(img, 0, 0);
                 const canvasdata = canvas.toDataURL("image/png");
                 const a = document.createElement("a");
-                console.log(img.src); // send this in a post to the server
-                a.download = "meme.png";
-                a.href = canvasdata;
-                document.body.appendChild(a);
-                a.click();
+                var imgURI = canvas
+                    .toDataURL('image/jpeg')
+                console.log(imgURI); // send this in a post to the server
+                this.mintMeme(imgURI);
+                // a.download = "meme.png";
+                // a.href = canvasdata;
+                // document.body.appendChild(a);
+                // a.click();
                 this.updateBorderStyle({border: "solid 1px #ddd", borderStyle: "dashed", borderRadius: 10});
             };             
         }
     }
 
-    updateBorderStyle(newBorderStyleObject) {
+    async updateBorderStyle(newBorderStyleObject) {
         this.setState(prevState => ({
             ...prevState,
             borderStyle: newBorderStyleObject,
