@@ -4,6 +4,10 @@ import { styles } from '../styles/styles'
 import Slider from '@material-ui/core/Slider'
 import { MinterAutoSizedText } from './MinterAutoSizedText'
 import Button from '@material-ui/core/Button';
+import QRCode from './qrCode';
+import * as htmlToImage from 'html-to-image';
+import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
+import MinterImage from "./MinterImage";
 const axios = require('axios');
 
 export default class MemeMinter extends React.Component {
@@ -40,7 +44,9 @@ export default class MemeMinter extends React.Component {
             base64Meme: "",
             memeWidth: 600,
             memeHeight: memeHeight,
+            memeURL: "https://www.google.com",
         };
+
         this.svgRef = React.createRef();
     }
 
@@ -85,29 +91,21 @@ export default class MemeMinter extends React.Component {
 
     componentDidUpdate() {
         if (this.state.borderStyle.border !== "solid 1px #ddd") {
-            let svg = this.svgRef.current;
-            let svgData = new XMLSerializer().serializeToString(svg);
-            const canvas = document.createElement("canvas");
-            canvas.setAttribute("id", "canvas");
-            const svgSize = svg.getBoundingClientRect();
-            canvas.width = svgSize.width;
-            canvas.height = svgSize.height;
-            const img = document.createElement("img");
-            img.setAttribute("src", "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData))));
-            img.onload = () => {
-                canvas.getContext("2d").drawImage(img, 0, 0);
-                const canvasdata = canvas.toDataURL("image/png");
-                const a = document.createElement("a");
-                var imgURI = canvas
-                    .toDataURL('image/jpeg')
-                console.log(imgURI); // send this in a post to the server
-                this.mintMeme(imgURI);
-                // a.download = "meme.png";
-                // a.href = canvasdata;
-                // document.body.appendChild(a);
-                // a.click();
-                this.updateBorderStyle({border: "solid 1px #ddd", borderStyle: "dashed", borderRadius: 10});
-            };             
+            var node = document.getElementById('svg_ref');
+            htmlToImage.toPng(node)
+                .then(function (dataUrl) {
+                    const a = document.createElement("a");
+                    // console.log(dataUrl); // send this in a post to the server
+                    a.download = "meme.png";
+                    a.href = dataUrl;
+                    document.body.appendChild(a);
+                    // this.mintMeme(imgURI);
+                    a.click();
+                    this.updateBorderStyle({border: "solid 1px #ddd", borderStyle: "dashed", borderRadius: 10});
+                })
+                .catch(function (error) {
+                    console.error('oops, something went wrong!', error);
+                });            
         }
     }
 
@@ -145,7 +143,45 @@ export default class MemeMinter extends React.Component {
     render() {
         return (
             <div>
-                <svg
+                <div
+                    id="svg_ref"
+                    style={{
+                        backgroundColor: "black", 
+                        position: "relative", 
+                        top: 0, 
+                        left: 0, 
+                        width: 600,
+                        height: `${this.state.memeHeight + 50}px`,
+                    }}>
+                    <MinterImage
+                        style={{position: "absolute", top: 0, left: 0, zIndex: 1, margin: 0}}
+                        src={this.state.base64URL}
+                        height={600 / (this.props.meme.width / this.props.meme.height)}
+                        width={600}
+                    />
+                    <QRCode style={{position: "absolute", top: `${600 / (this.props.meme.width / this.props.meme.height) - 50}px`, left: 500, zIndex: 10}} />                           
+                    {this.state.textLocations.map((el, index) => (
+                        <MinterAutoSizedText 
+                            borderStyle={this.state.borderStyle}
+                            text={el.text} 
+                            rotation={el.rotation} 
+                            height={el.height} 
+                            width={el.width} 
+                            x={el.x}
+                            y={el.y}
+                            id={el.key}
+                            key={el.key}
+                            changeSectionLocation={this.changeSectionLocation}
+                            changeSectionSize={this.changeSectionSize}
+                            />                            
+                    ))}
+                    <div className="memeBackground" style={{height: 45}}>
+                        <p style={{marginLeft: 10, marginTop: 0, fontSize: 18, fontWeight: "bold", color: "white", MsTransform: "translateY(50%)", transform: "translateY(50%)"}}>
+                            Minted with DankMinter.com, Creator: Pate
+                        </p>                      
+                    </div>
+                </div>
+                {/* <svg
                     ref={this.svgRef}
                     width={600}
                     id="svg_ref"
@@ -177,7 +213,10 @@ export default class MemeMinter extends React.Component {
                     <text style={styles.watermark} x="10" y={`${this.state.memeHeight - 10}`}>
                         Minted with NFTMemeMinter.com, Creator: Pate
                     </text>
-                </svg>
+                    <foreignObject width={100} height={100} x={`${this.state.memeHeight - 100}`} y={`${this.state.memeWidth - 100}`} >                        
+                        {<QRCode/>}                            
+                    </foreignObject>
+                </svg> */}
                 <div className="meme-form">
                     {this.state.textLocations.map((el, index) => (
                         <FormGroup key={el.key}>
