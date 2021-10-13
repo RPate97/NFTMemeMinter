@@ -1,9 +1,11 @@
 export const AppColors = {
     primaryBackground: '#222831',
     secondaryBackground: '#30475E',
-    secondaryForeground: '#F05454',
-    callToAction: '#4b266b',
+    primaryForeground: '#ffffff',
+    callToAction: '#ffffff',
     secondaryCallToAction: '#FFFFC0',
+
+    buttonBackground: '#0e0e0e',
 }
 
 export const FontSizes = {
@@ -16,6 +18,9 @@ export const styles = {
         flex: "1",
         display: "flex",
         flexDirection: "column",
+        backgroundImage: "url('sand-background.jpg')",
+        backgroundSize: "cover",
+        backgroundAttachment: "fixed",
     },
     memeText: {
         fontFamily: "Impact",
@@ -51,6 +56,10 @@ export const styles = {
             fontSize: "1.5rem",
             fontFamily: "'Montserrat', sans-serif",
             textAlign: "center",
+            color: AppColors.primaryForeground,
+        },
+        question: {
+            color: AppColors.primaryForeground,
         }
     },
     intro: {
@@ -58,9 +67,9 @@ export const styles = {
         width: "100%",
         height: "75vh",
         right: 0,
-        transform: "translateY(20%)",
+        transform: "translateY(40%)",
         title: {
-            color: AppColors.callToAction,
+            color: AppColors.primaryForeground,
             fontSize: "3.1rem",
             fontFamily: "'Press Start 2P', cursive",
             textAlign: "center",
@@ -100,45 +109,6 @@ export const styles = {
             marginRight: "auto",
         }
     },
-    navBar: {
-        borderBottomRightRadius: 100,
-        position: "sticky",
-        top: 0,
-        color: AppColors.primaryForeground,
-        paddingRight: 40,
-        paddingLeft: 40,
-        paddingTop: 10,
-        paddingBottom: 10,
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        height: 100,
-        alignItems: "center",
-        zIndex: 10,
-        primaryElement: {
-            fontSize: FontSizes.secondaryTitle,
-            color: AppColors.callToAction,
-            lineHeight: "1.15",
-            fontFamily: "'Press Start 2P', cursive",
-        },
-        secondaryElement: {
-            marginLeft: 40,
-            fontSize: FontSizes.secondaryTitle,
-            transition: "color 0.25s ease",
-        },
-        selectedElement: {
-            color: AppColors.secondaryForeground,
-            marginLeft: 40,
-            fontSize: FontSizes.secondaryTitle,
-            transition: "color 0.25s ease",
-        },
-        navigation: {
-            height: 100,
-            display: "flex",
-            flexDirection: "row",   
-            alignItems: "center",       
-        },
-    },
     memePage: {
         display: "flex",
         flexDirection: "row",
@@ -172,5 +142,12 @@ export const styles = {
                 flexDirection: "row",
             }
         },
+    },
+    walletBar: {
+        logo: {
+            color: "#ffffff",
+            fontFamily: "SpaceMono-Regular",
+            fontSize: 36,
+        }
     }
 }

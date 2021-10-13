@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { FormGroup, Label } from 'reactstrap'
 import { styles } from '../styles/styles'
 import Slider from '@material-ui/core/Slider'
-import { MinterAutoSizedText } from './MinterAutoSizedText'
+import { MinterAutoSizedText } from './MakeAMeme/MinterModal/MinterAutoSizedText'
 import Button from '@material-ui/core/Button';
 const axios = require('axios');
 

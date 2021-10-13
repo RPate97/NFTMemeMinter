@@ -9,7 +9,7 @@ import { styles } from '../styles/styles'
 const questions = [
     {
         question: "Do you have a token?",
-        answer: "There is no ERC20 token representing this project. If you like what I'm doing and wish to support me, I'm auctioning off the first 10 NFTs memes minted with this tool on OpenSea. Each and every one was meticulously hand crafted by yours truly. The proceeds from these sales will be going directly to covering the gas costs to keep the service free for everyone. You can find them here:",
+        answer: "Yes, DankMinter has a utility token: TreeFiddyCoin. TreeFiddies can be earned by minting memes with DankMinter. You can send them to meme creators as tips, sacrifice them to increase a memes dankness score, use them to up/downvote memes, and if you wish, you can 🎶  Toss a Coin to Your Witcher 🎶  to tip the developer.",
         key: 5,
     },
     {
@@ -24,17 +24,17 @@ const questions = [
     },
     {
         question: "How much does it cost to mint a meme as an NFT?",
-        answer: "Nothing, we cover all gas costs for minting NFTs using the tool. Hopefully, I don't run out of money and can keep it free forever but I can't guarentee it due to lack of resources. If you want to make sure this tool stays free for a long time, bid on the 10 original NFT memes I'm selling on OpenSea.",
+        answer: "Nothing, I'm covering all gas fees for minting NFTs using the tool. Hopefully, I don't run out of money and can keep DankMinter free forever, but I can't guarentee it. If you want to make sure this tool stays free for a long time, bid on the 10 original NFT memes I'm selling on OpenSea. All proceeds from those sales will go directly to gas fees.",
         key: 2,
     },
     {
         question: "Is this a charity project? How do you make money?",
-        answer: "This is a for profit service. It makes money through royalties paid when people sell their NFT memes on marketplaces like OpenSea. Hopefully, these royalties will allow me to cover the costs of providing the service including all gas fees and make a reasonable profit. They are currently set at 10% and that is as high as they will ever be. However, we may lower them in the future to encourage a vibrant collector community.",
+        answer: "This is a for profit service. DankMinter makes money through royalties paid when people sell their NFT memes on marketplaces like OpenSea. Hopefully, these royalties will allow me to cover the costs of providing the service including all gas fees and make a reasonable profit. They are currently set at 15%. I'm relying on the royalties to generate enough revenue to cover gas fees, so I decided to start rather high and lower them once DankMinter is financially stable.",
         key: 4,
     },
     {
-        question: "What do you mean unique? How do you guarentee the NFTs are unique? ",
-        answer: "When I say unique, I mean there only exists one NFT of each individual meme. Once you've minted a meme, it's yours and can never be minted again. I define a meme as a unique combination of text and a template. The smart contract uses keccak256 on the combination of the template and text to get a unique hash for each meme. The contract then rejects attempts to mint more memes with that unique hash. If this is actually interesting to you, then you should really read the whitepaper ;)",
+        question: "What do you mean by unique? How do you guarentee the NFTs are unique?",
+        answer: "When I say unique, I mean there only exists one NFT of each individual meme. Once you've minted a meme, it's yours and can never be minted again. I define a meme as a unique combination of text and template. The smart contract uses keccak256 on the combination of the template identifier and text captions to get a unique hash for each meme. The contract rejects attempts to mint more memes with that unique hash. If this is actually interesting to you, then you should really read the whitepaper :)",
         key: 6,
     },
     {
@@ -88,10 +88,11 @@ export const FAQ = () => {
                     <AccordionSummary
                     aria-controls="panel1a-content"
                     id="panel1a-header"
+                    style={styles.faq.heading}
                     >
                         <Typography>{el.question}</Typography>
                     </AccordionSummary>
-                    <AccordionDetails>
+                    <AccordionDetails style={styles.faq.question}>
                         <Typography>{el.answer}</Typography>
                     </AccordionDetails>
                 </Accordion>                    

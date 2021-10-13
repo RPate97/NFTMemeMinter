@@ -3,6 +3,26 @@
   src: local('Impact'), url(/fonts/Impact/impact.ttf) format('truetype');
 }
 
+@font-face {
+  font-family: 'SpaceMono';
+  src: local('SpaceMono', url(/fonts/SpaceMono/SpaceMono-Regular.ttf) format('truetype'));
+}
+
+@font-face {
+  font-family: 'SpaceMono-Bold';
+  src: local('SpaceMono-Bold', url(/fonts/SpaceMono/SpaceMono-Bold.ttf) format('truetype'));
+}
+
+@font-face {
+  font-family: 'SpaceMono-BoldItalic';
+  src: local('SpaceMono-BoldItalic', url(/fonts/SpaceMono/SpaceMono-BoldItalic.ttf) format('truetype'));
+}
+
+@font-face {
+  font-family: 'SpaceMono-Italic';
+  src: local('SpaceMono-Italic', url(/fonts/SpaceMono/SpaceMono-Italic.ttf) format('truetype'));
+}
+
 .meme-caption {
   position: absolute;
   font-size: 20px;

@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Button from '@material-ui/core/Button';
 import Link from 'next/link'
 import { styles } from '../styles/styles'
+import { Logo } from 'components/common-ui/logo'
 
 export const Landing = () => {
     return (
@@ -13,9 +14,8 @@ export const Landing = () => {
                 <link href="https://fonts.googleapis.com/css2?family=Play:wght@700&family=Press+Start+2P&display=swap" rel="stylesheet" />      
                 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Play:wght@700&family=Press+Start+2P&display=swap" rel="stylesheet" />
             </Head>
-            <h1 style={styles.intro.title}>NFT Meme Minter</h1>
             <div style={styles.intro.section}> 
-                <h1 style={styles.intro.sectionTitle}>The only meme generator that mints your memes as NFTs.</h1>    
+                <h1 style={styles.intro.sectionTitle}>The meme generator that mints your memes as NFTs.</h1>    
                 <h1 style={styles.intro.subtitle}>Guarenteed to be authentic, collectible, and truly one of a kind.</h1>                          
                 <div style={styles.intro.actions}>
                     <Link href='/makeameme'>
