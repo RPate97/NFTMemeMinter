@@ -8,8 +8,8 @@ export const Logo = () => {
             flexDirection="column"
             alignItems="center"
             justifyContent="center"
-            h="20"
-            marginLeft="3">
+            h="28"
+            marginLeft="10">
             <h1 style={styles.walletBar.logo}>
                 DankMinter          
             </h1>            

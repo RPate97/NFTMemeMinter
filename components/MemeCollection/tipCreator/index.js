@@ -28,12 +28,12 @@ import {
     useDisclosure,
   } from "@chakra-ui/react";
 
-export const TipCreatorButton = ({userAddress, treeFiddyBalance, memeId}) => {
+export const TipCreatorButton = ({treeFiddyBalance, memeId}) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
     const CONTRACT_INTERFACE = new ethers.utils.Interface(abi);
     const MEME_ADDRESS = '0xcfeb869f69431e42cdb54a4f4f105c19c080a601'
-    const contract = new ethers.Contract(MEME_ADDRESS, CONTRACT_INTERFACE, userAddress);
+    const contract = new ethers.Contract(MEME_ADDRESS, CONTRACT_INTERFACE);
     const [ amount, setAmount ] = useState(3.5);
     const { state, send } = useContractFunction(contract, 'tipCreator', { transactionName: 'TipDev' })
 
@@ -41,10 +41,6 @@ export const TipCreatorButton = ({userAddress, treeFiddyBalance, memeId}) => {
         const weiAmt = web3.utils.toWei(amount.toString(), "ether");
         send(memeId, weiAmt);
     }
-
-    useEffect(() => {
-        console.log(state);
-    }, [state])
 
     return (
         <Box>
@@ -103,7 +99,7 @@ export const TipCreatorButton = ({userAddress, treeFiddyBalance, memeId}) => {
                             mb={3}
                         >
                             <Flex flexDirection="column" justifyContent="space-between" alignItems="center" mb={3} pl={5} pr={5}>
-                                <Image src="/inevertip.png" width="500" height="500" alt="salvation"/>
+                            <iframe width="560" height="315" src="https://www.youtube.com/embed/U9OQAySv184?start=49&autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
                                 {treeFiddyBalance && <Slider mt={5} defaultValue={amount} min={3.5} max={formatUnits(treeFiddyBalance, 18)} step={3.5} onChange={(value) => setAmount(value)}>
                                     <SliderTrack bg="red.100">
                                         <Box position="relative" right={10} />

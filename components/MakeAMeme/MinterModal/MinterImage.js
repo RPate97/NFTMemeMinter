@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from "next/image";
 
-export default function MinterImage(props) {
+export function MinterImage(props) {
     return (
         <>
             {props.src ? (<Image

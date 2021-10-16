@@ -1,17 +1,11 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
-import { Gallery } from '../components/Gallery'
+import styles from 'styles/Home.module.css';
+import { Gallery } from 'components/MakeAMeme/Gallery';
+import { Header } from "components/common-ui/header";
 
-export default function MakeAMeme() {
+export function MakeAMeme() {
   return (
     <div className={styles.container}>
-      <Head>
-        <title>DankMinter</title>
-        <meta name="description" content="A dank meme generator" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
+      <Header title="Mint A Meme"/>
       <main className={styles.main}>
         <Gallery />
       </main>

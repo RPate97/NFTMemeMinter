@@ -9,7 +9,9 @@ import { Logo } from "components/common-ui/logo";
 import { AppColors } from "styles/styles";
 import { TossACoin } from "components/common-ui/wallet-bar/tossACoin";
 import { TreeFiddyButton } from 'components/common-ui/wallet-bar/TreeFiddyButton';
-import { useTokenBalance } from '@usedapp/core'
+import { useTokenBalance } from '@usedapp/core';
+import { VoteButton } from "components/common-ui/wallet-bar/voteButton";
+import { MintButton } from "components/common-ui/wallet-bar/mintButton";
 
 export const ConnectButton = ({handleOpenModal}) => {
     const {activateBrowserWallet, account } = useEthers();
@@ -32,44 +34,51 @@ export const ConnectButton = ({handleOpenModal}) => {
                 <Box display="flex"
                     height="20"
                     alignItems="center"
-                    marginRight="5">
+                    marginRight="4">
                 {account ? (
-                    <Flex direction="row">
-                        <TossACoin treeFiddyBalance={treeFiddyBalance}/>
-                        <Box
-                            display="flex"
-                            alignItems="center"
-                            border="1px"
-                            borderColor="gray.700"
-                            borderRadius="xl"
-                            py="0">
-                            <CollectionButton userAddress={account}/>
-                            <TreeFiddyButton treeFiddyBalance={treeFiddyBalance} />
-                            <Button
-                                bg={AppColors.buttonBackground}
-                                border="1px solid transparent"
-                                _hover={{
-                                    border: "1px",
-                                    borderStyle: "solid",
-                                    borderColor: "white",
-                                    backgroundColor: "gray.700",
-                                }}
-                                onClick={handleOpenModal}
+                    <Flex direction="column" justify="flex-end">
+                        <Flex direction="row" mt="8">
+                            <Box
+                                ml="auto"
+                                display="flex"
+                                alignItems="center"
+                                border="1px"
+                                borderColor="gray.700"
                                 borderRadius="xl"
-                                m="0px"
-                                px={3}
-                                height="38px"
-                            >
-                                <Text color="white" fontSize="md" fontWeight="medium" mr="2">
-                                {account &&
-                                    `${account.slice(0, 6)}...${account.slice(
-                                    account.length - 4,
-                                    account.length
-                                    )}`}
-                                </Text>
-                                <Identicon />
-                            </Button>
-                        </Box>                         
+                                py="0">
+                                <CollectionButton userAddress={account}/>
+                                <TreeFiddyButton treeFiddyBalance={treeFiddyBalance} />
+                                <Button
+                                    bg={AppColors.buttonBackground}
+                                    border="1px solid transparent"
+                                    _hover={{
+                                        border: "1px",
+                                        borderStyle: "solid",
+                                        borderColor: "white",
+                                        backgroundColor: "gray.700",
+                                    }}
+                                    onClick={handleOpenModal}
+                                    borderRadius="xl"
+                                    m="0px"
+                                    px={3}
+                                    height="38px"
+                                >
+                                    <Text color="white" fontSize="md" fontWeight="medium" mr="2">
+                                    {account &&
+                                        `${account.slice(0, 6)}...${account.slice(
+                                        account.length - 4,
+                                        account.length
+                                        )}`}
+                                    </Text>
+                                    <Identicon />
+                                </Button>
+                            </Box>                         
+                        </Flex>
+                        <Flex direction="row" mt="8px">
+                            <TossACoin treeFiddyBalance={treeFiddyBalance}/>
+                            <VoteButton />
+                            <MintButton />                            
+                        </Flex>
                     </Flex>
                 ) : (
                     <Button onClick={handleConnectWallet}>Connect to a wallet</Button>

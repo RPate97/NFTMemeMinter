@@ -3,6 +3,7 @@ const pinata = pinataSDK(process.env.PINATA_API_KEY, process.env.PINATA_API_SECR
 const { Readable } = require('stream');
 const { ethers } = require("ethers");
 const fs = require("fs");
+import playwright from 'playwright';
 
 async function mintMemeViaContract(templateId, text, URI) {
     const CONTRACT_ADDRESS = "0xcfeb869f69431e42cdb54a4f4f105c19c080a601";
@@ -1435,17 +1436,52 @@ async function mintMemeViaContract(templateId, text, URI) {
     console.log("NFT meme minted:", resp);
 }
 
+function wait(ms) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log("Done waiting");
+      resolve(ms)
+    }, ms )
+  })
+}  
+
+async function renderImage(state) {
+  const browser = await playwright['chromium'].launch();
+  // Create a page with the Open Graph image size best practise
+  const page = await browser.newPage({
+      viewport: {
+          width: state.memeWidth + 50,
+          height: state.memeHeight + 150,
+      }
+  });
+
+  // Generate the full URL out of the given path (GET parameter)
+  const url = "localhost:3000/memeTemplate?state=" + encodeURIComponent(JSON.stringify(state));
+  console.log(url);
+  await page.goto(url, {
+      timeout: 30 * 1000
+  })
+
+  await wait(100);
+
+  const data = await page.screenshot()
+  await browser.close()
+  fs.writeFileSync("/tmp/temp.png", data);
+  return fs.createReadStream('/tmp/temp.png');     
+}
+
 export default async function handler(req, res) {
     // const base64URL = req.query.base64URL;
     // const metadata = req.query.metadata;
-    console.log(req.body.base64Meme);
+    // console.log(req.body.base64Meme);
     console.log(req.body.captions);
     console.log(req.body.templateId);
     console.log(req.body.name);
 
-    const imgBuffer = Buffer.from(req.body.base64Meme.replace(/^data:image\/png;base64,/, ""), 'base64')
-    fs.writeFileSync("/tmp/temp.png", imgBuffer);
-    const readableStreamForFile = fs.createReadStream('/tmp/temp.png');
+    const imgStream = await renderImage(req.body.state);
+    // const imgBuffer = Buffer.from(req.body.base64Meme.replace(/^data:image\/png;base64,/, ""), 'base64')
+    // fs.writeFileSync("/tmp/temp.png", imgBuffer);
+    // const readableStreamForFile = fs.createReadStream('/tmp/temp.png');
 
     // const stream = Readable.from(imgBuffer.toString());
     // stream.path = "test.png";
@@ -1459,7 +1495,7 @@ export default async function handler(req, res) {
             cidVersion: 0
         }
     };
-    let ipfsHash = await pinata.pinFileToIPFS(readableStreamForFile, options).then((result) => {
+    let ipfsHash = await pinata.pinFileToIPFS(imgStream, options).then((result) => {
         //handle results here
         console.log(result);
         fs.unlink('/tmp/temp.png', () => {console.info("deleted temporary file")});

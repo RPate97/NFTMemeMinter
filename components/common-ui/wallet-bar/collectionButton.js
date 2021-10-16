@@ -31,7 +31,7 @@ export const CollectionButton = ({userAddress}) => {
                 borderRadius="xl"
                 border="1px"
                 borderColor="gray.700"
-                label="Click to visit your DankMinter collection.">
+                label="Visit your DankMinter collection.">
                     <Button
                         bg="transparent"
                         border="1px solid transparent"

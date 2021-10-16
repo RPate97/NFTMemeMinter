@@ -4,7 +4,7 @@ import { Box, Text, Spacer, Flex, Button } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 import { MemeModal } from "components/MemeCollection/memeModal";
 
-export const CollectionMeme = ({hash, score, uri, postings, memeId}) => {
+export const CollectionMeme = ({userAddress, hash, score, uri, postings, memeId}) => {
     const gateway = "https://dankminter.mypinata.cloud/ipfs/";
     const gatewayURI = uri.replace('ipfs://', gateway);
     const [{ data, loading, error }, refetch] = useAxios(gatewayURI);
@@ -53,6 +53,7 @@ export const CollectionMeme = ({hash, score, uri, postings, memeId}) => {
                         <img width={500} height={500} src={imageURI} alt={data.name}/> 
                     </Button>
                     <MemeModal 
+                        userAddress={userAddress}
                         isOpen={isOpen}
                         onClose={onClose}
                         hash={hash}

@@ -15,17 +15,16 @@ import {
     Spacer,
   } from "@chakra-ui/react";
   import { AppColors } from "styles/styles";
-import { ChevronUpIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import { SacrificeButton } from "components/MemeCollection/sacrifice"
 import { TipCreatorButton } from "components/MemeCollection/tipCreator"
-import { useEthers } from "@usedapp/core";
+import { VoteButton } from "components/MemeCollection/vote"
 import { useTokenBalance } from '@usedapp/core'
 
-export const MemeModal = ({isOpen, onClose, hash, score, postings, memeId, imageURI, name, description, creatorName, printNum, creationDate, totalMinted}) => {
-    const {activateBrowserWallet, account } = useEthers();
+
+export const MemeModal = ({userAddress, contract, isOpen, onClose, hash, score, postings, memeId, imageURI, name, description, creatorName, printNum, creationDate, totalMinted}) => {
     const TREE_FIDDY_ADDRESS = '0xc89ce4735882c9f0f0fe26686c53074e09b0d550'
-    let treeFiddyBalance = useTokenBalance(TREE_FIDDY_ADDRESS, account);
-    
+    let treeFiddyBalance = useTokenBalance(TREE_FIDDY_ADDRESS, userAddress);
+
     return (
         <Modal isOpen={isOpen} onClose={onClose} isCentered size="md">
             <ModalOverlay />
@@ -99,44 +98,11 @@ export const MemeModal = ({isOpen, onClose, hash, score, postings, memeId, image
                 borderBottomLeftRadius="3xl"
                 borderBottomRightRadius="3xl"
                 m>
-                    <TipCreatorButton treeFiddyBalance={treeFiddyBalance} userAccount={account} memeId={memeId}/>
-                    <SacrificeButton treeFiddyBalance={treeFiddyBalance} userAccount={account} memeId={memeId}/>
+                    <TipCreatorButton treeFiddyBalance={treeFiddyBalance} memeId={memeId}/>
+                    <SacrificeButton treeFiddyBalance={treeFiddyBalance} memeId={memeId}/>
                     <Spacer />
-                    <Button
-                        bg={AppColors.buttonBackground}
-                        border="1px solid transparent"
-                        _hover={{
-                            border: "1px",
-                            borderStyle: "solid",
-                            borderColor: "white",
-                            backgroundColor: "gray.700",
-                        }}
-                        borderRadius="xl"
-                        m="0px"
-                        p={0}
-                        height="38px">
-                        <ChevronDownIcon color="red" boxSize={10} _hover={{
-                            color: "black"
-                        }}/>
-                    </Button>
-                    <Button
-                        bg={AppColors.buttonBackground}
-                        border="1px solid transparent"
-                        _hover={{
-                            border: "1px",
-                            borderStyle: "solid",
-                            borderColor: "white",
-                            backgroundColor: "green.700",
-                        }}
-                        borderRadius="xl"
-                        m="0px"
-                        ml="5px"
-                        p={0}
-                        height="38px">
-                        <ChevronUpIcon color="green" boxSize={10} _hover={{
-                            color: "black"
-                        }}/>
-                    </Button>
+                    <VoteButton memeId={memeId} upDown={false} />
+                    <VoteButton memeId={memeId} upDown={true} />
                 </ModalFooter>
             </ModalContent>
         </Modal>

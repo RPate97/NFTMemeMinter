@@ -8,12 +8,13 @@ import { useContractCall } from "@usedapp/core";
 import abi from 'contracts/dankminter-abi.json';
 import { CollectionMeme } from "components/MemeCollection/collectionMeme";
 import { Button, Box, Text, Spacer, Flex } from "@chakra-ui/react";
+import { Header } from "components/common-ui/header";
 
 export function MemeCollection() {
   const {activateBrowserWallet, account } = useEthers();
   const CONTRACT_INTERFACE = new ethers.utils.Interface(abi);
   const MEME_ADDRESS = '0xcfeb869f69431e42cdb54a4f4f105c19c080a601'
-
+  
   function useUsersMemes() {
       try {
           const usersMemes = useContractCall(account && {
@@ -33,17 +34,12 @@ export function MemeCollection() {
 
   return (
     <div>
-      <Head>
-        <title>NFT Meme Minter</title>
-        <meta name="description" content="The only meme generator that mints your memes as NFTs." />
-        <meta name="google" content="notranslate" />
-      </Head>
-
+      <Header title="Collection"/>
       <main style={styles.main}>
         <WalletBar />
         <Flex width="100vw" height="100vh" margin="5">
           {memes && memes[0].map((el) => (
-            <CollectionMeme key={el.memeHash} hash={el.memeHash} score={el.score} uri={el.uri} postings={el.postings} memeId={el.memeId} />
+            <CollectionMeme key={el.memeHash} hash={el.memeHash} score={el.score} uri={el.uri} postings={el.postings} memeId={el.memeId} userAddress={account} />
           ))}          
         </Flex>
       </main>

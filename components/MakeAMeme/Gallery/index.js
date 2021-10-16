@@ -2,16 +2,20 @@
 import React, { useState } from 'react'
 import { GalleryMeme } from './GalleryMeme'
 import TemplateMaker from '../../TemplateMaker'
+import { useEthers } from "@usedapp/core";
 import Modal from '@material-ui/core/Modal';
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
-import MemeMinter from '../MinterModal/MemeMinterModal';
 import { styles } from '../../../styles/styles';
 import Button from '@material-ui/core/Button';
-import Head from 'next/head'
 import { WalletBar } from 'components/common-ui/wallet-bar'
 
 const templates = [
+    {
+        src: '/images/umbrellaAcademy.jpeg',
+        width: 680,
+        height: 680,
+    },
     {
         src: '/images/boy.png',
         width: 610,
@@ -121,20 +125,8 @@ const templates = [
 
 
 export const Gallery = () => {
-    const [mintMemeModalOpen, setMintMemeModalOpen] = useState(false);
+    const {activateBrowserWallet, account } = useEthers();
     const [makeTemplateModalOpen, setMakeTemplateModalOpen] = useState(false);
-    const [selectedMeme, setSelectedMeme] = useState();
-
-    const handleOpenMintMeme = (index) => {
-        setSelectedMeme(index);
-        setMintMemeModalOpen(true);
-    };
-    
-    const handleCloseMintMeme = () => {
-        setSelectedMeme(null);
-        setMintMemeModalOpen(false);
-    };
-
     const handleOpenMakeTemplate = (index) => {
         setMakeTemplateModalOpen(true);
     };
@@ -144,33 +136,17 @@ export const Gallery = () => {
     };
 
     return (
-        <div>
-            <Head>
-                <title>NFT Meme Minter</title>
-                <meta name="description" content="The only meme generator that mints your memes as NFTs." />
-                <meta name="google" content="notranslate" />
-            </Head>
-  
+        <div>  
             <main style={styles.main}>
                 <WalletBar />
                 <Button variant="outlined" style={{color: "white", borderColor: "white", marginRight: "auto", marginBottom: 10, marginLeft: 10}} onClick={handleOpenMakeTemplate}>Create a new template</Button>
-                <ImageList rowHeight={400} cols={3}>
+                <ImageList rowHeight={500} cols={3}>
                     {templates.map((el, index) => (
-                        <ImageListItem key={el.src} cols={el.cols || 1} onClick={() => handleOpenMintMeme(index)}>
-                            <GalleryMeme meme={el} />    
+                        <ImageListItem key={el.src} cols={el.cols || 1}>
+                            <GalleryMeme meme={el} userAddress={account}/>    
                         </ImageListItem>
                     ))}                     
                 </ImageList>
-                <Modal
-                    open={mintMemeModalOpen}
-                    onClose={handleCloseMintMeme}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                >
-                    <div>
-                        <MemeMinter meme={templates[selectedMeme]} />
-                    </div>
-                </Modal>
                 <Modal
                     open={makeTemplateModalOpen}
                     onClose={handleCloseMakeTemplate}

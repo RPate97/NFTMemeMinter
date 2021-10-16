@@ -9,7 +9,6 @@ import {
     Box,
     Button,
     Flex,
-    Link,
     Modal,
     ModalOverlay,
     ModalContent,

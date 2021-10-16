@@ -1,6 +1,9 @@
+import React from 'react';
 import '../styles/globals.css'
 import { ChainId, DAppProvider, } from '@usedapp/core'
 import { ChakraProvider } from "@chakra-ui/react";
+import { MemeMinterTemplate } from "pages/memeTemplate";
+const templateType = React.createElement(MemeMinterTemplate).type;
 
 const config = {
   readOnlyChainId: ChainId.Ropsten,
@@ -9,14 +12,23 @@ const config = {
   },
 }
 
-function MyApp({ Component, pageProps }) {
-  return (
-    <DAppProvider config={config}>
+function MyApp({ Component, pageProps, router }) {
+  if (router.pathname.startsWith('/memetemplate') | router.pathname.startsWith('/memeTemplate')) {
+    return (
       <ChakraProvider>
-        <Component {...pageProps} />      
+        <Component {...pageProps} />  
       </ChakraProvider>
-    </DAppProvider>
-  )
+    )  
+  } else {
+    return (
+      <ChakraProvider>
+        <DAppProvider config={config}>
+          <Component {...pageProps} />  
+        </DAppProvider>
+      </ChakraProvider>
+    )  
+  }
+
 }
 
 export default MyApp
