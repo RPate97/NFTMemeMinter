@@ -2,8 +2,6 @@ import React from 'react';
 import '../styles/globals.css'
 import { ChainId, DAppProvider, } from '@usedapp/core'
 import { ChakraProvider } from "@chakra-ui/react";
-import { MemeMinterTemplate } from "pages/memeTemplate";
-const templateType = React.createElement(MemeMinterTemplate).type;
 
 const config = {
   readOnlyChainId: ChainId.Ropsten,

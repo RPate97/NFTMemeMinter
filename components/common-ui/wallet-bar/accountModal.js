@@ -13,18 +13,20 @@ import {
     ModalCloseButton,
     Text,
   } from "@chakra-ui/react";
-  import { ExternalLinkIcon, CopyIcon } from "@chakra-ui/icons";
-  import { useEthers } from "@usedapp/core";
-  import { Identicon } from "./Identicon";
-  import { AppColors } from "styles/styles";
-  
+import { ExternalLinkIcon, CopyIcon } from "@chakra-ui/icons";
+import { Identicon } from "./identicon";
+import { AppColors } from "styles/styles";
+import { useRouter } from 'next/router';
+
 // AccountModal.tsx
-export const AccountModal = ({isOpen, onClose}) => {
-    const { account, deactivate } = useEthers();
-    
+export const AccountModal = ({isOpen, onClose, account, deactivate}) => {   
+    const router = useRouter();
+
     function handleDeactivateAccount() {
         deactivate();
+        localStorage.removeItem("token");
         onClose();
+        router.replace('/');
     }
 
     return (

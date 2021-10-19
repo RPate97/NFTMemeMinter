@@ -41,42 +41,42 @@ export default class MemeMinterTemplate extends React.Component {
                         bgGradient="linear-gradient(to right, #0f0c29, #302b63, #24243e)">
                         <ModalBody pt={0} m={0} alignContent="center">
                             <Center>
-                                <Box
-                                    backgroundColor="#0e0e0e"
-                                    borderRadius="3xl"
-                                    border="3px"
-                                    borderStyle="solid"
-                                    borderColor="gray.600"
-                                    px={0}
-                                    pt={0}
-                                    pb={0}
-                                    mb={7}
-                                    mt={9}
-                                    width={605}
-                                    height={this.state.memeHeight + 100}
-                                    overflow="hidden"
-                                    boxShadow="rgba(0, 0, 0, 0.35) 0px 5px 15px;"
-                                >
-                                    <Flex flexDirection="column" justifyContent="space-between" alignItems="center" mt={0} width={600}>
-                                        <Flex flexDirection="row" mb={0} p={0} pt={1} justifyContent="space-between" width="100%">
-                                            <Flex flexDirection="column" pl={2} pb={2} width={485} height={100} justifyContent="space-between">
-                                                <Text color="white" fontSize="md" style={{
-                                                    color: "#ffffff",
-                                                    fontFamily: "SpaceMono-Regular",
-                                                    fontSize: 16,
-                                                }}>
-                                                    Created by: @pate - DankMinter.com
-                                                </Text>   
-                                                <Text color="white" fontSize="md" style={{
-                                                    color: "#ffffff",
-                                                    fontFamily: "SpaceMono-Regular",
-                                                    fontSize: 16,
-                                                }}>
-                                                    {/* {"This is a boring meme that isn't funny but hey, at least it looks good:"} */}
-                                                </Text>                                                   
-                                            </Flex>
-                                            <QRCode templateId={0} captions={this.state.hashCaptions} style={{marginRight: 5, width: 100, height: 100}}/>                           
+                            <Box
+                                backgroundColor="#0e0e0e"
+                                borderRadius="3xl"
+                                border="3px"
+                                borderStyle="solid"
+                                borderColor="gray.600"
+                                px={0}
+                                pt={0}
+                                pb={0}
+                                mb={7}
+                                mt={9}
+                                width={605}
+                                height={this.state.memeHeight + 210}
+                                overflow="hidden"
+                                boxShadow="rgba(0, 0, 0, 0.35) 0px 5px 15px;"
+                            >
+                                <Flex flexDirection="column" justifyContent="space-between" alignItems="center" mt={0} width={600}>
+                                    <Flex flexDirection="row" mb={0} p={0} pt={1} justifyContent="space-between" width="100%">
+                                        <Flex flexDirection="column" pl={2} pb={2} width={385} height={200} justifyContent="space-between">
+                                            <Text color="white" fontSize="md" style={{
+                                                color: "#ffffff",
+                                                fontFamily: "SpaceMono-Regular",
+                                                fontSize: 16,
+                                            }}>
+                                                Created by: @pate - DankMinter.com
+                                            </Text>   
+                                            <Text color="white" fontSize="md" style={{
+                                                color: "#ffffff",
+                                                fontFamily: "SpaceMono-Regular",
+                                                fontSize: 16,
+                                            }}>
+                                                {"This is a boring meme that isn't funny but hey, at least it looks good:"}
+                                            </Text>                                                   
                                         </Flex>
+                                        <QRCode handle={this.state.user.handle} memeIndex={this.state.user.memeIndex} style={{marginRight: 5, width: 200, height: 200}}/>                           
+                                    </Flex>
                                         <div
                                             id="svg_ref"
                                             style={{

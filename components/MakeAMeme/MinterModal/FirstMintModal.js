@@ -99,7 +99,7 @@ export function FirstMint({changeTab}) {
                 </Text>                                  
             </Button>     
             <LinkBox>
-                <LinkOverlay href="/collection">
+                <LinkOverlay href="/">
                     <Button
                         onClick={() => this.updateBorderStyle({border: "solid 0px #ddd"})}
                         bg="transparent"

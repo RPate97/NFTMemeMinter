@@ -8,12 +8,12 @@ import { AppColors } from "styles/styles";
 
 export const CollectionButton = ({userAddress}) => {
     const CONTRACT_INTERFACE = new ethers.utils.Interface(abi);
-    const MEME_ADDRESS = '0xcfeb869f69431e42cdb54a4f4f105c19c080a601'
+    const DANKMINTER_ADDRESS = process.env.NEXT_PUBLIC_DANKMINTER_ADDRESS;
     function useMemeBalance() {
         try {
             const memeBalance = useContractCall(userAddress && {
                 abi: CONTRACT_INTERFACE, 
-                address: MEME_ADDRESS, 
+                address: DANKMINTER_ADDRESS, 
                 method: "getNumStashedMemes", 
                 args: [userAddress]
             });
@@ -46,9 +46,9 @@ export const CollectionButton = ({userAddress}) => {
                         mr="5px"
                         px={0}
                         height="38px">
-                        <Link href='/collection' passHref>
+                        <Link href='/' passHref>
                             <Text color="white" fontSize="md" p={5} m={0}>
-                            {memeBalance} {memeBalance === '1' ? 'MEME' : 'MEMES'} 
+                                {memeBalance} {memeBalance === '1' ? 'MEME' : 'MEMES'} 
                             </Text>                                      
                         </Link>
                     </Button>  

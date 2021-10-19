@@ -1,13 +1,16 @@
 const pinataSDK = require('@pinata/sdk');
 const pinata = pinataSDK(process.env.PINATA_API_KEY, process.env.PINATA_API_SECRET);
-const { Readable } = require('stream');
 const { ethers } = require("ethers");
 const fs = require("fs");
 import playwright from 'playwright';
+const { MongoClient } = require('mongodb');
+const uri = process.env.DB_HOST;
+var Web3 = require('web3');
+var web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
 
-async function mintMemeViaContract(templateId, text, URI) {
+async function mintMemeViaContract(templateId, text, URI, mintToAddress) {
     const CONTRACT_ADDRESS = "0xcfeb869f69431e42cdb54a4f4f105c19c080a601";
-    const OWNER_ADDRESS = "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0"; // send to address
+    const OWNER_ADDRESS = mintToAddress; // send to address
     const infuraKey = process.env.INFURA_KEY;
     const abi = [
       {
@@ -1445,13 +1448,13 @@ function wait(ms) {
   })
 }  
 
-async function renderImage(state) {
+async function renderImage(state, captions, templateId) {
   const browser = await playwright['chromium'].launch();
   // Create a page with the Open Graph image size best practise
   const page = await browser.newPage({
       viewport: {
           width: state.memeWidth + 50,
-          height: state.memeHeight + 150,
+          height: state.memeHeight + 250,
       }
   });
 
@@ -1462,7 +1465,7 @@ async function renderImage(state) {
       timeout: 30 * 1000
   })
 
-  await wait(100);
+  await wait(1000);
 
   const data = await page.screenshot()
   await browser.close()
@@ -1471,20 +1474,33 @@ async function renderImage(state) {
 }
 
 export default async function handler(req, res) {
-    // const base64URL = req.query.base64URL;
-    // const metadata = req.query.metadata;
-    // console.log(req.body.base64Meme);
-    console.log(req.body.captions);
-    console.log(req.body.templateId);
-    console.log(req.body.name);
+    // calculate memeHash
+    var textStr = "";
+    for (var i = 0; i < req.body.captions.length; i++) {
+        textStr += req.body.captions[i];
+    }
+    const encoded = web3.eth.abi.encodeParameters(['uint256', 'string'], [req.body.templateId, textStr])
+    const memeHash = web3.utils.sha3(encoded, {encoding: 'hex'});
 
-    const imgStream = await renderImage(req.body.state);
-    // const imgBuffer = Buffer.from(req.body.base64Meme.replace(/^data:image\/png;base64,/, ""), 'base64')
-    // fs.writeFileSync("/tmp/temp.png", imgBuffer);
-    // const readableStreamForFile = fs.createReadStream('/tmp/temp.png');
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    await client.connect();
+    let user;
+    try {
+      const userCollection = client.db("primary").collection("users");
+      const linkCollection = client.db("primary").collection("memelinks");
+      user = await userCollection.findOne({address: {$eq: req.body.mintToAddress}});
+      await linkCollection.insertOne({creator: user.handle, memeIndex: user.memeIndex, memeHash: memeHash});
+      await userCollection.updateOne({address: {$eq: req.body.mintToAddress}}, {$inc : {memeIndex: 1}});
+    } catch(e) {
+      console.error(e);
+      // TODO - handle reverting image pin + metadata update
+      res.status(500).json({ error: e.message })
+    }
 
-    // const stream = Readable.from(imgBuffer.toString());
-    // stream.path = "test.png";
+    let state = req.body.state;
+    state.user = user;
+
+    const imgStream = await renderImage(state, req.body.captions, req.body.templateId);
     // pin file
     const options = {
         pinataMetadata: {
@@ -1505,6 +1521,7 @@ export default async function handler(req, res) {
         console.log(err);
     });
 
+    // create metadata
     let metadata = {
         name: req.body.name,
         description: req.body.description,
@@ -1528,33 +1545,25 @@ export default async function handler(req, res) {
                 value: 1
             }
         ],
+        memeHash: memeHash,
     };
 
-    const metadataBuffer = Buffer.from(JSON.stringify(metadata, null, 2), "utf-8");
-    console.log("made metadata buffer");
-    const metadatastream = Readable.from(metadataBuffer.toString());
-    console.log("made metadata stream, initiating pin");
-    metadatastream.path = "test-metadata.png";
+    console.log(`memeHash: ${memeHash}`)
 
-    const metadataOptions = {
-        pinataMetadata: {
-            name: `metadata-${req.body.name}`,
-            keyvalues: {}
-        },
-        pinataOptions: {
-            cidVersion: 0
-        }
-    };
-    let metadataIpfsHash = await pinata.pinFileToIPFS(metadatastream, metadataOptions).then((result) => {
-        //handle results here
-        console.log(result);
-        return result.IpfsHash;
-    }).catch((err) => {
-        //handle error here
-        console.log(err);
-    });
+    // insert metadata into mongodb
+    try {
+      await client.connect();
+      const metadataCollection = client.db("primary").collection("metadata");
+      await metadataCollection.insertOne(metadata);
+    } catch(e) {
+      console.error(e);
+      // TODO - handle reverting image pin
+      res.status(500).json({ error: e.message })
+    } finally {
+      await client.close();
+    }
 
     // mint meme with metadata
-    const nftMetadataURI = `ipfs://${metadataIpfsHash}`;
-    await mintMemeViaContract(0, req.body.captions, nftMetadataURI);
+    const nftMetadataURI = `${process.env.NEXT_PUBLIC_DANKMINTER_DOMAIN}/api/metadata/${memeHash}`;
+    await mintMemeViaContract(0, req.body.captions, nftMetadataURI, req.body.mintToAddress);
 }

@@ -9,7 +9,7 @@ import { AppColors } from "styles/styles";
 
 export const VoteButton = ({memeId, upDown}) => {
     const CONTRACT_INTERFACE = new ethers.utils.Interface(abi);
-    const MEME_ADDRESS = '0xcfeb869f69431e42cdb54a4f4f105c19c080a601';
+    const MEME_ADDRESS = process.env.NEXT_PUBLIC_DANKMINTER_ADDRESS;
     const contract = new ethers.Contract(MEME_ADDRESS, CONTRACT_INTERFACE);
     const { state, send } = useContractFunction(contract, 'voteOnMeme', { transactionName: 'Vote' });
 

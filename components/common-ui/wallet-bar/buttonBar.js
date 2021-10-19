@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useEthers } from "@usedapp/core";
 import { Button, Box, Text, Tooltip } from "@chakra-ui/react";
 import { Identicon } from "components/common-ui/wallet-bar/identicon";
@@ -12,15 +12,22 @@ import { TreeFiddyButton } from 'components/common-ui/wallet-bar/TreeFiddyButton
 import { useTokenBalance } from '@usedapp/core';
 import { VoteButton } from "components/common-ui/wallet-bar/voteButton";
 import { MintButton } from "components/common-ui/wallet-bar/mintButton";
+import { useDisclosure } from "@chakra-ui/react";
 
-export const ConnectButton = ({handleOpenModal}) => {
-    const {activateBrowserWallet, account } = useEthers();
-    const TREE_FIDDY_ADDRESS = '0xc89ce4735882c9f0f0fe26686c53074e09b0d550'
-    let treeFiddyBalance = useTokenBalance(TREE_FIDDY_ADDRESS, account);
+import Web3 from 'web3';
+const axios = require('axios');
 
-    function handleConnectWallet() {
-        activateBrowserWallet();
-    }
+export const ButtonBar = ({handleOpenModal, account}) => {
+    let treeFiddyBalance = useTokenBalance(process.env.NEXT_PUBLIC_TREE_FIDDY_ADDRESS, account);
+    const [token, setToken] = useState(() => {
+        if (typeof(Storage) !== "undefined") {
+          // Code for localStorage/sessionStorage.
+          return localStorage.getItem("token");
+        } else {
+          // Sorry! No Web Storage support..
+          return null;
+        }
+    });
 
     return (
         <div style={{position: "sticky", top: 0}}>
@@ -35,7 +42,6 @@ export const ConnectButton = ({handleOpenModal}) => {
                     height="20"
                     alignItems="center"
                     marginRight="4">
-                {account ? (
                     <Flex direction="column" justify="flex-end">
                         <Flex direction="row" mt="8">
                             <Box
@@ -79,13 +85,9 @@ export const ConnectButton = ({handleOpenModal}) => {
                             <VoteButton />
                             <MintButton />                            
                         </Flex>
-                    </Flex>
-                ) : (
-                    <Button onClick={handleConnectWallet}>Connect to a wallet</Button>
-                )}                  
+                    </Flex>                
                 </Box>
-        
-            </Flex>            
+            </Flex>   
         </div>
     )
 }

@@ -124,8 +124,7 @@ const templates = [
 ]
 
 
-export const Gallery = () => {
-    const {activateBrowserWallet, account } = useEthers();
+export const Gallery = ({account, deactivate}) => {
     const [makeTemplateModalOpen, setMakeTemplateModalOpen] = useState(false);
     const handleOpenMakeTemplate = (index) => {
         setMakeTemplateModalOpen(true);
@@ -138,7 +137,7 @@ export const Gallery = () => {
     return (
         <div>  
             <main style={styles.main}>
-                <WalletBar />
+                <WalletBar account={account} deactivate={deactivate} />
                 <Button variant="outlined" style={{color: "white", borderColor: "white", marginRight: "auto", marginBottom: 10, marginLeft: 10}} onClick={handleOpenMakeTemplate}>Create a new template</Button>
                 <ImageList rowHeight={500} cols={3}>
                     {templates.map((el, index) => (

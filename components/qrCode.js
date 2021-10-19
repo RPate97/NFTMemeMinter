@@ -1,16 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
-import Web3 from 'web3';
+import React, { useEffect, useRef } from "react";
 
-export default function QRCode({style, templateId, captions}) {
-    const [url, setUrl] = useState("https://www.dankminter.com/");
+export default function QRCode({handle, memeIndex, style}) {
     const ref = useRef(null);
 
     let qrCode;
     if (typeof window !== "undefined") {
         const QRCodeStyling = require("qr-code-styling");
         qrCode = new QRCodeStyling({
-            width: 100,
-            height: 100,
+            width: 200,
+            height: 200,
             margin: 0,
             qrOptions: {
                 typeNumber: 0,
@@ -120,20 +118,16 @@ export default function QRCode({style, templateId, captions}) {
 
     useEffect(() => {
         qrCode.append(ref.current);
-        var web3 = new Web3();
-        var textStr = "";
-        for (var i = 0; i < captions.length; i++) {
-            textStr += captions[i];
-        }
-        const encoded = web3.eth.abi.encodeParameters(['uint256', 'string'], [templateId, textStr])
-        const hash = web3.utils.sha3(encoded, {encoding: 'hex'});
-        // const newUrl = "https://www.dankminter.com/" + hash.toString();
-        const newUrl = "https://www.dankminter.com/pate/1235";
+        const newUrl = `${process.env.NEXT_PUBLIC_DANKMINTER_DOMAIN}/meme/${handle}/${memeIndex}`;
+        console.log(process.env.NEXT_PUBLIC_DANKMINTER_DOMAIN);
+        console.log(handle);
+        console.log(memeIndex);
+        console.log(newUrl);
         qrCode.update({
             data: newUrl
         });
     }, []);
 
-    return <div style={{...style, overflow: "hidden", width: 100, height: 100 }} ref={ref} />;
+    return <div style={{...style, overflow: "hidden", width: 200, height: 200 }} ref={ref} />;
 }
 

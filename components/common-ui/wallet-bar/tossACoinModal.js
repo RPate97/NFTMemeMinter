@@ -27,7 +27,7 @@ import {
 export const TossACoinModal = ({userAddress, isOpen, onClose, treeFiddyBalance}) => {
     const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
     const CONTRACT_INTERFACE = new ethers.utils.Interface(abi);
-    const MEME_ADDRESS = '0xcfeb869f69431e42cdb54a4f4f105c19c080a601'
+    const MEME_ADDRESS = process.env.NEXT_PUBLIC_DANKMINTER_ADDRESS;
     const contract = new ethers.Contract(MEME_ADDRESS, CONTRACT_INTERFACE, userAddress);
     const [ amount, setAmount ] = useState(3.5);
     const { state, send } = useContractFunction(contract, 'tossACoin', { transactionName: 'TipDev' })

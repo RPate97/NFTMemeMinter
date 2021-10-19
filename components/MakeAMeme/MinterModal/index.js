@@ -63,6 +63,7 @@ export class MemeMinterModal extends React.Component {
             memeURL: "https://www.google.com",
             hashCaptions: ["Caption 1", "Caption 2"],
             tabIndex: 0,
+            mintToAddress: props.userAddress,
         };
 
         this.svgRef = React.createRef();
@@ -137,7 +138,7 @@ export class MemeMinterModal extends React.Component {
         this.state.textLocations.forEach((el) => {
             captions.push(el.text);
         });
-        const res = await axios.post('/api/mintMeme', {captions: captions, templateId: 1, name: "test.jpeg", description: "a description", state: this.state});
+        const res = await axios.post('/api/mintMeme', {captions: captions, templateId: 1, name: "test.jpeg", description: "a description", state: this.state, mintToAddress: this.state.mintToAddress});
     };
 
     updateBorderStyle = (newBorderStyleObject) => {
@@ -191,7 +192,7 @@ export class MemeMinterModal extends React.Component {
     }
 
     render() {
-        const { userAddress, isOpen, onClose, meme } = this.props;
+        const { isOpen, onClose } = this.props;
         return (
             <Modal isOpen={isOpen} onClose={onClose} size="2xl">
                 <ModalOverlay />
@@ -236,13 +237,13 @@ export class MemeMinterModal extends React.Component {
                                             mb={7}
                                             mt={9}
                                             width={605}
-                                            height={this.state.memeHeight + 95}
+                                            height={this.state.memeHeight + 210}
                                             overflow="hidden"
                                             boxShadow="rgba(0, 0, 0, 0.35) 0px 5px 15px;"
                                         >
                                             <Flex flexDirection="column" justifyContent="space-between" alignItems="center" mt={0} width={600}>
                                                 <Flex flexDirection="row" mb={0} p={0} pt={1} justifyContent="space-between" width="100%">
-                                                    <Flex flexDirection="column" pl={2} pb={2} width={485} height={100} justifyContent="space-between">
+                                                    <Flex flexDirection="column" pl={2} pb={2} width={385} height={200} justifyContent="space-between">
                                                         <Text color="white" fontSize="md" style={{
                                                             color: "#ffffff",
                                                             fontFamily: "SpaceMono-Regular",
@@ -258,7 +259,7 @@ export class MemeMinterModal extends React.Component {
                                                             {"This is a boring meme that isn't funny but hey, at least it looks good:"}
                                                         </Text>                                                   
                                                     </Flex>
-                                                    <QRCode templateId={0} captions={this.state.hashCaptions} style={{marginRight: 5, width: 100, height: 100}}/>                           
+                                                    <QRCode handle={"yourHandleHere"} memeIndex={0} style={{marginRight: 5, width: 200, height: 200}}/>                           
                                                 </Flex>
                                                 <div
                                                     id="svg_ref"

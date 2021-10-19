@@ -28,7 +28,7 @@ export const GalleryMeme = ({userAddress, meme}) => {
                 overflow="hidden">
                     <Image width={500} height={500} src={meme.src} alt={meme.src}/>                            
             </Button>     
-            <MemeMinterModal userAddress={userAddress} meme={meme} isOpen={isOpen} onClose={onClose}/>
+            <MemeMinterModal userAddress={userAddress} meme={meme} isOpen={isOpen} onClose={onClose} />
         </Box>
     )
 }
