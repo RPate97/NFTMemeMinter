@@ -76,7 +76,7 @@ export const ButtonBar = ({handleOpenModal, account}) => {
                                         account.length
                                         )}`}
                                     </Text>
-                                    <Identicon />
+                                    <Identicon account={account}/>
                                 </Button>
                             </Box>                         
                         </Flex>

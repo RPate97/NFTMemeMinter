@@ -1,7 +1,8 @@
 import React from 'react';
-import '../styles/globals.css'
-import { ChainId, DAppProvider, } from '@usedapp/core'
+import '../styles/globals.css';
+import { ChainId, DAppProvider, } from '@usedapp/core';
 import { ChakraProvider } from "@chakra-ui/react";
+import { WalletCache } from "components/wallet-cache";
 
 const config = {
   readOnlyChainId: ChainId.Ropsten,
@@ -11,6 +12,7 @@ const config = {
 }
 
 function MyApp({ Component, pageProps, router }) {
+
   if (router.pathname.startsWith('/memetemplate') | router.pathname.startsWith('/memeTemplate')) {
     return (
       <ChakraProvider>
@@ -21,7 +23,13 @@ function MyApp({ Component, pageProps, router }) {
     return (
       <ChakraProvider>
         <DAppProvider config={config}>
-          <Component {...pageProps} />  
+          <WalletCache>
+            {appProps => (
+              <Component {...pageProps}
+                {...appProps}
+              />  
+            )}            
+          </WalletCache>
         </DAppProvider>
       </ChakraProvider>
     )  

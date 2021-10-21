@@ -15,7 +15,7 @@ export const MemeInfo = ({memeInfo}) => {
                     <div style={styles.memePage.info.section}> 
                         <p style={styles.memePage.info.title}>Around the Web: </p>
                         {memeInfo.postings.map((el) => (
-                            <li> 
+                            <li key={el}> 
                                 <a href={el}>{el}</a>                                
                             </li>
                         ))}                
@@ -25,7 +25,7 @@ export const MemeInfo = ({memeInfo}) => {
                     <div style={styles.memePage.info.section}> 
                         <p style={styles.memePage.info.title}>Attributes: </p>
                         {memeInfo.attributes.map((el) => (
-                            <p style={styles.memePage.info.text}>{el.trait_type}: {el.value}</p>
+                            <p key={el.trait_type} style={styles.memePage.info.text}>{el.trait_type}: {el.value}</p>
                         ))}          
                         <p style={styles.memePage.info.text}>Votes: {memeInfo.score}</p>      
                     </div>  

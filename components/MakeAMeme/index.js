@@ -1,11 +1,8 @@
 import styles from 'styles/Home.module.css';
 import { Gallery } from 'components/MakeAMeme/Gallery';
 import { Header } from "components/common-ui/header";
-import { useEthers } from '@usedapp/core';
 
-export function MakeAMeme() {
-  const {activateBrowserWallet, account, deactivate } = useEthers();
-
+export function MakeAMeme({activateBrowserWallet, account, deactivate}) {
   return (
     <div className={styles.container}>
       <Header title="Mint A Meme"/>
