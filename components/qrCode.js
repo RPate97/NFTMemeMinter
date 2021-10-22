@@ -118,11 +118,7 @@ export default function QRCode({handle, memeIndex, style}) {
 
     useEffect(() => {
         qrCode.append(ref.current);
-        const newUrl = `${process.env.NEXT_PUBLIC_DANKMINTER_DOMAIN}/meme/${handle}/${memeIndex}`;
-        console.log(process.env.NEXT_PUBLIC_DANKMINTER_DOMAIN);
-        console.log(handle);
-        console.log(memeIndex);
-        console.log(newUrl);
+        const newUrl = `${process.env.NEXT_PUBLIC_DANKMINTER_DOMAIN}/api/meme/${handle}/${memeIndex}`;
         qrCode.update({
             data: newUrl
         });

@@ -1479,6 +1479,8 @@ export default async function handler(req, res) {
     for (var i = 0; i < req.body.captions.length; i++) {
         textStr += req.body.captions[i];
     }
+    console.log(textStr);
+    console.log(req.body.templateId);
     const encoded = web3.eth.abi.encodeParameters(['uint256', 'string'], [req.body.templateId, textStr])
     const memeHash = web3.utils.sha3(encoded, {encoding: 'hex'});
 
@@ -1565,5 +1567,5 @@ export default async function handler(req, res) {
 
     // mint meme with metadata
     const nftMetadataURI = `${process.env.NEXT_PUBLIC_DANKMINTER_DOMAIN}/api/metadata/${memeHash}`;
-    await mintMemeViaContract(0, req.body.captions, nftMetadataURI, req.body.mintToAddress);
+    await mintMemeViaContract(req.body.templateId, req.body.captions, nftMetadataURI, req.body.mintToAddress);
 }

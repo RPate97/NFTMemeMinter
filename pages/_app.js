@@ -5,9 +5,9 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { WalletCache } from "components/wallet-cache";
 
 const config = {
-  readOnlyChainId: ChainId.Ropsten,
+  readOnlyChainId: ChainId.Mainnet,
   readOnlyUrls: {
-    [ChainId.Ropsten]: 'https://127.0.0.1:8545',
+    [ChainId.Mainnet]: 'http://127.0.0.1:8545',
   },
 }
 

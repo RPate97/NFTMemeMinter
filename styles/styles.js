@@ -147,7 +147,7 @@ export const styles = {
         logo: {
             color: "#ffffff",
             fontFamily: "SpaceMono-Regular",
-            fontSize: 36,
+            fontSize: 40,
         }
     }
 }

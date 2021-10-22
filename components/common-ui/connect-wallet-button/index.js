@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from "@chakra-ui/react";
-import { Flex } from "@chakra-ui/react";
+import { Flex, Text, Button } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 import { AuthModal } from "components/common-ui/connect-wallet-button/authModal";
 import { styles } from 'styles/styles.js'
@@ -159,7 +158,13 @@ export const ConnectWalletButton = ({activateBrowserWallet, account, setDoneConn
                 <h1 style={styles.walletBar.logo}>
                     Welcome to DankMinter          
                 </h1>
-                <Button mt={3} onClick={handleConnectWallet}> Connect Wallet </Button>
+                <Text color="white" maxWidth={700} textAlign="center" fontSize={20}>
+                    The meme generator that mints NFTs of your memes.
+                </Text>
+                <Text color="white" maxWidth={700} textAlign="center">
+                    Own your work, capture the value you create, collect truly one of a kind NFT memes.
+                </Text>
+                <Button mt={10} onClick={handleConnectWallet}> Connect Wallet </Button>
             </Flex>   
             <AuthModal nonce={nonce} authenticate={authenticate} onClose={onClose} isOpen={isOpen} tabIndex={authTabIndex} addTokens={addCryptoTokens} updateProfile={updateProfile} />
         </div>
