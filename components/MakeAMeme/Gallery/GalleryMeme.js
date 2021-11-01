@@ -1,15 +1,14 @@
 import React from 'react'
-import Image from 'next/image'
-import { Button, Box } from "@chakra-ui/react";
+import { Button, Box, Image } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 import { MemeMinterModal } from "components/MakeAMeme/MinterModal";
 
-export const GalleryMeme = ({userAddress, meme}) => {
+export const GalleryMeme = ({userAddress, meme, userProfile}) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
         <Box>
-            <Button
+            <Button 
                 onClick={onOpen}
                 bg="transparent"
                 border="1px solid transparent"
@@ -19,16 +18,23 @@ export const GalleryMeme = ({userAddress, meme}) => {
                     borderColor: "white",
                     backgroundColor: "gray.700",
                 }}
-                borderColor="gray.700"
                 borderRadius="xl"
-                m="0px"
-                mr="0px"
-                width="500"
-                height="500"
-                overflow="hidden">
-                    <Image width={500} height={500} src={meme.src} alt={meme.src}/>                            
-            </Button>     
-            <MemeMinterModal userAddress={userAddress} meme={meme} isOpen={isOpen} onClose={onClose} />
+                m={0}
+                p={0}
+                mb={2}
+                width="fit-content"
+                height="fit-height">
+                <Image
+                    key="src"
+                    w="100%"
+                    borderRadius="xl"
+                    mb={0}
+                    d="inline-block"
+                    src={meme.src}
+                    alt="Alt"
+                />                
+            </Button>
+            <MemeMinterModal userAddress={userAddress} meme={meme} isOpen={isOpen} onClose={onClose} userProfile={userProfile} />
         </Box>
     )
 }

@@ -7,8 +7,7 @@ export const WalletCache = (props) => {
     const [userProfile, setUserProfile] = useState();
     const [token, setToken] = useState(() => {
       return getTokenFromStorage();
-    });
-  
+    });  
     const [doneConnecting, setDoneConnecting] = useState(token ? true : false);
   
     useEffect(() => {
@@ -17,7 +16,7 @@ export const WalletCache = (props) => {
         const finishConnecting = token !== null ? true : false;
         setDoneConnecting(finishConnecting);
       }
-    }, [account, token])
+    }, [account, token]);
   
     function getTokenFromStorage() {
       if (typeof(Storage) !== "undefined") {
@@ -34,8 +33,9 @@ export const WalletCache = (props) => {
     async function getUserProfile(userToken) {
       if (userToken) {
           const res = await axios.post('/api/fetchProfile', {token: userToken});
+          console.log(res.data.user);
           setUserProfile(res.data.user);
-          return res.data.user;
+          localStorage.setItem("userProfile", JSON.stringify(res.data.user));
       } else {
           console.log("token not set");
       }

@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 import { useContractCall } from "@usedapp/core";
 import abi from 'contracts/dankminter-abi.json';
 import { CollectionMeme } from "components/MemeCollection/collectionMeme";
-import { Flex } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { Header } from "components/common-ui/header";
 import { EmptyCollection } from "components/MemeCollection/emptyCollection";
 
@@ -13,18 +13,19 @@ export function MemeCollection({account, deactivate}) {
   const MEME_ADDRESS = process.env.NEXT_PUBLIC_DANKMINTER_ADDRESS;
   
   function useUsersMemes() {
-      try {
-          const usersMemes = useContractCall(account && {
-              abi: CONTRACT_INTERFACE, 
-              address: MEME_ADDRESS, 
-              method: "getUsersMemes", 
-              args: [account]
-          });
-          console.log(usersMemes);
-          return usersMemes;            
-      } catch (e) {
-          console.error(e);
-      }
+    console.log("account:");
+    console.log(account);
+    try {
+      const usersMemes = useContractCall({
+          abi: CONTRACT_INTERFACE, 
+          address: MEME_ADDRESS, 
+          method: "getUsersMemes", 
+          args: [account]
+      });
+      return usersMemes;            
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   const memes = useUsersMemes();
@@ -34,11 +35,19 @@ export function MemeCollection({account, deactivate}) {
       <Header title="Collection"/>
       <main style={styles.main}>
         <WalletBar account={account} deactivate={deactivate} />
-        <Flex width="100vw" height="100vh" margin="5">
-          {memes && memes[0].length > 0 ? memes[0].map((el) => (
-            <CollectionMeme key={el.memeHash} hash={el.memeHash} score={el.score} uri={el.uri} postings={el.postings} memeId={el.memeId} userAddress={account} />
-          )) : <EmptyCollection />}       
-        </Flex>
+        {memes && memes[0].length > 0 ? <Box
+          padding={2}
+          w="100%"
+          mx="auto"
+          sx={{ columnCount: [1, 2, 3, 4], columnGap: "8px" }}
+        >
+          {memes[0].map((el) => {
+            console.log(el.requiredExperience);
+            return (
+              <CollectionMeme key={el.memeHash} hash={el.memeHash} score={el.score} uri={el.uri} postings={el.postings} memeId={el.memeId} userAddress={account} experience={el.experience} requiredExperience={el.requiredExperience} danknessTier={el.danknessTier} />
+            )
+          })}             
+        </Box> : <EmptyCollection />}
       </main>
     </div>
   )

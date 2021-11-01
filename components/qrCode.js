@@ -1,14 +1,14 @@
 import React, { useEffect, useRef } from "react";
 
-export default function QRCode({handle, memeIndex, style}) {
+export default function QRCode({handle, memeIndex, style, width, height}) {
     const ref = useRef(null);
 
     let qrCode;
     if (typeof window !== "undefined") {
         const QRCodeStyling = require("qr-code-styling");
         qrCode = new QRCodeStyling({
-            width: 200,
-            height: 200,
+            width: width,
+            height: height,
             margin: 0,
             qrOptions: {
                 typeNumber: 0,
@@ -124,6 +124,6 @@ export default function QRCode({handle, memeIndex, style}) {
         });
     }, []);
 
-    return <div style={{...style, overflow: "hidden", width: 200, height: 200 }} ref={ref} />;
+    return <div style={{...style, overflow: "hidden", width: width, height: height }} ref={ref} />;
 }
 

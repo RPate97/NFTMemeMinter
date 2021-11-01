@@ -1435,7 +1435,7 @@ async function mintMemeViaContract(templateId, text, URI, mintToAddress) {
     console.log("got provider");
     const signer = provider.getSigner();
     const dankMinter = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
-    const resp = await dankMinter.createMeme(templateId, text, URI, OWNER_ADDRESS);
+    const resp = await (await dankMinter.createMeme(templateId, text, URI, OWNER_ADDRESS)).wait(1);
     console.log("NFT meme minted:", resp);
 }
 
@@ -1448,13 +1448,13 @@ function wait(ms) {
   })
 }  
 
-async function renderImage(state, captions, templateId) {
+async function renderImage(state) {
   const browser = await playwright['chromium'].launch();
   // Create a page with the Open Graph image size best practise
   const page = await browser.newPage({
       viewport: {
           width: state.memeWidth + 50,
-          height: state.memeHeight + 250,
+          height: state.memeHeight + 230,
       }
   });
 
@@ -1474,14 +1474,20 @@ async function renderImage(state, captions, templateId) {
 }
 
 export default async function handler(req, res) {
+    console.log("minting...");
+    let captions = [];
+    req.body.state.textLocations.forEach((el) => {
+        captions.push(el.text);
+    });
     // calculate memeHash
     var textStr = "";
-    for (var i = 0; i < req.body.captions.length; i++) {
-        textStr += req.body.captions[i];
+    for (var i = 0; i < captions.length; i++) {
+        textStr += captions[i];
     }
+    textStr += req.body.state.mainCaption;
     console.log(textStr);
-    console.log(req.body.templateId);
-    const encoded = web3.eth.abi.encodeParameters(['uint256', 'string'], [req.body.templateId, textStr])
+    console.log(req.body.state.templateId);
+    const encoded = web3.eth.abi.encodeParameters(['uint256', 'string'], [req.body.state.templateId, textStr])
     const memeHash = web3.utils.sha3(encoded, {encoding: 'hex'});
 
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -1502,7 +1508,7 @@ export default async function handler(req, res) {
     let state = req.body.state;
     state.user = user;
 
-    const imgStream = await renderImage(state, req.body.captions, req.body.templateId);
+    const imgStream = await renderImage(state);
     // pin file
     const options = {
         pinataMetadata: {
@@ -1526,7 +1532,7 @@ export default async function handler(req, res) {
     // create metadata
     let metadata = {
         name: req.body.name,
-        description: req.body.description,
+        description: `A gloriously dank meme created by ${req.body.name} and minted with DankMinter. Mint your own unique NFT memes at https://www.dankminter.com`,
         image: `ipfs://${ipfsHash}`,
         attributes: [
             {
@@ -1567,5 +1573,5 @@ export default async function handler(req, res) {
 
     // mint meme with metadata
     const nftMetadataURI = `${process.env.NEXT_PUBLIC_DANKMINTER_DOMAIN}/api/metadata/${memeHash}`;
-    await mintMemeViaContract(req.body.templateId, req.body.captions, nftMetadataURI, req.body.mintToAddress);
+    await mintMemeViaContract(req.body.state.templateId, captions, nftMetadataURI, req.body.mintToAddress);
 }

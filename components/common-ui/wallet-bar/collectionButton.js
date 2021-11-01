@@ -14,7 +14,7 @@ export const CollectionButton = ({userAddress}) => {
             const memeBalance = useContractCall(userAddress && {
                 abi: CONTRACT_INTERFACE, 
                 address: DANKMINTER_ADDRESS, 
-                method: "getNumStashedMemes", 
+                method: "balanceOf", 
                 args: [userAddress]
             });
             return `${memeBalance}`;            

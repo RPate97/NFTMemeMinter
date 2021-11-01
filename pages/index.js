@@ -5,23 +5,21 @@ import { MemeCollection } from 'components/MemeCollection/index.js';
 
 export default function Home({account, activateBrowserWallet, deactivate, doneConnecting, setDoneConnecting, token, setToken, userProfile, setUserProfile, getUserProfile}) {
   return (
-    <div>
+    <main style={styles.main}>
       <Header title="DankMinter"/>
-      <main style={styles.main}>
-        {account && doneConnecting && token && userProfile ? 
-          <MemeCollection 
-            account={account} 
-            deactivate={deactivate}/>
-        : <ConnectWalletButton 
-            activateBrowserWallet={activateBrowserWallet} 
-            account={account} 
-            setDoneConnecting={setDoneConnecting} 
-            token={token} 
-            setToken={setToken} 
-            userProfile={userProfile} 
-            setUserProfile={setUserProfile} 
-            getUserProfile={getUserProfile}/>}
-      </main>
-    </div>
+      {account && doneConnecting && token && userProfile ? 
+        <MemeCollection 
+          account={account} 
+          deactivate={deactivate}/>
+      : <ConnectWalletButton 
+          activateBrowserWallet={activateBrowserWallet} 
+          account={account} 
+          setDoneConnecting={setDoneConnecting} 
+          token={token} 
+          setToken={setToken} 
+          userProfile={userProfile} 
+          setUserProfile={setUserProfile} 
+          getUserProfile={getUserProfile}/>}
+    </main>
   )
 }

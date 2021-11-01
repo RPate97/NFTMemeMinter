@@ -13,6 +13,7 @@ import { useTokenBalance } from '@usedapp/core';
 import { VoteButton } from "components/common-ui/wallet-bar/voteButton";
 import { MintButton } from "components/common-ui/wallet-bar/mintButton";
 import { useDisclosure } from "@chakra-ui/react";
+import { PlayerDankness } from "components/common-ui/wallet-bar/danknessTier"; 
 
 import Web3 from 'web3';
 const axios = require('axios');
@@ -33,11 +34,12 @@ export const ButtonBar = ({handleOpenModal, account}) => {
         <div style={{position: "sticky", top: 0}}>
             <Flex
                 flexDirection="row"
-                alignItems="end"
+                alignItems="center"
                 justifyContent="center"
-                h="20">
+                h="75">
                 <Logo />
                 <Spacer />
+                <PlayerDankness account={account} />
                 <Box display="flex"
                     height="20"
                     alignItems="center"

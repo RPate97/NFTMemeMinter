@@ -9,6 +9,9 @@ import ImageListItem from '@material-ui/core/ImageListItem';
 import { styles } from '../../../styles/styles';
 import Button from '@material-ui/core/Button';
 import { WalletBar } from 'components/common-ui/wallet-bar'
+import {
+    Box,
+} from "@chakra-ui/react";
 
 const templates = [
     {
@@ -134,18 +137,33 @@ export const Gallery = ({account, deactivate}) => {
         setMakeTemplateModalOpen(false);
     };
 
+    let userProfile;
+    if (typeof window !== 'undefined') {
+        userProfile = JSON.parse(localStorage.getItem("userProfile"));
+    }
+
     return (
         <div>  
             <main style={styles.main}>
                 <WalletBar account={account} deactivate={deactivate} />
                 <Button variant="outlined" style={{color: "white", borderColor: "white", marginRight: "auto", marginBottom: 10, marginLeft: 10}} onClick={handleOpenMakeTemplate}>Create a new template</Button>
-                <ImageList rowHeight={500} cols={3}>
-                    {templates.map((el, index) => (
+                {/* <ImageList rowHeight={500} cols={3}>
+                    {userProfile && templates && templates.map((el, index) => (
                         <ImageListItem key={el.src} cols={el.cols || 1}>
-                            <GalleryMeme meme={el} userAddress={account}/>    
+                            <GalleryMeme meme={el} userAddress={account} userProfile={userProfile} />    
                         </ImageListItem>
                     ))}                     
-                </ImageList>
+                </ImageList> */}
+                <Box
+                    padding={2}
+                    w="100%"
+                    mx="auto"
+                    sx={{ columnCount: [1, 2, 3, 4], columnGap: "8px" }}
+                >
+                    {userProfile && templates && templates.map((el, index) => (
+                        <GalleryMeme key={el.src} meme={el} userAddress={account} userProfile={userProfile} />  
+                    ))}  
+                </Box>
                 <Modal
                     open={makeTemplateModalOpen}
                     onClose={handleCloseMakeTemplate}

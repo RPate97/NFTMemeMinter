@@ -5,7 +5,6 @@ export function MinterImage(props) {
     return (
         <>
             {props.src ? (<Image
-                style={{...props.style}}
                 unoptimized={true}
                 alt="meme"
                 src={props.src}

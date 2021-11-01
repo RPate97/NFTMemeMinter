@@ -4,10 +4,10 @@ import { MemeModal } from 'components/MemeCollection/memeModal';
 import { useContractCall } from "@usedapp/core";
 import abi from 'contracts/dankminter-abi.json';
 const axios = require('axios');
-import Web3 from 'web3';
+// import Web3 from 'web3';
 
 export const MemeContainer = ({account, memeHash}) => {
-  const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
+  // const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
   const [imageURI, setImageURI] = useState();
   const [data, setData] = useState();
   const CONTRACT_INTERFACE = new ethers.utils.Interface(abi);
@@ -15,8 +15,6 @@ export const MemeContainer = ({account, memeHash}) => {
   const gateway = "https://dankminter.mypinata.cloud/ipfs/";
 
   function useMeme() {
-    console.log(MEME_ADDRESS);
-    const bytesHash = memeHash.substring(2);
     try {
         const meme = useContractCall(memeHash && {
             abi: CONTRACT_INTERFACE, 
@@ -24,8 +22,12 @@ export const MemeContainer = ({account, memeHash}) => {
             method: "getMemeWithHash", 
             args: [memeHash.valueOf()]
         });
-        console.log(meme);
-        return meme;            
+        if (meme) {
+          console.log(meme[0]);
+          return meme[0];            
+        } else {
+          return undefined;
+        }
     } catch (e) {
         console.error(e);
     }
@@ -57,6 +59,9 @@ export const MemeContainer = ({account, memeHash}) => {
         score={meme.score}
         postings={meme.postings} 
         memeId={meme.id}
+        danknessTier={meme.danknessTier}
+        experience={meme.experience}
+        requiredExperience={meme.requiredExperience}
         imageURI={imageURI} 
         name={data.name}
         description={data.description} 

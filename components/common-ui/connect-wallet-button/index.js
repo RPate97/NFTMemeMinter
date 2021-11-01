@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Flex, Text, Button } from "@chakra-ui/react";
+import { Flex, Text, Button, Spacer } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 import { AuthModal } from "components/common-ui/connect-wallet-button/authModal";
 import { styles } from 'styles/styles.js'
@@ -155,16 +155,25 @@ export const ConnectWalletButton = ({activateBrowserWallet, account, setDoneConn
                 justifyContent="center"
                 alignContent="center"
                 h="100vh">
+                <Spacer />
                 <h1 style={styles.walletBar.logo}>
                     Welcome to DankMinter          
                 </h1>
                 <Text color="white" maxWidth={700} textAlign="center" fontSize={20}>
-                    The meme generator that mints NFTs of your memes.
+                    The meme generator that mints unique NFTs of your memes.
                 </Text>
                 <Text color="white" maxWidth={700} textAlign="center">
                     Own your work, capture the value you create, collect truly one of a kind NFT memes.
                 </Text>
-                <Button mt={10} onClick={handleConnectWallet}> Connect Wallet </Button>
+                <Button mt={10} onClick={handleConnectWallet}> Connect MetaMask Wallet </Button>
+                <Text color="white" maxWidth={700} textAlign="center" mt={10}>
+                    {"Don't have MetaMask?"}
+                </Text>
+                <Button mt={1} onClick={handleConnectWallet}> Install MetaMask </Button>
+                <Spacer />
+                <Text color="white" textAlign="center">
+                    {"We cannot guarentee alternative wallets will work correctly. Improved wallet support is in our roadmap. If you have a specific wallet you would like to see, please let us know in the Discord! Thank your for your patience."}
+                </Text>
             </Flex>   
             <AuthModal nonce={nonce} authenticate={authenticate} onClose={onClose} isOpen={isOpen} tabIndex={authTabIndex} addTokens={addCryptoTokens} updateProfile={updateProfile} />
         </div>

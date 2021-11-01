@@ -117,6 +117,31 @@
 	  "inputs": [
 		{
 		  "indexed": false,
+		  "internalType": "bytes32",
+		  "name": "memeHash",
+		  "type": "bytes32"
+		},
+		{
+		  "indexed": false,
+		  "internalType": "address",
+		  "name": "owner",
+		  "type": "address"
+		},
+		{
+		  "indexed": false,
+		  "internalType": "string",
+		  "name": "message",
+		  "type": "string"
+		}
+	  ],
+	  "name": "FailedMint",
+	  "type": "event"
+	},
+	{
+	  "anonymous": false,
+	  "inputs": [
+		{
+		  "indexed": false,
 		  "internalType": "address",
 		  "name": "source",
 		  "type": "address"
@@ -410,24 +435,6 @@
 	{
 	  "inputs": [
 		{
-		  "internalType": "uint256",
-		  "name": "_memeId",
-		  "type": "uint256"
-		},
-		{
-		  "internalType": "string",
-		  "name": "posting",
-		  "type": "string"
-		}
-	  ],
-	  "name": "addPosting",
-	  "outputs": [],
-	  "stateMutability": "nonpayable",
-	  "type": "function"
-	},
-	{
-	  "inputs": [
-		{
 		  "internalType": "address",
 		  "name": "to",
 		  "type": "address"
@@ -600,14 +607,14 @@
 			  "type": "uint256"
 			},
 			{
+			  "internalType": "uint256",
+			  "name": "requiredExperience",
+			  "type": "uint256"
+			},
+			{
 			  "internalType": "address",
 			  "name": "creator",
 			  "type": "address"
-			},
-			{
-			  "internalType": "string[]",
-			  "name": "postings",
-			  "type": "string[]"
 			}
 		  ],
 		  "internalType": "struct DankMinter.Meme",
@@ -661,14 +668,14 @@
 			  "type": "uint256"
 			},
 			{
+			  "internalType": "uint256",
+			  "name": "requiredExperience",
+			  "type": "uint256"
+			},
+			{
 			  "internalType": "address",
 			  "name": "creator",
 			  "type": "address"
-			},
-			{
-			  "internalType": "string[]",
-			  "name": "postings",
-			  "type": "string[]"
 			}
 		  ],
 		  "internalType": "struct DankMinter.Meme",
@@ -722,38 +729,19 @@
 			  "type": "uint256"
 			},
 			{
+			  "internalType": "uint256",
+			  "name": "requiredExperience",
+			  "type": "uint256"
+			},
+			{
 			  "internalType": "address",
 			  "name": "creator",
 			  "type": "address"
-			},
-			{
-			  "internalType": "string[]",
-			  "name": "postings",
-			  "type": "string[]"
 			}
 		  ],
 		  "internalType": "struct DankMinter.Meme[]",
 		  "name": "",
 		  "type": "tuple[]"
-		}
-	  ],
-	  "stateMutability": "view",
-	  "type": "function"
-	},
-	{
-	  "inputs": [
-		{
-		  "internalType": "address",
-		  "name": "_userAddress",
-		  "type": "address"
-		}
-	  ],
-	  "name": "getNumStashedMemes",
-	  "outputs": [
-		{
-		  "internalType": "uint256",
-		  "name": "",
-		  "type": "uint256"
 		}
 	  ],
 	  "stateMutability": "view",
@@ -785,6 +773,91 @@
 		  "internalType": "struct LibPart.Part[]",
 		  "name": "",
 		  "type": "tuple[]"
+		}
+	  ],
+	  "stateMutability": "view",
+	  "type": "function"
+	},
+	{
+	  "inputs": [
+		{
+		  "internalType": "address",
+		  "name": "_userAddress",
+		  "type": "address"
+		}
+	  ],
+	  "name": "getUserInfo",
+	  "outputs": [
+		{
+		  "components": [
+			{
+			  "internalType": "bytes32",
+			  "name": "memeHash",
+			  "type": "bytes32"
+			},
+			{
+			  "internalType": "string",
+			  "name": "uri",
+			  "type": "string"
+			},
+			{
+			  "internalType": "uint256",
+			  "name": "memeId",
+			  "type": "uint256"
+			},
+			{
+			  "internalType": "uint256",
+			  "name": "score",
+			  "type": "uint256"
+			},
+			{
+			  "internalType": "uint256",
+			  "name": "danknessTier",
+			  "type": "uint256"
+			},
+			{
+			  "internalType": "uint256",
+			  "name": "experience",
+			  "type": "uint256"
+			},
+			{
+			  "internalType": "uint256",
+			  "name": "requiredExperience",
+			  "type": "uint256"
+			},
+			{
+			  "internalType": "address",
+			  "name": "creator",
+			  "type": "address"
+			}
+		  ],
+		  "internalType": "struct DankMinter.Meme[]",
+		  "name": "memes",
+		  "type": "tuple[]"
+		},
+		{
+		  "internalType": "uint256",
+		  "name": "cumulativeDankness",
+		  "type": "uint256"
+		}
+	  ],
+	  "stateMutability": "view",
+	  "type": "function"
+	},
+	{
+	  "inputs": [
+		{
+		  "internalType": "address",
+		  "name": "_userAddress",
+		  "type": "address"
+		}
+	  ],
+	  "name": "getUsersDankness",
+	  "outputs": [
+		{
+		  "internalType": "uint256",
+		  "name": "cumulativeDankness",
+		  "type": "uint256"
 		}
 	  ],
 	  "stateMutability": "view",
@@ -833,14 +906,14 @@
 			  "type": "uint256"
 			},
 			{
+			  "internalType": "uint256",
+			  "name": "requiredExperience",
+			  "type": "uint256"
+			},
+			{
 			  "internalType": "address",
 			  "name": "creator",
 			  "type": "address"
-			},
-			{
-			  "internalType": "string[]",
-			  "name": "postings",
-			  "type": "string[]"
 			}
 		  ],
 		  "internalType": "struct DankMinter.Meme[]",
@@ -877,6 +950,30 @@
 		  "internalType": "bool",
 		  "name": "isOperator",
 		  "type": "bool"
+		}
+	  ],
+	  "stateMutability": "view",
+	  "type": "function"
+	},
+	{
+	  "inputs": [
+		{
+		  "internalType": "bytes32",
+		  "name": "_memeHash",
+		  "type": "bytes32"
+		}
+	  ],
+	  "name": "isOriginalHash",
+	  "outputs": [
+		{
+		  "internalType": "bool",
+		  "name": "",
+		  "type": "bool"
+		},
+		{
+		  "internalType": "uint256",
+		  "name": "",
+		  "type": "uint256"
 		}
 	  ],
 	  "stateMutability": "view",
@@ -974,24 +1071,6 @@
 		}
 	  ],
 	  "stateMutability": "view",
-	  "type": "function"
-	},
-	{
-	  "inputs": [
-		{
-		  "internalType": "uint256",
-		  "name": "_memeId",
-		  "type": "uint256"
-		},
-		{
-		  "internalType": "uint256",
-		  "name": "index",
-		  "type": "uint256"
-		}
-	  ],
-	  "name": "removePosting",
-	  "outputs": [],
-	  "stateMutability": "nonpayable",
 	  "type": "function"
 	},
 	{
@@ -1236,6 +1315,49 @@
 	  "inputs": [
 		{
 		  "internalType": "uint256",
+		  "name": "index",
+		  "type": "uint256"
+		}
+	  ],
+	  "name": "tokenByIndex",
+	  "outputs": [
+		{
+		  "internalType": "uint256",
+		  "name": "",
+		  "type": "uint256"
+		}
+	  ],
+	  "stateMutability": "view",
+	  "type": "function"
+	},
+	{
+	  "inputs": [
+		{
+		  "internalType": "address",
+		  "name": "owner",
+		  "type": "address"
+		},
+		{
+		  "internalType": "uint256",
+		  "name": "index",
+		  "type": "uint256"
+		}
+	  ],
+	  "name": "tokenOfOwnerByIndex",
+	  "outputs": [
+		{
+		  "internalType": "uint256",
+		  "name": "",
+		  "type": "uint256"
+		}
+	  ],
+	  "stateMutability": "view",
+	  "type": "function"
+	},
+	{
+	  "inputs": [
+		{
+		  "internalType": "uint256",
 		  "name": "tokenId",
 		  "type": "uint256"
 		}
@@ -1262,6 +1384,19 @@
 	  "name": "tossACoin",
 	  "outputs": [],
 	  "stateMutability": "nonpayable",
+	  "type": "function"
+	},
+	{
+	  "inputs": [],
+	  "name": "totalSupply",
+	  "outputs": [
+		{
+		  "internalType": "uint256",
+		  "name": "",
+		  "type": "uint256"
+		}
+	  ],
+	  "stateMutability": "view",
 	  "type": "function"
 	},
 	{
@@ -1323,6 +1458,25 @@
 	  "name": "updateRoyalties",
 	  "outputs": [],
 	  "stateMutability": "nonpayable",
+	  "type": "function"
+	},
+	{
+	  "inputs": [
+		{
+		  "internalType": "address",
+		  "name": "_userAddress",
+		  "type": "address"
+		}
+	  ],
+	  "name": "userHasMinted",
+	  "outputs": [
+		{
+		  "internalType": "bool",
+		  "name": "",
+		  "type": "bool"
+		}
+	  ],
+	  "stateMutability": "view",
 	  "type": "function"
 	},
 	{

@@ -35,7 +35,7 @@ export default async function handler(req, res) {
                 const nonce = require("crypto").randomBytes(64).toString('hex');
                 await userCollection.updateOne({address: {$eq: address}}, { $set: {nonce: nonce}});
                 // JSON web token for the owner that expires in 24 hours
-                var token = jwt.sign({user: address}, process.env.JWT_KEY,  { expiresIn: '1d' });
+                var token = jwt.sign({user: address, handle: user.handle}, process.env.JWT_KEY,  { expiresIn: '1d' });
                 // return token
                 res.status(200).json({ token: token });
             } else {

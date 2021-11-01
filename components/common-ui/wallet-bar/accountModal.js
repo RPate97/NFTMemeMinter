@@ -25,6 +25,7 @@ export const AccountModal = ({isOpen, onClose, account, deactivate}) => {
     function handleDeactivateAccount() {
         deactivate();
         localStorage.removeItem("token");
+        localStorage.removeItem("userProfile");
         onClose();
         router.replace('/');
     }

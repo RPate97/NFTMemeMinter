@@ -13,6 +13,8 @@ import {
     ModalCloseButton,
     Text,
     Spacer,
+    Progress,
+    Divider,
   } from "@chakra-ui/react";
   import { AppColors } from "styles/styles";
 import { SacrificeButton } from "components/MemeCollection/sacrifice"
@@ -21,11 +23,12 @@ import { VoteButton } from "components/MemeCollection/vote"
 import { useTokenBalance } from '@usedapp/core'
 
 
-export const MemeModal = ({userAddress, contract, isOpen, onClose, hash, score, postings, memeId, imageURI, name, description, creatorName, printNum, creationDate, totalMinted}) => {
+export const MemeModal = ({userAddress, contract, isOpen, onClose, hash, score, postings, memeId, imageURI, name, description, creatorName, printNum, creationDate, totalMinted, experience, requiredExperience, danknessTier}) => {
     let treeFiddyBalance = useTokenBalance(process.env.NEXT_PUBLIC_TREE_FIDDY_ADDRESS, userAddress);
-
+    console.log(experience);
+    console.log(requiredExperience);
     return (
-        <Modal isOpen={isOpen} onClose={onClose} isCentered size="md">
+        <Modal isOpen={isOpen} onClose={onClose} size="md">
             <ModalOverlay />
             <ModalContent
                 background={AppColors.buttonBackground}
@@ -59,6 +62,10 @@ export const MemeModal = ({userAddress, contract, isOpen, onClose, hash, score, 
                             mb={3}
                             mt={3}
                         >
+                            <Text color="gray.400" fontSize="sm">
+                                {description}
+                            </Text>
+                            <Divider mt={3} mb={3} />
                             <Flex flexDirection="row" justifyContent="space-between" alignItems="start" mb={3}>
                                 <Flex flexDirection="column" justifyContent="space-between" alignItems="start" mb={3}>
                                     <Text color="gray.400" fontSize="sm">
@@ -66,9 +73,6 @@ export const MemeModal = ({userAddress, contract, isOpen, onClose, hash, score, 
                                     </Text>
                                     <Text color="gray.400" fontSize="sm">
                                         Creation Date: {(new Date(creationDate)).toDateString()}
-                                    </Text>
-                                    <Text color="gray.400" fontSize="sm">
-                                        Around the Web: {postings}
                                     </Text>
                                 </Flex>
                                 <Flex flexDirection="column" justifyContent="space-between" alignItems="start" mb={3}>
@@ -83,10 +87,19 @@ export const MemeModal = ({userAddress, contract, isOpen, onClose, hash, score, 
                                     </Text>
                                 </Flex>                                
                             </Flex>
-
                             <Text color="gray.400" fontSize="sm">
-                                Description: {description}
+                                Dankness Tier: {danknessTier.toString()}
                             </Text>
+                            <Progress mb={3} size="md" value={experience} min={0} max={requiredExperience} borderRadius="lg" />
+                            <Flex flexDir="row"> 
+                                <Text color="gray.400" fontSize="sm">
+                                    Fake Internet Points: {experience.toString()}
+                                </Text>
+                                <Spacer />
+                                <Text color="gray.400" fontSize="sm">
+                                    Required: {requiredExperience.toString()}
+                                </Text>
+                            </Flex>
                         </Box>                        
                     </Flex>
                 </ModalBody>
@@ -101,6 +114,9 @@ export const MemeModal = ({userAddress, contract, isOpen, onClose, hash, score, 
                     <SacrificeButton treeFiddyBalance={treeFiddyBalance} memeId={memeId}/>
                     <Spacer />
                     <VoteButton memeId={memeId} upDown={false} />
+                    <Text color="gray.400" fontSize="md" fontWeight="bold" ml={1} textAlign="center">
+                        {score.toString()}
+                    </Text>
                     <VoteButton memeId={memeId} upDown={true} />
                 </ModalFooter>
             </ModalContent>
