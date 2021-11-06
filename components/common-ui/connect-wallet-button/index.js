@@ -85,12 +85,6 @@ export const ConnectWalletButton = ({activateBrowserWallet, account, setDoneConn
                 },
                 },
             });
-
-            if (wasAdded) {
-                console.log('Thanks for your interest!');
-            } else {
-                console.log('Your loss!');
-            }
         } catch (error) {
             console.log(error); 
         }
@@ -109,16 +103,9 @@ export const ConnectWalletButton = ({activateBrowserWallet, account, setDoneConn
                 },
                 },
             });
-
-            if (wasAdded) {
-                console.log('Thanks for your interest!');
-            } else {
-                console.log('Your loss!');
-            }
         } catch (error) {
             console.log(error); 
         }
-        console.log("moving tabs");
         if (userProfile && userProfile.handle) {
             onClose();
             setDoneConnecting(true);
@@ -129,23 +116,11 @@ export const ConnectWalletButton = ({activateBrowserWallet, account, setDoneConn
     }
 
     async function updateProfile(handle) {
-        console.log(handle);
         const res = await axios.post('/api/createProfile', {token: token, handle: handle, addedTokens: true, memeIndex: 0}); 
-        console.log(res);
         onClose();
         setDoneConnecting(true);
         setUserProfile({ handle: handle, addedTokens: true });
     }
-    
-    async function testAuthentication() {
-        if (token) {
-            const res = await axios.post('/api/authTest', {token: token});
-            console.log(res);
-        } else {
-            console.log("token not set");
-        }
-    }  
-
 
     return (
         <div style={{position: "sticky", top: 0}}>

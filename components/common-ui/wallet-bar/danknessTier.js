@@ -20,8 +20,6 @@ export const PlayerDankness = ({account}) => {
     const MEME_ADDRESS = process.env.NEXT_PUBLIC_DANKMINTER_ADDRESS;
 
     function convertDanknessToTier(bigDankness) {
-        console.log("big dankness");
-        console.log(bigDankness);
         if (bigDankness.gte(0) && bigDankness.lt(10)) {
             return 1;
         } else if (bigDankness.gte(10) && bigDankness.lt(100)) {
@@ -45,16 +43,12 @@ export const PlayerDankness = ({account}) => {
                 method: "getUsersDankness", 
                 args: [account]
             });
-            console.log("dankness:");
-            console.log(dankness);
             if (dankness[0] === undefined) {
                 return convertDanknessToTier(0);
             } else {
                 return convertDanknessToTier(dankness[0]);            
             }
-        } catch (e) {
-            console.error(e);
-        }
+        } catch (e) {}
     }
   
     let playerDankness = useUserDankness();

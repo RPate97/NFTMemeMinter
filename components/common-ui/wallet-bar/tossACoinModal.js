@@ -33,14 +33,9 @@ export const TossACoinModal = ({userAddress, isOpen, onClose, treeFiddyBalance})
     const { state, send } = useContractFunction(contract, 'tossACoin', { transactionName: 'TipDev' })
 
     const tossACoin = () => {
-        console.log(amount);
         const weiAmt = web3.utils.toWei(amount.toString(), "ether");
         send(weiAmt);
     }
-
-    useEffect(() => {
-        console.log(state);
-    }, [state])
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} isCentered size="2xl">

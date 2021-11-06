@@ -21,13 +21,9 @@ export default class MemeMinterTemplate extends React.Component {
     constructor(props) {
         super(props);
         if (typeof window !== "undefined") {
-            console.log(window.location);
             let search = window.location.search;
             let jsonState = decodeURIComponent(search).replace("?state=", "");
-            console.log(jsonState);
-            const state = JSON.parse(jsonState);
-            console.log(state);
-            this.state = state;
+            this.state = JSON.parse(jsonState);
         }
     }
 

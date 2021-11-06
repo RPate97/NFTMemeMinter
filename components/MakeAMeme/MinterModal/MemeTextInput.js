@@ -4,13 +4,11 @@ import Slider from '@material-ui/core/Slider'
 
 export const MemeTextInput = ({handleTextInfoChange, textInfo, index}) => {
     const handleRotationChange = (event, newValue) => {
-        console.log("handle rotation change");
         textInfo.rotation = newValue;
         handleTextInfoChange(textInfo, index);
     };
 
     const changeText = (event, index) => {
-        console.log("handle text change");
         textInfo.text = event.currentTarget.value;
         handleTextInfoChange(textInfo, index);
     }

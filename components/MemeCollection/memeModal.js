@@ -25,8 +25,6 @@ import { useTokenBalance } from '@usedapp/core'
 
 export const MemeModal = ({userAddress, contract, isOpen, onClose, hash, score, postings, memeId, imageURI, name, description, creatorName, printNum, creationDate, totalMinted, experience, requiredExperience, danknessTier}) => {
     let treeFiddyBalance = useTokenBalance(process.env.NEXT_PUBLIC_TREE_FIDDY_ADDRESS, userAddress);
-    console.log(experience);
-    console.log(requiredExperience);
     return (
         <Modal isOpen={isOpen} onClose={onClose} size="md">
             <ModalOverlay />

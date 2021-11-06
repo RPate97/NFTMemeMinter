@@ -23,7 +23,6 @@ export const MemeContainer = ({account, memeHash}) => {
             args: [memeHash.valueOf()]
         });
         if (meme) {
-          console.log(meme[0]);
           return meme[0];            
         } else {
           return undefined;
@@ -37,10 +36,8 @@ export const MemeContainer = ({account, memeHash}) => {
 
   useEffect(() => {
     if (meme) {
-      console.log(meme);
       async function getData() {
         const data = (await axios.get(meme.uri)).data;
-        console.log(data);
         const newURI = data.image.replace('ipfs://', gateway);
         setImageURI(newURI);  
         setData(data);        

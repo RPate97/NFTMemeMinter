@@ -13,8 +13,6 @@ export function MemeCollection({account, deactivate}) {
   const MEME_ADDRESS = process.env.NEXT_PUBLIC_DANKMINTER_ADDRESS;
   
   function useUsersMemes() {
-    console.log("account:");
-    console.log(account);
     try {
       const usersMemes = useContractCall({
           abi: CONTRACT_INTERFACE, 
@@ -42,7 +40,6 @@ export function MemeCollection({account, deactivate}) {
           sx={{ columnCount: [1, 2, 3, 4], columnGap: "8px" }}
         >
           {memes[0].map((el) => {
-            console.log(el.requiredExperience);
             return (
               <CollectionMeme key={el.memeHash} hash={el.memeHash} score={el.score} uri={el.uri} postings={el.postings} memeId={el.memeId} userAddress={account} experience={el.experience} requiredExperience={el.requiredExperience} danknessTier={el.danknessTier} />
             )

@@ -1,6 +1,5 @@
 import React from 'react';
 import { FormGroup, Label } from 'reactstrap';
-// import Slider from '@material-ui/core/Slider';
 import { MinterAutoSizedText } from './MinterAutoSizedText';
 import QRCode from '../../qrCode';
 import * as htmlToImage from 'html-to-image';
@@ -39,40 +38,25 @@ const axios = require('axios');
 export class MemeMinterModal extends React.Component {
     constructor(props) {
         super(props);
-        var memeWidth = 500;
-        var memeHeight = (memeWidth / (this.props.meme.width / this.props.meme.height));
+        var memeWidth = props.template.width;
+        var memeHeight = props.template.height;
+        let hashCaptions = [];
+        props.template.textLocations.forEach(() => {
+            hashCaptions.push("");
+        });
         this.state = {
             borderStyle: {
                 border: "solid 1px #ddd",
                 borderStyle: "dashed",
                 borderRadius: 10,
             },
-            textLocations: [
-                {
-                    x: (memeWidth - 400) / 2,
-                    y: (memeWidth / (this.props.meme.width / this.props.meme.height)) / 20,
-                    text: "",
-                    rotation: 0,
-                    height: 60,
-                    width: 400,
-                    key: 0,
-                },
-                {
-                    x: (memeWidth - 400) / 2,
-                    y: (memeWidth / (this.props.meme.width / this.props.meme.height)) - (memeWidth / (this.props.meme.width / this.props.meme.height)) / 6.5,
-                    text: "",
-                    rotation: 0,
-                    height: 60,
-                    width: 400,
-                    key: 1,
-                }
-            ],
-            templateId: 1,
-            templateUrl: this.props.meme.src,
-            memeWidth: memeWidth,
-            memeHeight: memeHeight,
+            textLocations: props.template.textLocations,
+            templateId: props.template._id,
+            templateUrl: props.template.src,
+            memeWidth: props.template.width,
+            memeHeight: props.template.height,
             memeURL: "https://www.google.com",
-            hashCaptions: ["", ""],
+            hashCaptions: hashCaptions,
             tabIndex: 0,
             mintToAddress: this.props.userAddress,
             userProfile: this.props.userProfile,
@@ -88,6 +72,8 @@ export class MemeMinterModal extends React.Component {
             // Sorry! No Web Storage support..
             return null;
         }
+
+        this.templateName = this.props.template.templateName;
 
         this.mintMeme = this.mintMeme.bind(this);
         this.updateBorderStyle = this.updateBorderStyle.bind(this);
@@ -146,7 +132,6 @@ export class MemeMinterModal extends React.Component {
     };
 
     updateBorderStyle = (newBorderStyleObject) => {
-        console.log("set state");
         this.setState(prevState => ({
             ...prevState,
             borderStyle: newBorderStyleObject,
@@ -162,7 +147,6 @@ export class MemeMinterModal extends React.Component {
                 captions.push(this.state.textLocations.text);
             }
         }
-        console.log(captions);
         this.setState(prevState => ({
             ...prevState,
             textLocations: prevState.textLocations.map(el => el.key === index ? { ...el, text: newText } : el),
@@ -177,18 +161,21 @@ export class MemeMinterModal extends React.Component {
         }));
     }
 
-    changeSectionSize = (newWidth, newHeight, index) => {
-        this.state.textLocations[index].height = newHeight;
+    changeSectionSize(newWidth, newHeight, index) {
+        /*eslint-disable */
+        this.state.textLocations[index].height = newHeight; 
         this.state.textLocations[index].width = newWidth;
+        /*eslint-enable */
     }
 
-    changeSectionLocation = (newX, newY, index) => {
+    changeSectionLocation(newX, newY, index) {
+        /*eslint-disable */
         this.state.textLocations[index].x = newX;
         this.state.textLocations[index].y = newY;
+        /*eslint-enable */
     }
     
     changeTab = (index) => {
-        console.log("change tab: " + index);
         this.setState(prevState => ({
             ...prevState,
             tabIndex: index,
@@ -212,7 +199,13 @@ export class MemeMinterModal extends React.Component {
                     // bgGradient="linear-gradient(to right, #0f0c29, #302b63, #24243e)"
                     borderRadius="3xl">
                     <ModalHeader color="white" px={4} fontSize="lg" fontWeight="medium">
-                        Template Name Goes Here
+                        <Text ml={5} color="white" fontSize="md" style={{
+                            color: "#ffffff",
+                            fontFamily: "SpaceMono-Regular",
+                            fontSize: 24,
+                        }}>
+                            {this.templateName}
+                        </Text> 
                     </ModalHeader>
                     <ModalCloseButton
                         color="white"

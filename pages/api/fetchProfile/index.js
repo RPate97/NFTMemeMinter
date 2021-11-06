@@ -12,10 +12,8 @@ const handler = async (req, res) => {
     try {
         await client.connect();
         const userCollection = client.db("primary").collection("users");
-        console.log("fetching user");
         const user = await userCollection.findOne({address: {$eq: address}});
         if (user) {
-            console.log(user);
             res.status(200).json({ user: user });
         } else {
             res.status(404).json({ error: 'user not found' });

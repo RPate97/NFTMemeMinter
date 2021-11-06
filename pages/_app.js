@@ -13,7 +13,7 @@ const config = {
 
 function MyApp({ Component, pageProps, router }) {
 
-  if (router.pathname.startsWith('/memetemplate') | router.pathname.startsWith('/memeTemplate')) {
+  if (router.pathname.startsWith('/memetemplate') | router.pathname.startsWith('/memeTemplate') | router.pathname.startsWith('/admin')) {
     return (
       <ChakraProvider>
         <Component {...pageProps} />  

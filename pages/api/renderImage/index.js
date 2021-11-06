@@ -13,7 +13,6 @@ export default async function handler(req, res) {
 
     // Generate the full URL out of the given path (GET parameter)
     const url = "localhost:3000/memeTemplate?state=" + encodeURIComponent(JSON.stringify(req.body.state));
-    console.log(url);
     await page.goto(url, {
         timeout: 30 * 1000
     })

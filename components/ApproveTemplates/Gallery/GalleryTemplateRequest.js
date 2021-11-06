@@ -1,9 +1,9 @@
 import React from 'react'
 import { Button, Box, Image } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
-import { MemeMinterModal } from "components/MakeAMeme/MinterModal";
+import ReviewTemplateRequestModal from 'components/ApproveTemplates/ReviewTemplateRequestModal';
 
-export const GalleryMeme = ({userAddress, template, userProfile}) => {
+export const GalleryTemplateRequest = ({template}) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
@@ -34,7 +34,7 @@ export const GalleryMeme = ({userAddress, template, userProfile}) => {
                     alt="Alt"
                 />                
             </Button>
-            <MemeMinterModal userAddress={userAddress} template={template} isOpen={isOpen} onClose={onClose} userProfile={userProfile} />
+            <ReviewTemplateRequestModal template={template} isOpen={isOpen} onClose={onClose} />
         </Box>
     )
 }

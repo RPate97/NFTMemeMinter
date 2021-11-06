@@ -9,13 +9,11 @@ const handler = async (req, res) => {
     // connect to database
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     await client.connect();
-    console.log("0");
     let memesToMint;
     // fetch 10 memes from mint queue
     try {
         const mintQueueCollection = client.db("primary").collection("mintQueue");
         memesToMint = await mintQueueCollection.find().sort({created: 1}).limit(10).toArray();
-        console.log(memesToMint);
     } catch (e) {
         console.error(e);
         res.status(500).send(e.message);
@@ -25,7 +23,6 @@ const handler = async (req, res) => {
     if (memesToMint.length == 0) {
         res.status(200).send("success, no memes in queue");
     }
-    console.log("1");
     // mint addresses
     let firstMintAddresses = [];
     // create batch mint array
@@ -45,7 +42,6 @@ const handler = async (req, res) => {
             }
         }
     }
-    console.log("2");
     // batch mint
     const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_DANKMINTER_ADDRESS;
     const contractsDirectory = path.resolve(process.cwd(), "contracts");
@@ -56,12 +52,9 @@ const handler = async (req, res) => {
     const provider = new ethers.providers.JsonRpcProvider();
     const signer = provider.getSigner();
     const dankMinter = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
-    console.log("2.5");
-    console.log(mintBatch);
     const receipt = await (await dankMinter.batchMintMemes(mintBatch)).wait(1);
     console.log("NFT memes minted:", receipt);
 
-    console.log("3");
     // get new meme events
     let newMemeEvents = [];
     let failedMintEvents = [];
@@ -127,7 +120,6 @@ const handler = async (req, res) => {
         }
     }    
 
-    console.log("5");
     // TODO - handle failures which = failed mint
     await client.close();
     res.status(200).send("successfully minted xxx memes");

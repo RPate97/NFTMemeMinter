@@ -22,7 +22,6 @@ async function renderImage(state) {
   
     // Generate the full URL out of the given path (GET parameter)
     const url = "localhost:3000/memeTemplate?state=" + encodeURIComponent(JSON.stringify(state));
-    console.log(url);
     await page.goto(url, {
         timeout: 30 * 1000
     })
@@ -38,7 +37,6 @@ async function renderImage(state) {
 function wait(ms) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            console.log("Done waiting");
             resolve(ms)
         }, ms )
     });
@@ -84,18 +82,9 @@ async function hasAvailableTreeFiddyBalance(userAddress, client, abi) {
             }
             const availableBalance = officialBalance.sub(web3.utils.toWei(user.reservedTreeFiddyBalance.toString(), "ether"));
             const weiRequirement = web3.utils.toWei("35", "ether");
-            console.log("checking balance");
-            console.log(availableBalance.toString());
-            console.log(weiRequirement.toString());
             if (availableBalance.gte(weiRequirement)) {
-                console.log("balance available");
-                console.log(officialBalance);
-                console.log(user.reservedTreeFiddyBalance);
                 return [true, user.reservedTreeFiddyBalance, officialBalance, user.mintedBefore];
             } else {
-                console.log("balance not available");
-                console.log(officialBalance);
-                console.log(user.reservedTreeFiddyBalance);
                 return [false, user.reservedTreeFiddyBalance, officialBalance, user.mintedBefore];
             }
         } else {
@@ -115,8 +104,6 @@ const handler = async(req, res) => {
         "utf8"
     );
 
-    console.log("1");
-
     // TODO - validate all inputs
 
     // get template id from request
@@ -127,7 +114,6 @@ const handler = async(req, res) => {
     // connect to db
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     await client.connect();
-    console.log("2");
     // check available tree fiddy balance
     const hasAvailableBalance = await hasAvailableTreeFiddyBalance(req.user, client, abi);
     if (!hasAvailableBalance[0]) {
@@ -147,7 +133,6 @@ const handler = async(req, res) => {
     } else {
         mintedBefore = hasAvailableBalance[3];
     }
-    console.log("3");
 
     // get overlay captions
     let captions = [];
@@ -161,7 +146,6 @@ const handler = async(req, res) => {
     for (var i = 0; i < captions.length; i++) {
         textStr += captions[i];
     }
-    console.log("4");
     // calculate hash
     const encoded = web3.eth.abi.encodeParameters(['uint256', 'string'], [templateId, textStr])
     const memeHash = web3.utils.sha3(encoded, {encoding: 'hex'});
@@ -172,7 +156,6 @@ const handler = async(req, res) => {
         await client.close();
         return res.status(409).send("error, meme hash is not unique");
     }
-    console.log("5");
     // render image
     const imgStream = await renderImage(state);
 
@@ -188,14 +171,12 @@ const handler = async(req, res) => {
     };
     let ipfsHash = await pinata.pinFileToIPFS(imgStream, options).then((result) => {
         //handle results here
-        console.log(result);
         fs.unlink('/tmp/temp.png', () => {console.info("deleted temporary file")});
         return result.IpfsHash;
     }).catch((err) => {
         //handle error here
         console.log(err);
     });
-    console.log("6");
 
     // create metadata object
     let currentTime = Date.now();
@@ -220,7 +201,6 @@ const handler = async(req, res) => {
         ],
         memeHash: memeHash,
     };
-    console.log("7");
 
     let mintRequest = {
         metadata: metadata,
@@ -241,13 +221,11 @@ const handler = async(req, res) => {
       // TODO - handle reverting image pin + metadata update
       return res.status(500).json({ error: e.message })
     }
-    console.log("8");
     
     // increase reserved tree fiddy balance
     const userCollection = client.db("primary").collection("users");
     await userCollection.updateOne({address: {$eq: req.user}}, {$inc : {reservedTreeFiddyBalance: 35}});        
 
-    console.log("9");
     await client.close();
     return res.status(200).json({ message: "success, mint request queued", imageURI: `https://dankminter.mypinata.cloud/ipfs/${ipfsHash}`});
 }
