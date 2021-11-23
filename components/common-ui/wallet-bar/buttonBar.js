@@ -16,6 +16,7 @@ import { useDisclosure } from "@chakra-ui/react";
 import { PlayerDankness } from "components/common-ui/wallet-bar/danknessTier"; 
 
 import Web3 from 'web3';
+import { DankBookButton } from './dankbook';
 const axios = require('axios');
 
 export const ButtonBar = ({handleOpenModal, account}) => {
@@ -84,7 +85,7 @@ export const ButtonBar = ({handleOpenModal, account}) => {
                         </Flex>
                         <Flex direction="row" mt="8px">
                             <TossACoin treeFiddyBalance={treeFiddyBalance}/>
-                            <VoteButton />
+                            <DankBookButton />
                             <MintButton />                            
                         </Flex>
                     </Flex>                

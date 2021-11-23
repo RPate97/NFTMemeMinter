@@ -12,7 +12,10 @@ export const Logo = () => {
             marginLeft="10">
             <h1 style={styles.walletBar.logo}>
                 DankMinter          
-            </h1>            
+            </h1>  
+            <h4 style={styles.walletBar.presentedBy}>
+                Presented by The Booty Bay Yacht Club
+            </h4>            
         </Flex>
     )
 }

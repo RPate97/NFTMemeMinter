@@ -154,8 +154,13 @@ export const styles = {
     walletBar: {
         logo: {
             color: "#ffffff",
-            fontFamily: "SpaceMono-Regular",
+            fontFamily: "pacificoregular",
             fontSize: 40,
-        }
+        },
+        presentedBy: {
+            color: "#ffffff",
+            fontFamily: "pacificoregular",
+            fontSize: 16, 
+        },
     }
 }
