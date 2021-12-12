@@ -161,18 +161,18 @@ export class MemeMinterModal extends React.Component {
         }));
     }
 
-    changeSectionSize = (newWidth, newHeight, index) => {
-        this.setState(prevState => ({
-            ...prevState,
-            textLocations: prevState.textLocations.map(el => el.key === index ? { ...el, height: newHeight, width: newWidth } : el)
-        }));
+    changeSectionSize(newWidth, newHeight, index) {
+        /*eslint-disable */
+        this.state.textLocations[index].height = newHeight; 
+        this.state.textLocations[index].width = newWidth;
+        /*eslint-enable */
     }
 
-    changeSectionLocation = (newX, newY, index) => {
-        this.setState(prevState => ({
-            ...prevState,
-            textLocations: prevState.textLocations.map(el => el.key === index ? { ...el, x: newX, y: newY } : el)
-        }));
+    changeSectionLocation(newX, newY, index) {
+        /*eslint-disable */
+        this.state.textLocations[index].x = newX;
+        this.state.textLocations[index].y = newY;
+        /*eslint-enable */
     }
     
     changeTab = (index) => {

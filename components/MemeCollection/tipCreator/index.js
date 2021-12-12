@@ -99,7 +99,7 @@ export const TipCreatorButton = ({treeFiddyBalance, memeId}) => {
                             mb={3}
                         >
                             <Flex flexDirection="column" justifyContent="space-between" alignItems="center" mb={3} pl={5} pr={5}>
-                            <iframe width="560" height="315" src="https://www.youtube.com/embed/U9OQAySv184?start=49&autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                            <iframe width="560" height="315" src="https://www.youtube.com/embed/U9OQAySv184?start=49&autoplay=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
                                 {treeFiddyBalance && <Slider mt={5} defaultValue={amount} min={3.5} max={formatUnits(treeFiddyBalance, 18)} step={3.5} onChange={(value) => setAmount(value)}>
                                     <SliderTrack bg="red.100">
                                         <Box position="relative" right={10} />

@@ -43,6 +43,7 @@ export default class FreeStyleModal extends React.Component {
             textLocations: [],
             stickerLocations: [],
             layout: props.layout,
+            hashCaptions: [],
             userProfile: this.props.userProfile,
             mainCaption: "",
             memeName: "Why would I name my meme?",
@@ -51,8 +52,6 @@ export default class FreeStyleModal extends React.Component {
             rowWidth: layoutWidth / this.props.layout.rows,
             columnWidth: layoutHeight / this.props.layout.columns,
             selectedOptions: 0,
-            layoutBorderThickness: 4,
-            layoutBorderColor: "white",
         };
 
         // // get token
@@ -78,22 +77,6 @@ export default class FreeStyleModal extends React.Component {
         this.changeSectionLocation = this.changeSectionLocation.bind(this);
         this.changeStickerSize = this.changeStickerSize.bind(this);
         this.changeStickerLocation = this.changeStickerLocation.bind(this);
-        this.changeBorderColor = this.changeBorderColor(this);
-        this.changeBorderThickness = this.changeBorderThickness(this);
-    }
-
-    changeBorderThickness = (newThickness) => {
-        this.setState(prevState => ({
-            ...prevState,
-            layoutBorderThickness: newThickness,
-        }));
-    }
-
-    changeBorderColor = (newBorderColor) => {
-        this.setState(prevState => ({
-            ...prevState,
-            layoutBorderColor: newBorderColor,
-        }));
     }
 
     changeMemeName = (newMemeName) => {
@@ -116,9 +99,18 @@ export default class FreeStyleModal extends React.Component {
     };
 
     changeText = (newText, index) => {
+        let captions = [];
+        for (let i = 0; i < this.state.textLocations.length; i++) {
+            if (i == index) {
+                captions.push(newText);
+            } else {
+                captions.push(this.state.textLocations.text);
+            }
+        }
         this.setState(prevState => ({
             ...prevState,
             textLocations: prevState.textLocations.map(el => el.key === index ? { ...el, text: newText } : el),
+            hashCaptions: captions,
         }));
     }
 
@@ -130,17 +122,17 @@ export default class FreeStyleModal extends React.Component {
     }
 
     changeSectionSize = (newWidth, newHeight, index) => {
-        this.setState(prevState => ({
-            ...prevState,
-            textLocations: prevState.textLocations.map(el => el.key === index ? { ...el, height: newHeight, width: newWidth } : el)
-        }));
+        /*eslint-disable */
+        this.state.textLocations[index].height = newHeight; 
+        this.state.textLocations[index].width = newWidth;
+        /*eslint-enable */
     }
 
     changeSectionLocation = (newX, newY, index) => {
-        this.setState(prevState => ({
-            ...prevState,
-            textLocations: prevState.textLocations.map(el => el.key === index ? { ...el, x: newX, y: newY } : el)
-        }));
+        /*eslint-disable */
+        this.state.textLocations[index].x = newX;
+        this.state.textLocations[index].y = newY;
+        /*eslint-enable */
     }
 
     setSelectedOption = (selectedOptions) => {
@@ -329,7 +321,7 @@ export default class FreeStyleModal extends React.Component {
                                         <Grid m={0} p={0} templateColumns={`repeat(${this.state.layout.columns}, ${this.state.columnWidth}px)`} templateRows={`repeat(${this.state.layout.rows}, ${this.state.rowWidth}px)`} gap="0">
                                             {this.state.layout.layoutSections.map((el, index) => {
                                                 return (
-                                                    <LayoutSection key={el.key} el={el} layout={this.state.layout} addLayoutImage={this.addLayoutImage} removeLayoutImage={this.removeLayoutImage} layoutIndex={index} rowWidth={this.state.rowWidth} colWidth={this.state.columnWidth} layoutBorderThickness={this.state.layoutBorderThickness} layoutBorderColor={this.state.layoutBorderColor} />
+                                                    <LayoutSection key={el.key} el={el} layout={this.state.layout} addLayoutImage={this.addLayoutImage} removeLayoutImage={this.removeLayoutImage} layoutIndex={index} rowWidth={this.state.rowWidth} colWidth={this.state.columnWidth} />
                                                 )
                                             })}
                                         </Grid>
@@ -367,15 +359,7 @@ export default class FreeStyleModal extends React.Component {
                                         ))}
                                     </Flex>
                                 </Box>
-                                <OptionButtons 
-                                    addTextSection={this.addTextSection} 
-                                    addStickerLocation={this.addStickerLocation} 
-                                    setSelectedOption={this.setSelectedOption} 
-                                    selectedOptions={this.state.selectedOptions} 
-                                    changeBorderThickness={this.changeBorderThickness}
-                                    borderThickness={this.state.borderThickness}
-                                    changeBorderColor={this.changeBorderColor}
-                                    borderColor={this.borderColor} />   
+                                <OptionButtons addTextSection={this.addTextSection} addStickerLocation={this.addStickerLocation} setSelectedOption={this.setSelectedOption} selectedOptions={this.state.selectedOptions} />   
                             </Flex>
                             <Flex flexDirection="column" justifyContent="center" alignItems="center" mb={0} mt={0} p={0} ml={4} width={550} minHeight={this.state.memeHeight + 150}>
                                 <Input width={500} color="white" variant="outline" placeholder="Top Caption" maxLength="60" onChange={(e) => this.changeMainCaption(e.currentTarget.value)} />
