@@ -136,7 +136,6 @@ function createMemeMetadata(name, image, description, creator, creatorAddress, d
         score: score,
         upvotes: upvotes,
         downvotes: downvotes,
-        parent: parent,
         creationDate: creationDate,
         lineage: lineage,
         descendants: 0,

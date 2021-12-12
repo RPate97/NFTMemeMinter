@@ -11,6 +11,9 @@ export default async function handler(req, res) {
         await client.connect();
         const metadataCollection = client.db("primary").collection("metadata");
         const meme = await metadataCollection.findOne({tokenId: {$eq: tokenId}});
+        delete meme._id;
+        delete meme.state;
+        delete meme.redirectLink;
         if (meme) {
             res.status(200).json(JSON.stringify(meme, null, 4));
         } else {
