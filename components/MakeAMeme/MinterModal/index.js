@@ -260,7 +260,7 @@ export class MemeMinterModal extends React.Component {
                                                                     {this.state.mainCaption}
                                                                 </Text>                                                   
                                                             </Flex>
-                                                            <QRCode handle={this.state.userProfile.handle} memeIndex={this.state.userProfile.memeIndex} width={150} height={150} style={{marginRight: 0, width: 150, height: 150}}/>                           
+                                                            <QRCode handle={this.state.userProfile?.handle} memeIndex={this.state.userProfile?.memeIndex} width={150} height={150} style={{marginRight: 0, width: 150, height: 150}}/>                           
                                                         </Flex>
                                                         <div
                                                             id="svg_ref"

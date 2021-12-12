@@ -316,7 +316,7 @@ export default class FreeStyleModal extends React.Component {
                                                     {this.state.mainCaption}
                                                 </Text>                                                   
                                             </Flex>
-                                            <QRCode handle={this.state.userProfile.handle} memeIndex={this.state.userProfile.memeIndex} width={150} height={150} style={{marginRight: 0, width: 150, height: 150}}/>                           
+                                            <QRCode handle={this.state.userProfile?.handle} memeIndex={this.state.userProfile?.memeIndex} width={150} height={150} style={{marginRight: 0, width: 150, height: 150}}/>                           
                                         </Flex>
                                         <Grid m={0} p={0} templateColumns={`repeat(${this.state.layout.columns}, ${this.state.columnWidth}px)`} templateRows={`repeat(${this.state.layout.rows}, ${this.state.rowWidth}px)`} gap="0">
                                             {this.state.layout.layoutSections.map((el, index) => {
