@@ -135,7 +135,7 @@ export const ConnectWalletButton = ({activateBrowserWallet, account, setDoneConn
                     Welcome to DankMinter          
                 </h1>
                 <h4 style={styles.walletBar.presentedBy}>
-                    Presented by The Booty Bay Yacht Club
+                    By Dank Labs
                 </h4>   
                 <Text color="white" maxWidth={700} textAlign="center" fontSize={20} mt={3}>
                     The meme generator that mints unique NFTs of your memes.

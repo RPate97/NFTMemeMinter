@@ -11,11 +11,8 @@ import { LayoutButton } from './layoutButton';
 export const LayoutOptions = ({userProfile}) => {
     return (
         <Flex flexDirection="column">
-            <Text color="white" fontSize="3xl" ml={5} mb={0}>
-                Start A Dynasty
-            </Text>
-            <Text color="white" fontSize="md" ml={5} mb={3}>
-                {"In DankMinter memes are living things that can reproduce, evolve, and change over time. When you create a new type of meme, we call this starting a dynasty. Anyone can create a meme within your Dynasty by remixing your meme or one of it's decendents. Starting a new Dynasty costs 140 TreeFiddy Tokens."}
+            <Text color="white" fontSize="3xl" ml={5} mb={0} fontFamily="space_monoregular">
+                Start a Dynasty
             </Text>
             <Flex         
                 alignContent="start"   

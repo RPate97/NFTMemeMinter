@@ -14,7 +14,7 @@ export const Logo = () => {
                 DankMinter          
             </h1>  
             <h4 style={styles.walletBar.presentedBy}>
-                Presented by The Booty Bay Yacht Club
+                By Dank Labs
             </h4>            
         </Flex>
     )

@@ -1,5 +1,6 @@
 import playwright from 'playwright';
 import withAuth from "middleware/auth";
+import image from 'next/image';
 const pinataSDK = require('@pinata/sdk');
 const pinata = pinataSDK(process.env.PINATA_API_KEY, process.env.PINATA_API_SECRET);
 const { ethers } = require("ethers");
@@ -42,22 +43,22 @@ function wait(ms) {
     });
 }  
   
-async function hashIsUnique(memeHash, client, abi) {
+async function hashIsUnique(memeHash, client) {
     try {
         // check mint queue for hash
         const mintQueueCollection = client.db("primary").collection("mintQueue");
-        const memeToMint = await mintQueueCollection.findOne({memeHash: {$eq: memeHash}});
-        if (memeToMint?.memeHash) {
+        const m1 = await mintQueueCollection.findOne({hash: {$eq: memeHash}});
+        if (m1?.memeHash) {
             return false;
         } else {
-            // check blockchain for hash
-            const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_DANKMINTER_ADDRESS;
-            const provider = new ethers.providers.JsonRpcProvider();
-            const signer = provider.getSigner();
-            const dankMinter = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
-            const resp = await dankMinter.isOriginalHash(memeHash);
-            const isUnique = resp[0];
-            return isUnique;
+            // check metadata collection for hash
+            const metadataCollection = client.db("primary").collection("metedata");
+            const m2 = await metadataCollection.findOne({hash: {$eq: memeHash}});
+            if (m2?.hash) {
+                return false;
+            } else {
+                return true;
+            }
         }
     } catch (e) {
         console.error(e);
@@ -65,96 +66,130 @@ async function hashIsUnique(memeHash, client, abi) {
     }
 }
 
-async function hasAvailableTreeFiddyBalance(userAddress, client, abi) {
-    try {
-        const userCollection = client.db("primary").collection("users");
-        const user = await userCollection.findOne({address: {$eq: userAddress}});
-        if (user) {
-            const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_TREE_FIDDY_ADDRESS;
-            const provider = new ethers.providers.JsonRpcProvider();
-            const signer = provider.getSigner();
-            const dankMinter = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
-            let officialBalance;
-            if (user.mintedBefore === false) {
-                officialBalance = ethers.BigNumber.from("210000000000000000000");
-            } else {
-                officialBalance = await dankMinter.balanceOf(userAddress);
-            }
-            const availableBalance = officialBalance.sub(web3.utils.toWei(user.reservedTreeFiddyBalance.toString(), "ether"));
-            const weiRequirement = web3.utils.toWei("35", "ether");
-            if (availableBalance.gte(weiRequirement)) {
-                return [true, user.reservedTreeFiddyBalance, officialBalance, user.mintedBefore];
-            } else {
-                return [false, user.reservedTreeFiddyBalance, officialBalance, user.mintedBefore];
-            }
-        } else {
-            return [false, -1, -1];
-        }
-    } catch (e) {
-        console.error(e);
-        return [false, -1, -2, e];
-    }
+// creates meme DNA sequence
+function createDNA(state) {
+    // start by creating dna
+    let DNA = '';
+    // create captions array
+    let captions = [];
+    state.textLocations.forEach((textLocation) => {
+        // removes everything except numbers and letters. TODO - make sure this is what I actually want to do
+        let c = textLocation.text;
+        captions.push(c.replace(/[^\p{L}\p{N}]/gu, '').toUpperCase());
+    });
+    // sort alphabetically
+    captions = captions.sort();
+    // add main caption to front of list
+    let mc = state.mainCaption;
+    captions.unshift(mc.replace(/[^\p{L}\p{N}]/gu, '').toUpperCase());
+
+    // create sticker array
+    let stickers = [];
+    state.stickerLocations.forEach((stickerLocation) => {
+        stickers.push(stickerLocation.stickerIdentifier);
+    });
+    // sort alphabetically
+    stickers = stickers.sort();
+
+    // create layout fill unique ids array
+    let layoutFillIds = [];
+    state.layoutSections.forEach((section) => {
+        layoutFillIds.push(section.uniqueId);
+    });
+
+    // get layoutId
+    const layoutIdentifier = state.layout.layoutIdentifier;
+
+    // compile DNA components into sequence
+    DNA = layoutIdentifier;
+    layoutFillIds.forEach((str) => {
+        DNA += str;
+    });
+    captions.forEach((str) => {
+        DNA += str;
+    });
+    stickers.forEach((str) => {
+        DNA += str;
+    });
+
+    return DNA;
+}
+
+function hashDNA(DNA) {
+    const encoded = web3.eth.abi.encodeParameters(['string'], [DNA])
+    return web3.utils.sha3(encoded, {encoding: 'hex'});
+}
+
+function createMemeMetadata(name, image, description, creator, creatorAddress, dynasty, headOfDynasty, DNA, hash, danknessTier, creationDate, lineage, state, requiredImageApprovals, redirectLink) {
+    return {
+        name: name,
+        image: image,
+        description: description,
+        creator: creator,
+        creatorAddress: creatorAddress,
+        dynasty: dynasty,
+        headOfDynasty: headOfDynasty,
+        DNA: DNA,
+        hash: hash,
+        danknessTier: danknessTier,
+        rarityBackground: rarityBackground,
+        score: score,
+        upvotes: upvotes,
+        downvotes: downvotes,
+        parent: parent,
+        creationDate: creationDate,
+        lineage: lineage,
+        descendants: 0,
+        quantity: 1,
+        state: state,
+        requiredImageApprovals: requiredImageApprovals,
+        redirectLink: redirectLink,
+    };
+}
+
+function createMemeRedirectLink(creatorName, creatorMemeIndex, memeHash) {
+    return {creator: creatorName, memeIndex: creatorMemeIndex, memeHash: memeHash}; 
 }
 
 const handler = async(req, res) => {
-    // get contract abi
-    const contractsDirectory = path.resolve(process.cwd(), "contracts");
-    const abi = fs.readFileSync(
-        path.join(contractsDirectory, "dankminter-abi.json"),
-        "utf8"
-    );
-
     // TODO - validate all inputs
 
-    // get template id from request
-    let templateId = req.body.state.templateId;
+    let userCollection;
+    let user;
+    // get user
+    try {
+        userCollection = client.db("primary").collection("users");
+        user = await userCollection.findOne({address: {$eq: req.user}});
+    } catch (e) {
+        console.log(e);
+        return res.status(404).send("user not found");
+    }
+
+    // get state from body
     let state = req.body.state;
-    // TODO - fetch template info from backend and make image with that info
+
+    // TODO - get parent lineage array
+    let parent = 0;
+    let lineage = [parent];
+    // TODO - get dynasty from parent
+    let dynasty = "testing-dynasty";
+    // TODO - if no parent, then head of dynasty == ture
+    let headOfDynasty = true;
 
     // connect to db
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     await client.connect();
-    // check available tree fiddy balance
-    const hasAvailableBalance = await hasAvailableTreeFiddyBalance(req.user, client, abi);
-    if (!hasAvailableBalance[0]) {
-        if (hasAvailableBalance[1] === -1) {
-            if (hasAvailableBalance[2] === -1) {
-                return res.status(404).send("error, user not found");
-            } else {
-                return res.status(500).send(hasAvailableBalance[3]);
-            }
-        } else {
-            return res.status(410).send({message: "error, does not have available balance", balance: hasAvailableBalance[2], reserved: hasAvailableBalance[1]});
-        }
-    }
-    let mintedBefore;
-    if (hasAvailableBalance.length === 1) {
-        mintedBefore = false;
-    } else {
-        mintedBefore = hasAvailableBalance[3];
-    }
 
-    // get overlay captions
-    let captions = [];
-    req.body.state.textLocations.forEach((el) => {
-        captions.push(el.text);
-    });
-    captions.push(req.body.state.mainCaption);
-
-    // concat captions
-    var textStr = "";
-    for (var i = 0; i < captions.length; i++) {
-        textStr += captions[i];
-    }
-    // calculate hash
-    const encoded = web3.eth.abi.encodeParameters(['uint256', 'string'], [templateId, textStr])
-    const memeHash = web3.utils.sha3(encoded, {encoding: 'hex'});
+    // compile DNA sequence 
+    const DNA = createDNA(state);
+    // hash DNA
+    const memeHash = hashDNA(DNA);
 
     // check if hash is unique
-    const isUnique = await hashIsUnique(memeHash, client, abi);
+    const isUnique = await hashIsUnique(memeHash, client);
     if (!isUnique) {
         await client.close();
-        return res.status(409).send("error, meme hash is not unique");
+        return res.status(409).send("error, hash is not unique");
     }
     // render image
     const imgStream = await renderImage(state);
@@ -178,53 +213,39 @@ const handler = async(req, res) => {
         console.log(err);
     });
 
+    // create redirect link object
+    const redirectLink = createMemeRedirectLink(user.handle, user.memeIndex, memeHash);
+
     // create metadata object
     let currentTime = Date.now();
-    let metadata = {
-        name: req.body.name,
-        description: `A gloriously dank meme created by ${req.body.name} and minted with DankMinter. Mint your own unique NFT memes at https://www.dankminter.com`,
-        image: `ipfs://${ipfsHash}`,
-        attributes: [
-            {
-                trait_type: "Creator", 
-                value: req.handle,
-            }, 
-            {
-                display_type: "date", 
-                trait_type: "Creation Date", 
-                value: currentTime,
-            },
-            {
-                trait_type: "Total Minted",
-                value: 1
-            }
-        ],
-        memeHash: memeHash,
-    };
+    let metadata = createMemeMetadata(
+        req.body.name, 
+        `ipfs://${ipfsHash}`, 
+        `A gloriously dank meme created by ${user.handle} and minted with DankMinter. Mint your own one-of-a-kind NFT memes at https://www.dankminter.com`,
+        user.handle,
+        user.address,
+        dynasty,
+        headOfDynasty,
+        DNA,
+        memeHash,
+        1,
+        currentTime,
+        lineage,
+        state,
+        [],
+        redirectLink
+    );
 
-    let mintRequest = {
-        metadata: metadata,
-        memeHash: memeHash,
-        state: state,
-        captions: captions,
-        mintToAddress: req.user,
-        created: currentTime,
-        mintedBefore: mintedBefore,
-    }
-
-    // insert into mint queue
+    // insert into mint queue and increment users memeIndex
     try {
       const mintQueueCollection = client.db("primary").collection("mintQueue");
-      await mintQueueCollection.insertOne(mintRequest);
+      await mintQueueCollection.insertOne(metadata);
+      await userCollection.updateOne({address: {$eq: user.address}}, {$inc: {memeIndex: 1}});
     } catch(e) {
       console.error(e);
       // TODO - handle reverting image pin + metadata update
       return res.status(500).json({ error: e.message })
     }
-    
-    // increase reserved tree fiddy balance
-    const userCollection = client.db("primary").collection("users");
-    await userCollection.updateOne({address: {$eq: req.user}}, {$inc : {reservedTreeFiddyBalance: 35}});        
 
     await client.close();
     return res.status(200).json({ message: "success, mint request queued", imageURI: `https://dankminter.mypinata.cloud/ipfs/${ipfsHash}`});

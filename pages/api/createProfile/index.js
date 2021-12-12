@@ -14,7 +14,7 @@ const handler = async (req, res) => {
     try {
         await client.connect();
         const userCollection = client.db("primary").collection("users");
-        await userCollection.updateOne({address: {$eq: address}}, { $set: {handle: handle, addedTokens: addedTokens, memeIndex: memeIndex, reservedTreeFiddyBalance: 0, mintedBefore: false}});
+        await userCollection.updateOne({address: {$eq: address}}, { $set: {handle: handle, addedTokens: addedTokens, memeIndex: memeIndex}});
         res.status(200).json({ message: 'updated profile' });
     } catch(e) {
         console.error(e);

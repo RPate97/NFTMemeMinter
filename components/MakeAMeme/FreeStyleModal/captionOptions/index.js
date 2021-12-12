@@ -1,5 +1,5 @@
 import { Flex, Button, useDisclosure } from '@chakra-ui/react'
-import { SelectStickerModal } from '../selectStickerModal';
+import { SelectStickerModal } from './selectStickerModal';
 
 export const CaptionOptions = ({addTextSection, addStickerLocation}) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -21,22 +21,6 @@ export const CaptionOptions = ({addTextSection, addStickerLocation}) => {
                 ml={0}
                 onClick={addTextSection}>
                 + Text
-            </Button>
-            <Button 
-                color="white"
-                bg="transparent"
-                border="1px solid white"
-                _hover={{
-                    border: "1px",
-                    borderStyle: "solid",
-                    borderColor: "white",
-                    backgroundColor: "gray.700",
-                }}
-                borderRadius="xl"
-                marginBottom={0}
-                ml={5}
-                onClick={() => {console.log("layout")}}>
-                + Image
             </Button>
             <>
                 <Button 

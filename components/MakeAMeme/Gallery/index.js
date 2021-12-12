@@ -86,11 +86,8 @@ export const Gallery = ({account, deactivate, }) => {
                 </Flex>
                 <LayoutOptions userProfile={userProfile} />
                 <Flex flexDirection="column">
-                    <Text color="white" fontSize="3xl" ml={5} mb={0} noOfLines={1}>
-                        Create Within A Dynasty
-                    </Text>
-                    <Text color="white" fontSize="md" ml={5} mb={3}>
-                        {"You can remix any meme created with DankMinter. When you do this, your meme becomes a part of it's parents dynasty. Remember, every meme created with DankMinter must be unique so make sure you make at least one change or you're meme will be rejected. Creating a meme within an existing dynasty costs only 35 TreeFiddy Tokens."}
+                    <Text color="white" fontSize="3xl" ml={5} mb={0} noOfLines={1} fontFamily="space_monoregular">
+                        Use a Dynasty
                     </Text>
                     <Box
                         padding={2}

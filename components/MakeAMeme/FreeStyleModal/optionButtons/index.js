@@ -2,10 +2,19 @@ import { Flex, Button } from '@chakra-ui/react';
 import { BackgroundOptions } from '../backgroundOptions';
 import { CaptionOptions } from '../captionOptions';
 
-export const OptionButtons = ({selectedOptions, setSelectedOption, addTextSection, addStickerLocation}) => {
+export const OptionButtons = ({selectedOptions, setSelectedOption, addTextSection, addStickerLocation, changeBorderThickness, borderThickness, changeBorderColor, borderColor}) => {
     return (
         <Flex flexDirection="column" justifyContent="center" width="500px" mt={5}>
-            {selectedOptions === 1 ? <CaptionOptions addTextSection={addTextSection} addStickerLocation={addStickerLocation} /> : <BackgroundOptions /> }
+            {selectedOptions === 1 
+                ? <CaptionOptions 
+                    addTextSection={addTextSection} 
+                    addStickerLocation={addStickerLocation} /> 
+                : <BackgroundOptions 
+                    changeBorderThickness={changeBorderThickness} 
+                    borderThickness={borderThickness} 
+                    changeBorderColor={changeBorderColor} 
+                    borderColor={borderColor} /> 
+            }
             <Flex flexDirection="row" justifyContent="center" mt={3}>
                 <Button 
                     color="white"
