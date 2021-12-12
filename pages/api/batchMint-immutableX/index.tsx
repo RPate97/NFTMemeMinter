@@ -114,7 +114,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         // for each meme to mint
         memesToMint.forEach((mintRequest: any) => {
             // assign id
-            mintRequest.id = tokenId;
+            mintRequest.tokenId = tokenId.toString();
             // get meme hash
             let memeHash = mintRequest.hash;
             // create withdraw blueprint
