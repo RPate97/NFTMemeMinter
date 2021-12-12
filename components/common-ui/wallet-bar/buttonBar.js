@@ -8,7 +8,7 @@ import { Flex, Spacer } from "@chakra-ui/react";
 import { Logo } from "components/common-ui/logo";
 import { AppColors } from "styles/styles";
 import { TossACoin } from "components/common-ui/wallet-bar/tossACoin";
-import { TreeFiddyButton } from 'components/common-ui/wallet-bar/TreeFiddyButton';
+import { TreeFiddyButton } from 'components/common-ui/wallet-bar/treeFiddyButton';
 import { useTokenBalance } from '@usedapp/core';
 import { VoteButton } from "components/common-ui/wallet-bar/voteButton";
 import { MintButton } from "components/common-ui/wallet-bar/mintButton";
