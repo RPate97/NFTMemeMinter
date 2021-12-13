@@ -120,7 +120,7 @@ function hashDNA(DNA) {
     return web3.utils.sha3(encoded, {encoding: 'hex'});
 }
 
-function createMemeMetadata(name, image, description, creator, creatorAddress, dynasty, headOfDynasty, DNA, hash, danknessTier, creationDate, lineage, state, requiredImageApprovals, redirectLink) {
+function createMemeMetadata(name, image, description, creator, creatorAddress, dynasty, headOfDynasty, DNA, hash, danknessTier, rarity, creationDate, lineage, state, requiredImageApprovals, redirectLink) {
     return {
         name: name,
         image: image,
@@ -132,7 +132,7 @@ function createMemeMetadata(name, image, description, creator, creatorAddress, d
         DNA: DNA,
         hash: hash,
         danknessTier: danknessTier,
-        rarityBackground: rarityBackground,
+        rarity: rarity,
         score: score,
         upvotes: upvotes,
         downvotes: downvotes,
@@ -227,6 +227,7 @@ const handler = async(req, res) => {
         headOfDynasty,
         DNA,
         memeHash,
+        1,
         1,
         currentTime,
         lineage,
