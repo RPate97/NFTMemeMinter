@@ -29,7 +29,7 @@ export const DankBookButton = () => {
                     m="0px"
                     mr="5px"
                     ml="1px"
-                    height="38px"
+                    height="40px"
                     p={0}
                     onClick={onOpen}>
                     <Text color="white" fontSize="md" p={4} m={0}>

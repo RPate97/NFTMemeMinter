@@ -3,7 +3,7 @@ import { Button, Box, Text, Tooltip } from "@chakra-ui/react";
 import { AppColors } from "styles/styles";
 import { formatUnits } from '@ethersproject/units'
 
-export const TreeFiddyButton = ({treeFiddyBalance}) => {
+export const IMXBalanceButton = ({imxBalance}) => {
     return (
         <Box>
             <Tooltip 
@@ -11,7 +11,7 @@ export const TreeFiddyButton = ({treeFiddyBalance}) => {
                 borderRadius="xl"
                 border="1px"
                 borderColor="gray.700"
-                label="TF stands for TreeFiddies which are the DankMinter ERC20 token. TreeFiddies are required to perform various actions on DankMinter memes such as tipping, sacrificing, and voting. You can earn it by minting dank memes, or click to buy it on Quickswap.">
+                label="Your ImmutableX layer 2 ETH balance. If you have ETH in mainnet, you must transfer it to layer 2 before you can use it in DankMinter.">
                 <Button
                     bg="transparent"
                     border="1px solid transparent"
@@ -26,9 +26,9 @@ export const TreeFiddyButton = ({treeFiddyBalance}) => {
                     mr="5px"
                     px={3}
                     height="38px">
-                    {treeFiddyBalance && <Text color="white" fontSize="md">
-                        {formatUnits(treeFiddyBalance, 18)} TF 
-                    </Text>}                                 
+                    <Text color="white" fontSize="md">
+                        {imxBalance} ETH
+                    </Text>                                
                 </Button>                
             </Tooltip>
         </Box>

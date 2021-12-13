@@ -18,11 +18,11 @@ import {
     TabPanels,
   } from "@chakra-ui/react";
 import { AuthenticateSection } from './authenticateSection';
-import { AddTokenSection } from './addTokenSection';
 import { ProfileInfoSection } from './profileInfoSection';
+import { ImmutableXAuthSection } from './immutableXAuthSection';
 
 
-export const AuthModal = ({authenticate, nonce, isOpen, onClose, tabIndex, addTokens, updateProfile}) => {
+export const AuthModal = ({authenticate, nonce, isOpen, onClose, tabIndex, linkAccount, updateProfile}) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose} isCentered size="xl">
             <ModalOverlay />
@@ -42,15 +42,15 @@ export const AuthModal = ({authenticate, nonce, isOpen, onClose, tabIndex, addTo
                 <Tabs index={tabIndex}>
                     <TabList>
                         <Tab>Sign In</Tab>
-                        <Tab>Add Tokens</Tab>
                         <Tab>Set Handle</Tab>
+                        <Tab>Link With ImmutableX</Tab>
                     </TabList>
                     <TabPanels p="2rem">
                         <TabPanel>
                             <AuthenticateSection authenticate={authenticate} nonce={nonce}/>
                         </TabPanel>
                         <TabPanel>
-                            <AddTokenSection addTokens={addTokens}/>
+                            <ImmutableXAuthSection link={linkAccount} />
                         </TabPanel>
                         <TabPanel>
                             <ProfileInfoSection updateProfile={updateProfile}/>

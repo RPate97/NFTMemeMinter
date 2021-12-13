@@ -10,7 +10,8 @@ export default function Home({account, activateBrowserWallet, deactivate, doneCo
       {account && doneConnecting && token && userProfile ? 
         <MemeCollection 
           account={account} 
-          deactivate={deactivate}/>
+          deactivate={deactivate}
+          userProfile={userProfile}/>
       : <ConnectWalletButton 
           activateBrowserWallet={activateBrowserWallet} 
           account={account} 

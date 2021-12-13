@@ -17,29 +17,18 @@ import { LayoutOptions } from 'components/MakeAMeme/Gallery/LayoutOptions';
 
 axios.defaults.baseURL = 'http://localhost:3000';
 
-export const Gallery = ({account, deactivate, }) => {
+export const Gallery = ({account, deactivate, userProfile}) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [page, setPage] = useState(1)
     const [{ data, loading, error }] = useAxios({
       url: '/api/fetchTemplates',
       params: { page },
-    })
-
-    useEffect(() => {
-        if (!loading) {
-            console.log(data);
-        }
-    }, [loading, data]);
-
-    let userProfile;
-    if (typeof window !== 'undefined') {
-        userProfile = JSON.parse(localStorage.getItem("userProfile"));
-    }
+    });
 
     return (
         <div>  
             <main style={styles.main}>
-                <WalletBar account={account} deactivate={deactivate} />
+                <WalletBar account={account} deactivate={deactivate} userProfile={userProfile} />
                 <Flex flexDirection="row" mt={7}>
                     <Flex flexDirection="column">
                         <Button 

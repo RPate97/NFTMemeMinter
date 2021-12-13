@@ -7,31 +7,39 @@ import {
     Text,
   } from "@chakra-ui/react";
 
-export const AddTokenSection = ({addTokens}) => {
+export const ImmutableXAuthSection = ({link}) => {
     return (
-        <ModalBody pt={0} px={4}>
+        <ModalBody pt={0} px={0}>
             <Flex flexDirection="column" justifyContent="center" alignItems="center">
                 <Box
                     borderRadius="3xl"
                     border="1px"
                     borderStyle="solid"
                     borderColor="gray.600"
+                    m={0}
+                    p={0}
                     px={5}
-                    pt={4}
+                    pt={0}
                     pb={2}
                     mb={3}
                 >
                     <Flex flexDirection="column" justifyContent="space-between" alignItems="center" mb={3} pl={5} pr={5}>
                         <Text color="white" fontSize="20" overflowWrap="anywhere" textAlign="center" mt={3}>
-                            DankMinter has two custom tokens, please add them to your MetaMask wallet.
+                            Please link your DankMinter account to ImmutableX
                         </Text>
                         <Text color="white" fontSize="14" overflowWrap="anywhere" textAlign="center" mt={3}>
-                            If you are not using MetaMask you can add them to your wallet manually using the following information: 
+                            ImmutableX is the secure layer 2 solution used by DankMinter to enable gasless minting and trading NFTs. 
                         </Text>
+                        {/* <Text color="white" fontSize="14" overflowWrap="anywhere" textAlign="center" mt={3}>
+                            {nonce} 
+                        </Text>
+                        <Text color="white" fontSize="14" textAlign="center" mt={3}>
+                            You will need a browser based wallet to complete the sign in process. If you do not have one, we recommend installing the Metamask browser extension: https://metamask.io/
+                        </Text> */}
                     </Flex>
                 </Box>
                 <Button
-                    onClick={addTokens}
+                    onClick={link}
                     bg="transparent"
                     border="1px solid white"
                     _hover={{
@@ -46,7 +54,7 @@ export const AddTokenSection = ({addTokens}) => {
                     p={0}
                     pb="1px">
                     <Text color="white" fontSize="md" p={4} m={0}>
-                        Add Tokens
+                        Link
                     </Text>   
                 </Button> 
             </Flex> 

@@ -3,6 +3,7 @@ import { Flex, Text, Button, Spacer } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 import { AuthModal } from "components/common-ui/connect-wallet-button/authModal";
 import { styles } from 'styles/styles.js'
+import { ImmutableXClient, Link } from '@imtbl/imx-sdk';
 
 import Web3 from 'web3';
 const axios = require('axios');
@@ -10,6 +11,7 @@ const axios = require('axios');
 export const ConnectWalletButton = ({activateBrowserWallet, account, setDoneConnecting, token, setToken, userProfile, setUserProfile, getUserProfile}) => {
     const [authTabIndex, setAuthTabIndex] = useState(0);
     const [ nonce, setNonce ] = useState();
+    const [ starkPublicKey, setStarkPublicKey ] = useState();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     function handleConnectWallet() {
@@ -48,7 +50,7 @@ export const ConnectWalletButton = ({activateBrowserWallet, account, setDoneConn
             const user = await getUserProfile(res.data.token);
             localStorage.setItem("token", res.data.token);
             setToken(res.data.token);
-            if (user && user.addedTokens === true) {
+            if (user && user.starkPublicKey) {
                 if (user && user.handle) {
                     onClose();
                     setDoneConnecting(true);
@@ -62,64 +64,18 @@ export const ConnectWalletButton = ({activateBrowserWallet, account, setDoneConn
         });
     }
 
-    async function addCryptoTokens() {
-        const tfAddress = process.env.NEXT_PUBLIC_TREE_FIDDY_ADDRESS;
-        const nftAddress = process.env.NEXT_PUBLIC_DANKMINTER_ADDRESS;
-        const tfSymbol = 'TF';
-        const nftSymbol = 'MEME';
-        const tfDecimals = 18;
-        const nftDecimals = 0;
-        const tokenImage = 'https://www.dankminter.com/dank-minter-logo.png';
-
-        try {
-            // wasAdded is a boolean. Like any RPC method, an error may be thrown.
-            const wasAdded = await ethereum.request({
-                method: 'wallet_watchAsset',
-                params: {
-                type: 'ERC20', // Initially only supports ERC20, but eventually more!
-                options: {
-                    address: tfAddress, // The address that the token is at.
-                    symbol: tfSymbol, // A ticker symbol or shorthand, up to 5 chars.
-                    decimals: tfDecimals, // The number of decimals in the token
-                    image: tokenImage, // A string url of the token logo
-                },
-                },
-            });
-        } catch (error) {
-            console.log(error); 
-        }
-
-        try {
-            // wasAdded is a boolean. Like any RPC method, an error may be thrown.
-            const wasAdded = await ethereum.request({
-                method: 'wallet_watchAsset',
-                params: {
-                type: 'ERC20', // Initially only supports ERC20, but eventually more!
-                options: {
-                    address: nftAddress, // The address that the token is at.
-                    symbol: nftSymbol, // A ticker symbol or shorthand, up to 5 chars.
-                    decimals: nftDecimals, // The number of decimals in the token
-                    image: tokenImage, // A string url of the token logo
-                },
-                },
-            });
-        } catch (error) {
-            console.log(error); 
-        }
-        if (userProfile && userProfile.handle) {
-            onClose();
-            setDoneConnecting(true);
-        } else {
-            // move to next tab
-            setAuthTabIndex(2);            
-        }
+    async function linkAccount() {
+        const link = new Link(process.env.NEXT_PUBLIC_LINK_ADDRESS);
+        const { address, starkPublicKey } = await link.setup({});
+        setStarkPublicKey(starkPublicKey);
+        setAuthTabIndex(2);
     }
 
     async function updateProfile(handle) {
-        const res = await axios.post('/api/createProfile', {token: token, handle: handle, addedTokens: true, memeIndex: 0}); 
+        const res = await axios.post('/api/createProfile', {token: token, handle: handle, memeIndex: 0, starkPublicKey: starkPublicKey }); 
+        setUserProfile({token: token, handle: handle, memeIndex: 0, starkPublicKey: starkPublicKey });
         onClose();
         setDoneConnecting(true);
-        setUserProfile({ handle: handle, addedTokens: true });
     }
 
     return (
@@ -153,7 +109,7 @@ export const ConnectWalletButton = ({activateBrowserWallet, account, setDoneConn
                     {"We cannot guarentee alternative wallets will work correctly. Improved wallet support is in our roadmap. If you have a specific wallet you would like to see, please let us know in the Discord! Thank your for your patience."}
                 </Text>
             </Flex>   
-            <AuthModal nonce={nonce} authenticate={authenticate} onClose={onClose} isOpen={isOpen} tabIndex={authTabIndex} addTokens={addCryptoTokens} updateProfile={updateProfile} />
+            <AuthModal nonce={nonce} authenticate={authenticate} onClose={onClose} isOpen={isOpen} tabIndex={authTabIndex} updateProfile={updateProfile} linkAccount={linkAccount} />
         </div>
     );
 }

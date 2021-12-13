@@ -5,7 +5,7 @@ import { Wallet } from '@ethersproject/wallet';
 const { MongoClient } = require('mongodb');
 const uri = process.env.DB_HOST;
 
-const provider = new AlchemyProvider('ropsten', process.env.ALCHEMY_API_KEY);
+const provider = new AlchemyProvider('ropsten', process.env.NEXT_PUBLIC_ALCHEMY_API_KEY);
 const component = 'dankminter-bulk-mint-function';
 
 const waitForTransaction = async (promise: Promise<string>) => {

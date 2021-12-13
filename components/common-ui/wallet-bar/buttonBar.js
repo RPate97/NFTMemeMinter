@@ -1,35 +1,32 @@
 
-import React, { useState } from 'react';
-import { useEthers } from "@usedapp/core";
-import { Button, Box, Text, Tooltip } from "@chakra-ui/react";
+import React, { useState, useEffect } from 'react';
+import { Button, Box, Text } from "@chakra-ui/react";
 import { Identicon } from "components/common-ui/wallet-bar/identicon";
 import { CollectionButton } from "components/common-ui/wallet-bar/collectionButton";
 import { Flex, Spacer } from "@chakra-ui/react";
 import { Logo } from "components/common-ui/logo";
 import { AppColors } from "styles/styles";
 import { TossACoin } from "components/common-ui/wallet-bar/tossACoin";
-import { TreeFiddyButton } from 'components/common-ui/wallet-bar/treeFiddyButton';
-import { useTokenBalance } from '@usedapp/core';
-import { VoteButton } from "components/common-ui/wallet-bar/voteButton";
 import { MintButton } from "components/common-ui/wallet-bar/mintButton";
-import { useDisclosure } from "@chakra-ui/react";
 import { PlayerDankness } from "components/common-ui/wallet-bar/danknessTier"; 
-
-import Web3 from 'web3';
+import { ImmutableXClient } from '@imtbl/imx-sdk';
+import { ERC721TokenType, ETHTokenType, Branded, EthAddressBrand } from '@imtbl/imx-sdk';
 import { DankBookButton } from './dankbook';
-const axios = require('axios');
+import { IMXBalanceButton } from './imxBalanceButton';
 
-export const ButtonBar = ({handleOpenModal, account}) => {
-    let treeFiddyBalance = useTokenBalance(process.env.NEXT_PUBLIC_TREE_FIDDY_ADDRESS, account);
-    const [token, setToken] = useState(() => {
-        if (typeof(Storage) !== "undefined") {
-          // Code for localStorage/sessionStorage.
-          return localStorage.getItem("token");
-        } else {
-          // Sorry! No Web Storage support..
-          return null;
+export const ButtonBar = ({handleOpenModal, userProfile, account}) => {
+    const [balances, setBalances] = useState([]);
+
+    useEffect(() => {
+        async function setup() {
+            const client = await ImmutableXClient.build({ publicApiUrl: process.env.NEXT_PUBLIC_IMX_API_ADDRESS });
+            const balances = await client.listBalances({user: account, symbols: ['IMX', 'ETH']});
+            setBalances(balances.result);            
         }
-    });
+        if (account) {
+            setup();
+        }
+    }, [account])
 
     return (
         <div style={{position: "sticky", top: 0}}>
@@ -40,15 +37,17 @@ export const ButtonBar = ({handleOpenModal, account}) => {
                 h="75">
                 <Logo />
                 <Spacer />
-                <PlayerDankness account={account} />
-                <Box display="flex"
+                {/* <PlayerDankness account={account} /> */}
+                {account && <Box display="flex"
                     height="20"
-                    alignItems="center"
+                    alignItems="start"
                     marginRight="4">
-                    <Flex direction="column" justify="flex-end">
-                        <Flex direction="row" mt="8">
+                    <Flex direction="column" justify="end">
+                        <Flex direction="row" mt="5">
+                            <DankBookButton />
+                            <MintButton />  
                             <Box
-                                ml="auto"
+                                ml="1.5"
                                 display="flex"
                                 alignItems="center"
                                 border="1px"
@@ -56,7 +55,7 @@ export const ButtonBar = ({handleOpenModal, account}) => {
                                 borderRadius="xl"
                                 py="0">
                                 <CollectionButton userAddress={account}/>
-                                <TreeFiddyButton treeFiddyBalance={treeFiddyBalance} />
+                                {balances && <IMXBalanceButton imxBalance={balances.length !== 0 ? balances[0] : 0} />}
                                 <Button
                                     bg={AppColors.buttonBackground}
                                     border="1px solid transparent"
@@ -83,13 +82,8 @@ export const ButtonBar = ({handleOpenModal, account}) => {
                                 </Button>
                             </Box>                         
                         </Flex>
-                        <Flex direction="row" mt="8px">
-                            <TossACoin treeFiddyBalance={treeFiddyBalance}/>
-                            <DankBookButton />
-                            <MintButton />                            
-                        </Flex>
                     </Flex>                
-                </Box>
+                </Box>}
             </Flex>   
         </div>
     )

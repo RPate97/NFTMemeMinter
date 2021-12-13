@@ -25,7 +25,7 @@ export const MintButton = () => {
                         borderRadius="xl"
                         m="0px"
                         ml="1px"
-                        height="38px"
+                        height="40px"
                         p={0}>
                         <Link href='/mint'>
                             <Text color="white" fontSize="md" p={4} m={0}>

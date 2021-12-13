@@ -8,7 +8,7 @@ import { Box } from "@chakra-ui/react";
 import { Header } from "components/common-ui/header";
 import { EmptyCollection } from "components/MemeCollection/emptyCollection";
 
-export function MemeCollection({account, deactivate}) {
+export function MemeCollection({account, deactivate, userProfile}) {
   const CONTRACT_INTERFACE = new ethers.utils.Interface(abi);
   const MEME_ADDRESS = process.env.NEXT_PUBLIC_DANKMINTER_ADDRESS;
   
@@ -32,7 +32,7 @@ export function MemeCollection({account, deactivate}) {
     <div>
       <Header title="Collection"/>
       <main style={styles.main}>
-        <WalletBar account={account} deactivate={deactivate} />
+        <WalletBar account={account} deactivate={deactivate} userProfile={userProfile} />
         {memes && memes[0].length > 0 ? <Box
           padding={2}
           w="100%"
