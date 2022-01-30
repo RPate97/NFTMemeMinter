@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { AppColors } from "styles/styles";
 
-export const BorderModal = ({isOpen, onClose, changeBorderThickness, borderThickness, changeBorderColor, borderColor}) => {
+export const BorderModal = ({isOpen, onClose, changeBorderStyle, borderThickness, borderColor}) => {
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} size="xl">
@@ -40,7 +40,7 @@ export const BorderModal = ({isOpen, onClose, changeBorderThickness, borderThick
                 />
                 <ModalBody p={0} m={0} alignContent="center">
                     <Text color="white" fontFamily="space_monoregular" fontSize="lg">Border Thickness</Text>
-                    <Slider aria-label="slider-ex-4" mt={1} value={borderThickness} width={200} min={1} max={10} onChange={(val) => changeBorderThickness(val)}>
+                    <Slider aria-label="slider-ex-4" mt={1} value={borderThickness} width={200} min={1} max={10} onChange={(val) => changeBorderStyle(borderColor, val)}>
                         <SliderTrack bg="blue.100">
                             <SliderFilledTrack bg="blue" />
                         </SliderTrack>

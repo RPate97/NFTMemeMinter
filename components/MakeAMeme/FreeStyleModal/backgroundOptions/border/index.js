@@ -1,7 +1,7 @@
 import { Button, useDisclosure } from '@chakra-ui/react';
 import { BorderModal } from './modal';
 
-export const BorderButton = ({changeBorderThickness, borderThickness, changeBorderColor, borderColor}) => {
+export const BorderButton = ({changeBorderStyle, borderThickness, changeBorderColor, borderColor}) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
@@ -22,7 +22,7 @@ export const BorderButton = ({changeBorderThickness, borderThickness, changeBord
                 onClick={onOpen}>
                 Border Style
             </Button>
-            <BorderModal isOpen={isOpen} onClose={onClose} changeBorderThickness={changeBorderThickness} borderThickness={borderThickness} changeBorderColor={changeBorderColor} borderColor={borderColor} />
+            <BorderModal isOpen={isOpen} onClose={onClose} changeBorderStyle={changeBorderStyle} borderThickness={borderThickness} borderColor={borderColor} />
         </>        
     );
 }

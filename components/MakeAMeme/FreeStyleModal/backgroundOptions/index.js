@@ -1,10 +1,10 @@
-import { Flex, Button } from '@chakra-ui/react'
+import { Flex, Button, Text } from '@chakra-ui/react'
 import { BorderButton } from './border';
 
-export const BackgroundOptions = ({changeBorderThickness, borderThickness, changeBorderColor, borderColor}) => {
+export const BackgroundOptions = ({changeBorderStyle, borderThickness, changeBorderColor, borderColor}) => {
     return (
         <Flex flexDirection="row" justifyContent="center">
-            <Button 
+            {/* <Button 
                 color="white"
                 bg="transparent"
                 border="1px solid white"
@@ -19,8 +19,8 @@ export const BackgroundOptions = ({changeBorderThickness, borderThickness, chang
                 ml={0}
                 onClick={() => {console.log("canvas")}}>
                 Canvas Size
-            </Button>
-            <Button 
+            </Button> */}
+            {/* <Button 
                 color="white"
                 bg="transparent"
                 border="1px solid white"
@@ -35,8 +35,8 @@ export const BackgroundOptions = ({changeBorderThickness, borderThickness, chang
                 ml={5}
                 onClick={() => {console.log("layout")}}>
                 Meme Layout
-            </Button>
-            <BorderButton changeBorderThickness={changeBorderThickness} borderThickness={borderThickness} changeBorderColor={changeBorderColor} borderColor={borderColor} />
+            </Button> */}
+            <BorderButton changeBorderStyle={changeBorderStyle} borderThickness={borderThickness} borderColor={borderColor} />
         </Flex>
     );
 }

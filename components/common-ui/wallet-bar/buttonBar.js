@@ -13,6 +13,7 @@ import { ImmutableXClient } from '@imtbl/imx-sdk';
 import { ERC721TokenType, ETHTokenType, Branded, EthAddressBrand } from '@imtbl/imx-sdk';
 import { DankBookButton } from './dankbook';
 import { IMXBalanceButton } from './imxBalanceButton';
+import { DiscordButton } from './discordButton';
 
 export const ButtonBar = ({handleOpenModal, userProfile, account}) => {
     const [balances, setBalances] = useState([]);
@@ -44,6 +45,7 @@ export const ButtonBar = ({handleOpenModal, userProfile, account}) => {
                     marginRight="4">
                     <Flex direction="column" justify="end">
                         <Flex direction="row" mt="5">
+                            <DiscordButton />
                             <DankBookButton />
                             <MintButton />  
                             <Box

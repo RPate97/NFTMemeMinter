@@ -22,7 +22,7 @@ export const CaptionOptions = ({addTextSection, addStickerLocation}) => {
                 onClick={addTextSection}>
                 + Text
             </Button>
-            <>
+            {/* <>
                 <Button 
                     color="white"
                     bg="transparent"
@@ -40,7 +40,7 @@ export const CaptionOptions = ({addTextSection, addStickerLocation}) => {
                     + Sticker
                 </Button>
                 <SelectStickerModal isOpen={isOpen} onClose={onClose} selectSticker={addStickerLocation} />
-            </>
+            </> */}
         </Flex>
     );
 }

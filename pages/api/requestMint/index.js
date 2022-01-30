@@ -16,13 +16,14 @@ async function renderImage(state) {
     // Create a page with the Open Graph image size best practise
     const page = await browser.newPage({
         viewport: {
-            width: state.memeWidth + 50,
-            height: state.memeHeight + 230,
+            width: state.layoutWidth + 50,
+            height: state.layoutHeight + 230,
         }
     });
   
     // Generate the full URL out of the given path (GET parameter)
     const url = "localhost:3000/memeTemplate?state=" + encodeURIComponent(JSON.stringify(state));
+    console.log(url);
     await page.goto(url, {
         timeout: 30 * 1000
     })
@@ -93,7 +94,7 @@ function createDNA(state) {
 
     // create layout fill unique ids array
     let layoutFillIds = [];
-    state.layoutSections.forEach((section) => {
+    state.layout.layoutSections.forEach((section) => {
         layoutFillIds.push(section.uniqueId);
     });
 
@@ -151,7 +152,12 @@ function createMemeRedirectLink(creatorName, creatorMemeIndex, memeHash) {
 }
 
 const handler = async(req, res) => {
+    console.log("in handler");
     // TODO - validate all inputs
+    // connect to db
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    await client.connect();
+    console.log("connected to db");
 
     let userCollection;
     let user;
@@ -164,6 +170,8 @@ const handler = async(req, res) => {
         return res.status(404).send("user not found");
     }
 
+    console.log("got user");
+
     // get state from body
     let state = req.body.state;
 
@@ -175,14 +183,12 @@ const handler = async(req, res) => {
     // TODO - if no parent, then head of dynasty == ture
     let headOfDynasty = true;
 
-    // connect to db
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-    await client.connect();
-
     // compile DNA sequence 
     const DNA = createDNA(state);
     // hash DNA
     const memeHash = hashDNA(DNA);
+
+    console.log("created dna and hash");
 
     // check if hash is unique
     const isUnique = await hashIsUnique(memeHash, client);
@@ -192,6 +198,9 @@ const handler = async(req, res) => {
     }
     // render image
     const imgStream = await renderImage(state);
+
+    console.log("rendered image");
+    return;
 
     // pin image file
     const options = {

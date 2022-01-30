@@ -14,7 +14,9 @@ import {
     Text,
     Center,
     Spacer,
+    Grid,
 } from "@chakra-ui/react";
+import { LayoutSection } from "components/MakeAMeme/FreeStyleModal/layoutSection";
 
 export default class MemeMinterTemplate extends React.Component { 
 
@@ -39,74 +41,93 @@ export default class MemeMinterTemplate extends React.Component {
                         <ModalBody pt={0} m={0} alignContent="center">
                             <Center>
                             <Box
-                                backgroundColor="#0e0e0e"
-                                borderRadius="3xl"
-                                border="3px"
-                                borderStyle="solid"
-                                borderColor="gray.600"
-                                px={0}
-                                pt={0}
-                                pb={0}
-                                mb={7}
-                                mt={9}
-                                width={this.state.memeWidth + 5}
-                                height={this.state.memeHeight + 150}
-                                overflow="hidden"
-                                boxShadow="rgba(0, 0, 0, 0.35) 0px 5px 15px;"
-                            >
-                                <Flex flexDirection="column" justifyContent="space-between" alignItems="center" mt={0} width={this.state.memeWidth}>
-                                    <Flex flexDirection="row" mb={0} p={0} pt={0} justifyContent="space-between" width="100%">
-                                        <Flex flexDirection="column" pl={2} pb={1} pt={1} width={this.state.memeWidth - 150} height={150} justifyContent="space-between">
-                                            <Text color="white" fontSize="md" style={{
-                                                color: "#ffffff",
-                                                fontFamily: "SpaceMono-Regular",
-                                                fontSize: 16,
-                                            }}>
-                                                Creator: {this.state.userProfile?.handle} - DankMinter.com
-                                            </Text>   
-                                            <Text color="white" fontSize="md" style={{
-                                                color: "#ffffff",
-                                                fontFamily: "SpaceMono-Regular",
-                                                fontSize: 24,
-                                            }}>
-                                                {this.state.mainCaption}
-                                            </Text>                                                   
-                                        </Flex>
-                                        <QRCode handle={this.state.userProfile?.handle} memeIndex={this.state.userProfile?.memeIndex} width={150} height={150} style={{marginRight: 0, width: 150, height: 150}}/>                           
-                                    </Flex>
-                                    <div
-                                        id="svg_ref"
-                                        style={{
-                                            position: "relative", 
-                                            top: 0, 
-                                            left: 0, 
-                                            width: this.state.memeWidth,
-                                            height: `${this.state.memeHeight}px`,
-                                        }}>
-                                        <MinterImage
-                                            style={{position: "absolute", top: 0, left: 0, margin: 0}}
-                                            src={this.state.templateUrl}
-                                            height={this.state.memeHeight}
-                                            width={this.state.memeWidth}
-                                        />
-                                        {this.state.textLocations.map((el, index) => (
-                                            <MinterAutoSizedText 
-                                                borderStyle={this.state.borderStyle}
-                                                text={el.text} 
-                                                rotation={el.rotation} 
-                                                height={el.height} 
-                                                width={el.width} 
-                                                x={el.x}
-                                                y={el.y}
-                                                id={el.key}
-                                                key={el.key}
-                                                changeSectionLocation={this.changeSectionLocation}
-                                                changeSectionSize={this.changeSectionSize}
+                                        backgroundColor="#0e0e0e"
+                                        borderRadius="3xl"
+                                        border="3px"
+                                        borderStyle="solid"
+                                        borderColor="gray.600"
+                                        px={0}
+                                        pt={0}
+                                        pb={0}
+                                        mb={0}
+                                        mt={0}
+                                        width={this.state.layoutWidth + 5}
+                                        height={this.state.layoutHeight + 150}
+                                        overflow="hidden"
+                                        boxShadow="rgba(0, 0, 0, 0.35) 0px 5px 15px;"
+                                    >
+                                        <Flex flexDirection="column" justifyContent="space-between" alignItems="center" mt={0} width={this.state.layoutWidth}>
+                                            <Flex flexDirection="row" mb={0} p={0} pt={0} justifyContent="space-between" width="100%">
+                                                <Flex flexDirection="column" pl={2} pb={1} pt={1} width={this.state.layoutWidth - 150} height={150} justifyContent="space-between">
+                                                    <Text color="white" fontSize="md" style={{
+                                                        color: "#ffffff",
+                                                        fontFamily: "SpaceMono-Regular",
+                                                        fontSize: 16,
+                                                    }}>
+                                                        Creator: {this.state.userProfile?.handle} - DankMinter.com
+                                                    </Text>   
+                                                    <Text color="white" fontSize="md" style={{
+                                                        color: "#ffffff",
+                                                        fontFamily: "SpaceMono-Regular",
+                                                        fontSize: 24,
+                                                    }}>
+                                                        {this.state.mainCaption}
+                                                    </Text>                                                   
+                                                </Flex>
+                                                <QRCode handle={this.state.userProfile?.handle} memeIndex={this.state.userProfile?.memeIndex} width={150} height={150} style={{marginRight: 0, width: 150, height: 150}}/>                           
+                                            </Flex>
+                                            <Grid m={0} p={0} templateColumns={`repeat(${this.state.layout.columns}, ${this.state.columnWidth}px)`} templateRows={`repeat(${this.state.layout.rows}, ${this.state.rowWidth}px)`} gap="0">
+                                                {this.state.layout.layoutSections.map((el, index) => {
+                                                    return (
+                                                        <LayoutSection 
+                                                            key={el.key} 
+                                                            el={el} 
+                                                            layout={this.state.layout} 
+                                                            addLayoutImage={this.addLayoutImage} 
+                                                            removeLayoutImage={this.removeLayoutImage} 
+                                                            layoutIndex={index} 
+                                                            rowWidth={this.state.rowWidth} 
+                                                            colWidth={this.state.columnWidth}
+                                                            layoutBorderColor={this.state.layoutBorderStyle.color}
+                                                            layoutBorderThickness={this.state.layoutBorderStyle.thickness}
+                                                        />
+                                                    )
+                                                })}
+                                            </Grid>
+                                            {this.state.textLocations.map((el, index) => (
+                                                <MinterAutoSizedText 
+                                                    borderStyle={this.state.borderStyle}
+                                                    text={el.text} 
+                                                    rotation={el.rotation} 
+                                                    height={el.height} 
+                                                    width={el.width} 
+                                                    x={el.x}
+                                                    y={el.y}
+                                                    id={el.key}
+                                                    key={el.key}
+                                                    changeSectionLocation={this.changeSectionLocation}
+                                                    changeSectionSize={this.changeSectionSize}
+                                                    zIndex={5}
                                                 />                            
-                                        ))}
-                                    </div>
-                                </Flex>
-                            </Box>
+                                            ))}
+                                            {/* {this.state.stickerLocations.map((el, index) => (
+                                                <AutoSizeSticker 
+                                                    borderStyle={this.state.borderStyle}
+                                                    sticker={el} 
+                                                    rotation={el.rotation} 
+                                                    height={el.height} 
+                                                    width={el.width} 
+                                                    x={el.x}
+                                                    y={el.y}
+                                                    id={el.key}
+                                                    key={el.key}
+                                                    changeStickerLocation={this.changeStickerLocation}
+                                                    changeStickerSize={this.changeStickerSize}
+                                                    zIndex={5}
+                                                />                            
+                                            ))} */}
+                                        </Flex>
+                                    </Box>
                             </Center>
                         </ModalBody>
                     </ModalContent>
