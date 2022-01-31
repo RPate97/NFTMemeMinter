@@ -1,9 +1,14 @@
-import React from 'react'
+import React from "react";
 import { Button, Box, Image } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
-import { MemeMinterModal } from "components/MakeAMeme/MinterModal (out of date)";
+import { ImageRequest } from "src/pages/review-images/types";
+import { ReviewImageRequestModal } from 'src/pages/review-images/ReviewImageRequestModal';
 
-export const GalleryMeme = ({userAddress, template, userProfile}) => {
+type Props = {
+    imageRequest: ImageRequest,
+};
+
+export const GalleryImageRequest: React.FC<Props> = ({imageRequest}) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
@@ -30,11 +35,11 @@ export const GalleryMeme = ({userAddress, template, userProfile}) => {
                     borderRadius="xl"
                     mb={0}
                     d="inline-block"
-                    src={template.src}
+                    src={imageRequest.src}
                     alt="Alt"
                 />                
             </Button>
-            <MemeMinterModal userAddress={userAddress} template={template} isOpen={isOpen} onClose={onClose} userProfile={userProfile} />
+            <ReviewImageRequestModal imageRequest={imageRequest} isOpen={isOpen} onClose={onClose} />
         </Box>
     )
 }

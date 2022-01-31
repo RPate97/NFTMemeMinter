@@ -1,3 +1,3 @@
-import { ApproveTemplates } from "components/ApproveTemplates";
+import { ApproveTemplates } from "src/pages/ApproveTemplates";
 
 export default ApproveTemplates;

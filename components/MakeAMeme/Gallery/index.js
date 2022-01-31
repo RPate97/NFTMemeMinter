@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react'
 import { GalleryMeme } from './GalleryMeme'
-import TemplateMakerModal from 'components/template-maker'
 import { styles } from '../../../styles/styles';
 import { WalletBar } from 'components/common-ui/wallet-bar'
 import {
@@ -14,6 +13,7 @@ import {
 import useAxios from 'axios-hooks';
 import axios from 'axios';
 import { LayoutOptions } from 'components/MakeAMeme/Gallery/LayoutOptions';
+import { ImageRequestButton } from 'components/image-request-button';
 
 axios.defaults.baseURL = 'http://localhost:3000';
 
@@ -31,43 +31,7 @@ export const Gallery = ({account, deactivate, userProfile}) => {
                 <WalletBar account={account} deactivate={deactivate} userProfile={userProfile} />
                 <Flex flexDirection="row" mt={7}>
                     <Flex flexDirection="column">
-                        <Button 
-                            color="white"
-                            bg="transparent"
-                            border="1px solid white"
-                            _hover={{
-                                border: "1px",
-                                borderStyle: "solid",
-                                borderColor: "white",
-                                backgroundColor: "gray.700",
-                            }}
-                            borderRadius="xl"
-                            marginBottom={0}
-                            ml={5}
-                            onClick={onOpen}>
-                            Request A Template
-                        </Button>
-                        <Text color="white" fontSize="sm" ml={5} mb={3} noOfLines={1}>
-                            To be a premade template
-                        </Text>
-                    </Flex>
-                    <Flex flexDirection="column">
-                        <Button 
-                            color="white"
-                            bg="transparent"
-                            border="1px solid white"
-                            _hover={{
-                                border: "1px",
-                                borderStyle: "solid",
-                                borderColor: "white",
-                                backgroundColor: "gray.700",
-                            }}
-                            borderRadius="xl"
-                            marginBottom={0}
-                            marginLeft={5}
-                            onClick={onOpen}>
-                            Suggest An Image
-                        </Button>
+                        <ImageRequestButton />
                         <Text color="white" fontSize="sm" ml={5} mb={3} noOfLines={1}>
                             To be available when free styling
                         </Text>
@@ -89,7 +53,6 @@ export const Gallery = ({account, deactivate, userProfile}) => {
                         ))}  
                     </Box>
                 </Flex>
-                <TemplateMakerModal isOpen={isOpen} onClose={onClose}/>
             </main>
         </div>
     )

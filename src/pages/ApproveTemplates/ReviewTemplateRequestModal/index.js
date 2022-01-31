@@ -1,6 +1,6 @@
 import React from 'react';
 import { MinterAutoSizedText } from 'components/MakeAMeme/MinterModal/MinterAutoSizedText';
-import { MinterImage } from "components/MakeAMeme/MinterModal/MinterImage";
+import { MinterImage } from "components/common-ui/minter-image";
 import { AppColors } from "styles/styles";
 import {
     Box,

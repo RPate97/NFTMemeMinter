@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Rnd } from "react-rnd"
 import { Textfit } from 'react-textfit'
-import { styles } from '../../../styles/styles'
+import { styles } from '../../styles/styles'
 
 export const MinterAutoSizedText = ({borderStyle, text, rotation, width, height, x, y, id, changeSectionSize, changeSectionLocation}) => {
     const [textWidth, setTextWidth] = useState(width);

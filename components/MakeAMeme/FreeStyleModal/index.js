@@ -25,7 +25,7 @@ import { RepeatIcon, MinusIcon } from "@chakra-ui/icons";
 import { OptionButtons } from './optionButtons';
 import { LayoutSection } from './layoutSection';
 import QRCode from 'components/qrCode';
-import { MinterAutoSizedText } from '../MinterModal/MinterAutoSizedText';
+import { MinterAutoSizedText } from 'components/minter-auto-sized-text';
 import { AutoSizeSticker } from './AutoSizeSticker';
 
 const axios = require('axios');

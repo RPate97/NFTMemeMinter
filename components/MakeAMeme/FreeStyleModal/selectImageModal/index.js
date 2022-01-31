@@ -6,7 +6,7 @@ import {
     ModalBody,
     ModalCloseButton,
 } from "@chakra-ui/react";
-import { Dropzone } from "components/template-maker/dropzone";
+import { Dropzone } from "components/common-ui/dropzone";
 import { useState } from "react";
 import { AppColors } from "styles/styles";
 import { ImagePosition } from "./image-position";
