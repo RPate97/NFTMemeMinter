@@ -1,6 +1,6 @@
 import styles from 'styles/Home.module.css';
-import { Gallery } from 'components/ApproveTemplates/Gallery';
-import { Header } from "components/common-ui/header";
+import { Gallery } from 'src/components/ApproveTemplates/Gallery';
+import { Header } from "src/components/common-ui/header";
 
 export function ApproveTemplates() {
   return (

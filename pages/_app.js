@@ -2,7 +2,7 @@ import React from 'react';
 import '../styles/globals.css';
 import { ChainId, DAppProvider, } from '@usedapp/core';
 import { ChakraProvider } from "@chakra-ui/react";
-import { WalletCache } from "components/wallet-cache";
+import { WalletCache } from "src/components/wallet-cache";
 
 function MyApp({ Component, pageProps, router }) {
   const config = {

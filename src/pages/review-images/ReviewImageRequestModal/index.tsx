@@ -16,11 +16,11 @@ import {
     Spinner,
     Input,
 } from "@chakra-ui/react";
-import { Dropzone } from 'components/common-ui/dropzone';
+import { Dropzone } from 'src/components/common-ui/dropzone';
 import { AppColors } from "styles/styles";
 import { CloseIcon, CheckCircleIcon } from "@chakra-ui/icons";
-import { MinterImage } from 'components/common-ui/minter-image';
-import { ImageRequest } from "src/pages/review-images/types";
+import { MinterImage } from 'src/components/common-ui/minter-image';
+import { ImageRequest } from "src/utils/types";
 const axios = require('axios');
 
 type Props = {

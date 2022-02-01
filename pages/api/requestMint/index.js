@@ -17,7 +17,7 @@ async function renderImage(state) {
     const page = await browser.newPage({
         viewport: {
             width: state.layoutWidth + 50,
-            height: state.layoutHeight + 230,
+            height: state.layoutHeight + 160,
         }
     });
   
@@ -200,7 +200,6 @@ const handler = async(req, res) => {
     const imgStream = await renderImage(state);
 
     console.log("rendered image");
-    return;
 
     // pin image file
     const options = {

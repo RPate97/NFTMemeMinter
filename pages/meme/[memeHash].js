@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { MemeContainer } from 'components/MemeContainer';
+import { MemeContainer } from 'src/components/MemeContainer';
 
 export default function Meme({account}) {
   const router = useRouter();

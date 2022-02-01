@@ -17,29 +17,32 @@ import {
     Spinner,
     Input,
   } from "@chakra-ui/react";
-import { CheckCircleIcon } from "@chakra-ui/icons";
+import { CloseIcon, CheckCircleIcon } from "@chakra-ui/icons";
+import { Dropzone } from 'src/components/common-ui/dropzone';
 
 const axios = require('axios');
 
-export default class ReviewTemplateRequestModal extends React.Component {
+export default class TemplateMakerModal extends React.Component {
     constructor(props) {
         super(props);
+        var memeWidth = 500;
+        var memeHeight = 500;
         this.state = {
             borderStyle: {
                 border: "solid 1px #ddd",
                 borderStyle: "dashed",
                 borderRadius: 10,
             },
-            textLocations: this.props.template.textLocations,
+            textLocations: [],
             templateId: 1,
-            memeWidth: this.props.template.width,
-            memeHeight: this.props.template.height,
-            templateName: this.props.template.templateName,
+            memeWidth: memeWidth,
+            memeHeight: memeHeight,
+            hashCaptions: ["", ""],
+            tabIndex: 0,
+            mainCaption: "",
+            templateName: "",
             loading: false,
             successful: false,
-            src: this.props.template.src,
-            requestedBy: this.props.template.requestedBy,
-            requestId: this.props.template._id,
         };
 
         // get token
@@ -48,11 +51,12 @@ export default class ReviewTemplateRequestModal extends React.Component {
             this.token = localStorage.getItem("token");
         }
 
-        this.approveTemplate = this.approveTemplate.bind(this);
-        this.rejectTemplate = this.rejectTemplate.bind(this);
+        this.requestTemplate = this.requestTemplate.bind(this);
         this.changeRotation = this.changeRotation.bind(this);
         this.changeSectionSize = this.changeSectionSize.bind(this);
         this.changeSectionLocation = this.changeSectionLocation.bind(this);
+        this.removeImage = this.removeImage.bind(this);
+        this.changeImage = this.changeImage.bind(this);
         this.addTextSection = this.addTextSection.bind(this);
         this.removeTextSection = this.removeTextSection.bind(this);
     }
@@ -84,6 +88,38 @@ export default class ReviewTemplateRequestModal extends React.Component {
         this.state.textLocations[index].x = newX;
         this.state.textLocations[index].y = newY;
         /*eslint-enable */
+    }
+
+    removeImage() {
+        this.setState(prevState => ({
+            ...prevState,
+            base64URL: "",
+        }));
+    }
+
+    changeImage(files) {
+        var reader = new FileReader();
+        reader.onload = (e) => {
+            var img = new Image();    
+            img.onload = () => {
+                var canvas = document.createElement("canvas");
+                canvas.width = img.width;
+                canvas.height = img.height;
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0);
+                var dataURL = canvas.toDataURL("image/png");
+                var height = (500 / (img.width / img.height));
+                this.setState(prevState => ({
+                    ...prevState,
+                    base64URL: dataURL,
+                    selectedFile: files[0],
+                    memeWidth: 500,
+                    memeHeight: height,
+                }));            
+            }
+            img.src = e.target.result;
+        }
+        reader.readAsDataURL(files[0]);
     }
 
     addTextSection() {
@@ -118,38 +154,13 @@ export default class ReviewTemplateRequestModal extends React.Component {
         }));
     }
 
-    async rejectTemplate() {
+    async requestTemplate() {
         this.setState(prevState => ({
             ...prevState,
             loading: true,
         }));
-        var template = {
-            src: this.state.src,
-        };
-
-        let localThis = this;
-        // upload template to mongodb
-        await axios.post('/api/admin/rejectTemplateRequest', {template: template, templateRequestId: this.state.requestId})
-          .then(function (response) {
-            localThis.setState(prevState => ({
-                ...prevState,
-                loading: false,
-                successful: true,
-            }));   
-          })
-          .catch(function (error) {
-            localThis.setState(prevState => ({
-                ...prevState,
-                loading: false,
-            }));  
-          });
-    }
-
-    async approveTemplate() {
-        this.setState(prevState => ({
-            ...prevState,
-            loading: true,
-        }));
+        var formData = new FormData();
+        formData.append("image", this.state.selectedFile);
         let correctTextLocations = [];
         this.state.textLocations.forEach((el) => {
             let textLocation = el;
@@ -157,17 +168,20 @@ export default class ReviewTemplateRequestModal extends React.Component {
             correctTextLocations.push(el)
         });
         var template = {
-            src: this.state.src,
+            src: null,
             width: this.state.memeWidth,
             height: this.state.memeHeight,
             textLocations: correctTextLocations,
             templateName: this.state.templateName,
-            requestedBy: this.state.requestedBy,
         };
+        formData.append("template", JSON.stringify(template));
+        formData.append("token", this.token);
 
         let localThis = this;
         // upload template to mongodb
-        await axios.post('/api/admin/approveTemplateRequest', {template: template, templateRequestId: this.state.requestId})
+        await axios.put('/api/requestTemplate', formData, { headers: {
+            'Content-Type': 'multipart/form-data'
+          }})
           .then(function (response) {
             localThis.setState(prevState => ({
                 ...prevState,
@@ -197,7 +211,7 @@ export default class ReviewTemplateRequestModal extends React.Component {
                     alignContent="center"
                     borderRadius="3xl">
                     <ModalHeader color="white" px={4} fontSize="lg" fontWeight="medium">
-                        Approve Template Request
+                        Request a new template
                     </ModalHeader>
                     <ModalCloseButton
                         color="white"
@@ -239,7 +253,7 @@ export default class ReviewTemplateRequestModal extends React.Component {
                                     boxShadow="rgba(0, 0, 0, 0.35) 0px 5px 15px;"
                                 >
                                     <Flex flexDirection="column" justifyContent="space-between" alignItems="center" mt={0} width={this.state.memeWidth} height={this.state.memeHeight}>
-                                        <div
+                                        {this.state.base64URL ? <div
                                             style={{
                                                 position: "relative", 
                                                 top: 0, 
@@ -248,10 +262,36 @@ export default class ReviewTemplateRequestModal extends React.Component {
                                                 height: `${this.state.memeHeight}px`,
                                             }}>
                                             <MinterImage
-                                                src={this.state.src}
+                                                src={this.state.base64URL}
                                                 height={this.state.memeHeight}
                                                 width={this.state.memeWidth}
                                             />
+                                            <Button
+                                                position="absolute"
+                                                top={0}
+                                                right={0}
+                                                onClick={this.removeImage}
+                                                border="1px solid transparent"
+                                                backgroundColor="transparent"
+                                                _hover={{}}
+                                                _active={{}}
+                                                _focus={{}}
+                                                _focusWithin={{}}
+                                                m="0px"
+                                                mx="5px"
+                                                px={3}
+                                                mt={2}
+                                                zIndex={5}
+                                                height="38px"
+                                                width="fit-content">
+                                                <CloseIcon 
+                                                    color="white"
+                                                    _hover={{
+                                                        color: "whiteAlpha.700",
+                                                    }}
+                                                    w={6} 
+                                                    h={6} />                                 
+                                            </Button>  
                                             {this.state.textLocations.map((el, index) => (
                                                 <MinterAutoSizedText 
                                                     borderStyle={this.state.borderStyle}
@@ -267,9 +307,10 @@ export default class ReviewTemplateRequestModal extends React.Component {
                                                     changeSectionSize={this.changeSectionSize}
                                                     />                            
                                             ))}
-                                        </div>
+                                        </div> : <Dropzone changeImage={this.changeImage}/>}
                                     </Flex>
                                 </Box>
+                                {this.state.base64URL && 
                                 <Flex flexDirection="column" alignItems="center">
                                     <Flex flexDirection="row" mx={5}>
                                         <Button
@@ -319,7 +360,7 @@ export default class ReviewTemplateRequestModal extends React.Component {
                                     </Flex>
                                     <Input value={this.state.templateName} my={3} width={420} color="white" variant="outline" placeholder="Give your template a name" maxLength="60" onChange={(e) => this.changeTemplateName(e.currentTarget.value)} />
                                     <Button
-                                        onClick={this.rejectTemplate}
+                                        onClick={this.requestTemplate}
                                         bg="transparent"
                                         border="1px solid transparent"
                                         _hover={{
@@ -337,32 +378,11 @@ export default class ReviewTemplateRequestModal extends React.Component {
                                         height="38px"
                                         width="fit-content">
                                         <Text color="white" fontSize="md">
-                                            Reject Request
-                                        </Text>                                  
-                                    </Button>  
-                                    <Button
-                                        onClick={this.approveTemplate}
-                                        bg="transparent"
-                                        border="1px solid transparent"
-                                        _hover={{
-                                            border: "1px",
-                                            borderStyle: "solid",
-                                            borderColor: "white",
-                                            backgroundColor: "gray.700",
-                                        }}
-                                        borderColor="gray.700"
-                                        borderRadius="xl"
-                                        m="0px"
-                                        mr="5px"
-                                        px={3}
-                                        mt={2}
-                                        height="38px"
-                                        width="fit-content">
-                                        <Text color="white" fontSize="md">
-                                            Approve Request
+                                            Submit Request
                                         </Text>                                  
                                     </Button>  
                                 </Flex>
+                                }
                             </Flex>}
                         </Center>
                     </ModalBody>

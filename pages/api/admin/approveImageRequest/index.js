@@ -4,6 +4,7 @@ const uri = process.env.DB_HOST;
 export default async function handler(req, res) {
     const imageInfo = req.body.imageRequest;
     delete imageInfo._id;
+    delete imageInfo.requestedBy;
     const id = req.body.imageRequestId;
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     await client.connect();

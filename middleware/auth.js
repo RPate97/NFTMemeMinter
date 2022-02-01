@@ -2,6 +2,7 @@ var jwt = require('jsonwebtoken');
 
 const withAuth = (handler) => {
     return async (req, res) => {
+        console.log(req.body);
         jwt.verify(req.body.token, process.env.JWT_KEY, function(err, decoded) {
             if (err) { 
                 console.error(err);

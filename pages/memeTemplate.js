@@ -1,7 +1,7 @@
 import React from 'react';
-import { MinterAutoSizedText } from 'components/MakeAMeme/MinterModal/MinterAutoSizedText';
-import QRCode from 'components/qrCode';
-import { MinterImage } from "components/common-ui/minter-image";
+import { MinterAutoSizedText } from 'src/components/minter-auto-sized-text';
+import QRCode from 'src/components/qrCode';
+import { MinterImage } from "src/components/common-ui/minter-image";
 import { AppColors } from "styles/styles";
 import {
     Box,
@@ -16,7 +16,7 @@ import {
     Spacer,
     Grid,
 } from "@chakra-ui/react";
-import { LayoutSection } from "components/MakeAMeme/FreeStyleModal/layoutSection";
+import { LayoutSection } from "src/components/MakeAMeme/FreeStyleModal/layoutSection";
 
 export default class MemeMinterTemplate extends React.Component { 
 
@@ -38,7 +38,7 @@ export default class MemeMinterTemplate extends React.Component {
                         borderStyle="solid"
                         backgroundImage="url('sand-background.jpg')"
                         backgroundSize="cover">
-                        <ModalBody pt={0} m={0} alignContent="center">
+                        <ModalBody pt={0} mt={2} alignContent="center">
                             <Center>
                             <Box
                                         backgroundColor="#0e0e0e"
