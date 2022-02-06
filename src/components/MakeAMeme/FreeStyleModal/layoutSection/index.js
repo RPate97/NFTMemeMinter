@@ -34,7 +34,7 @@ export const LayoutSection = ({el, layout, addLayoutImage, removeLayoutImage, la
                             <SelectFillIcon fill="white" width="100px" height="70px"/>
                             <Text mt={3} color="white" fontWeight="bold" textAlign="center"> Tap to select an image or fill </Text>
                         </Flex>
-                    : <Image src={el.src} width={rowWidth * (el.rowEnd - el.rowStart)} height={colWidth * (el.colEnd - el.colStart)} objectFit="cover" alt="meme image here"/>}
+                    : <Image src={el.src} height={rowWidth * (el.rowEnd - el.rowStart)} width={colWidth * (el.colEnd - el.colStart)} objectFit="cover" alt="meme image here"/>}
                 </Flex>
             </GridItem>
             {token && isOpen && <SelectLayoutImage isOpen={isOpen} onClose={onClose} layoutSection={el} addLayoutImage={addLayoutImage} removeLayoutImage={removeLayoutImage} layoutIndex={layoutIndex} token={token} />}

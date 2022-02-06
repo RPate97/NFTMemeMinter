@@ -6,23 +6,29 @@ import { styles } from 'styles/styles';
 export const MinterAutoSizedText = ({borderStyle, text, rotation, width, height, x, y, id, changeSectionSize, changeSectionLocation}) => {
     const [textWidth, setTextWidth] = useState(width);
     const [textHeight, setTextHeight] = useState(height);
+    const [textX, setTextX] = useState(x);
+    const [textY, setTextY] = useState(y);
 
     return (
         <Rnd
             id={"resizable" + id}
-            style={borderStyle}
+            style={{
+                ...borderStyle,
+                top: textY,
+                left: textX
+            }}
             size={{
                 width:textWidth,
                 height:textHeight, 
             }}
-            default={{
-                x: x,
-                y: y,
+            position={{
+                x: textX,
+                y: textY,
             }}
             onResizeStop={(e, direction, ref, d) => {
                 e.preventDefault(); 
                 e.stopPropagation();
-                var el = document.getElementById("resizable" + id); // or other selector like querySelector()
+                var el = document.getElementById("resizable" + id);
                 var rect = el.getBoundingClientRect();
                 setTextWidth(rect.width);
                 setTextHeight(rect.height);
@@ -31,13 +37,21 @@ export const MinterAutoSizedText = ({borderStyle, text, rotation, width, height,
             onResize={(e, direction, ref, d) => {
                 e.preventDefault(); 
                 e.stopPropagation();
-                var el = document.getElementById("resizable" + id); // or other selector like querySelector()
+                var el = document.getElementById("resizable" + id);
                 var rect = el.getBoundingClientRect();
                 setTextWidth(rect.width);
                 setTextHeight(rect.height);
             }}
+            onDrag={(e, d) => {
+                e.preventDefault(); 
+                e.stopPropagation();
+                setTextY((prev) => prev + d.deltaY);
+                setTextX((prev) => prev + d.deltaX);
+            }}
             onDragStop={(e, d) => {
-                changeSectionLocation(d.x, d.y, id);
+                e.preventDefault(); 
+                e.stopPropagation();
+                changeSectionLocation(textX, textY, id);
             }}
             >
             <div>

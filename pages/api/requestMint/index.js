@@ -16,8 +16,8 @@ async function renderImage(state) {
     // Create a page with the Open Graph image size best practise
     const page = await browser.newPage({
         viewport: {
-            width: state.layoutWidth + 50,
-            height: state.layoutHeight + 160,
+            width: state.layoutWidth + 25,
+            height: state.layoutHeight + 170,
         }
     });
   
