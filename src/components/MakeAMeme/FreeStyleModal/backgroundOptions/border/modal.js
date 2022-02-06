@@ -38,9 +38,9 @@ export const BorderModal = ({isOpen, onClose, changeBorderStyle, borderThickness
                         color: "whiteAlpha.700",
                     }}
                 />
-                <ModalBody p={0} m={0} alignContent="center">
+                <ModalBody py={1} px={4} m={0} alignContent="center">
                     <Text color="white" fontFamily="space_monoregular" fontSize="lg">Border Thickness</Text>
-                    <Slider aria-label="slider-ex-4" mt={1} value={borderThickness} width={200} min={1} max={10} onChange={(val) => changeBorderStyle(borderColor, val)}>
+                    <Slider aria-label="slider-ex-4" mt={1} value={borderThickness} width={200} min={0} max={10} onChange={(val) => changeBorderStyle(borderColor, val)}>
                         <SliderTrack bg="blue.100">
                             <SliderFilledTrack bg="blue" />
                         </SliderTrack>
