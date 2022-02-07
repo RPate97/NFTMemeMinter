@@ -40,6 +40,61 @@ export default class MemeMinterTemplate extends React.Component {
         }
     }
 
+    fetchSectionRowHeight = (section) => {
+        if (this.state.layout.layoutIdentifier === "FS") {
+            const numRows = section.rowEnd - section.rowStart;
+            let rowHeight = this.state.layoutHeight / this.props.layout.rows;
+            if (section.imageHeight) {
+                rowHeight = section.imageHeight / numRows;
+            }
+            return rowHeight;
+        } else {
+            return this.state.rowHeight;
+        }
+    }
+
+    fetchLayoutHeight = () => {
+        if (this.state.layout.layoutIdentifier === "FS") {
+            let row = 0;
+            let layoutHeight = 0;
+            this.state.layout.layoutSections.forEach((section) => {
+                if (row <= section.rowStart) {
+                    const numRows = section.rowEnd - section.rowStart;
+                    let rowHeight = this.state.layoutHeight / this.props.layout.rows;
+                    if (section.imageHeight) {
+                        rowHeight = section.imageHeight / numRows;
+                    }
+                    layoutHeight += (rowHeight * numRows);
+                    row = section.rowEnd;
+                }
+            });
+            return layoutHeight;
+        } else {
+            return this.state.layoutHeight;
+        } 
+    }
+
+    fetchGridRows = () => {
+        if (this.state.layout.layoutIdentifier === "FS") {
+            let row = 0;
+            let rowStr = '';
+            this.state.layout.layoutSections.forEach((section) => {
+                if (row <= section.rowStart) {
+                    const numRows = section.rowEnd - section.rowStart;
+                    let rowHeight = this.state.layoutHeight / this.props.layout.rows;
+                    if (section.imageHeight) {
+                        rowHeight = section.imageHeight / numRows;
+                    }
+                    rowStr += `repeat(${numRows}, ${rowHeight}px) `;
+                    row = section.rowEnd;
+                }
+            });
+            return rowStr;            
+        } else {
+            return `repeat(${this.state.layout.rows}, ${this.state.rowHeight}px)`;
+        }
+    }
+
     render() {
         return (
             <div suppressHydrationWarning={true}>
@@ -50,7 +105,7 @@ export default class MemeMinterTemplate extends React.Component {
                         backgroundImage="url('sand-background.jpg')"
                         backgroundSize="cover">
                             <Center>
-                                <Box
+                            <Box
                                     backgroundColor="#0e0e0e"
                                     borderRadius="3xl"
                                     border="3px"
@@ -59,10 +114,10 @@ export default class MemeMinterTemplate extends React.Component {
                                     px={0}
                                     pt={0}
                                     pb={0}
-                                    m={2}
-                                    my={3}
+                                    mb={0}
+                                    mt={0}
                                     width={this.state.layoutWidth + 5}
-                                    height={this.state.layoutHeight + 150}
+                                    height={this.fetchLayoutHeight() + 150}
                                     overflow="hidden"
                                     boxShadow="rgba(0, 0, 0, 0.35) 0px 5px 15px;"
                                     position="relative"
@@ -87,7 +142,12 @@ export default class MemeMinterTemplate extends React.Component {
                                             </Flex>
                                             <QRCode handle={this.state.userProfile?.handle} memeIndex={this.state.userProfile?.memeIndex} width={150} height={150} style={{marginRight: 0, width: 150, height: 150}}/>                           
                                         </Flex>
-                                        <Grid m={0} p={0} templateColumns={`repeat(${this.state.layout.columns}, ${this.state.columnWidth}px)`} templateRows={`repeat(${this.state.layout.rows}, ${this.state.rowWidth}px)`} gap="0">
+                                        <Grid 
+                                            m={0} 
+                                            p={0}
+                                            templateColumns={`repeat(${this.state.layout.columns}, ${this.state.columnWidth}px)`} 
+                                            templateRows={this.fetchGridRows()}
+                                            gap="0">
                                             {this.state.layout.layoutSections.map((el, index) => {
                                                 return (
                                                     <LayoutSection 
@@ -97,46 +157,47 @@ export default class MemeMinterTemplate extends React.Component {
                                                         addLayoutImage={this.addLayoutImage} 
                                                         removeLayoutImage={this.removeLayoutImage} 
                                                         layoutIndex={index} 
-                                                        rowWidth={this.state.rowWidth} 
+                                                        rowWidth={this.fetchSectionRowHeight(el)} 
                                                         colWidth={this.state.columnWidth}
                                                         layoutBorderColor={this.state.layoutBorderStyle.color}
                                                         layoutBorderThickness={this.state.layoutBorderStyle.thickness}
+                                                        token={this.token}
                                                     />
                                                 )
                                             })}
                                         </Grid>
-                                        {this.state.textLocations.map((el, index) => (
-                                            <MinterAutoSizedText 
-                                                text={el.text} 
-                                                rotation={el.rotation} 
-                                                height={el.height} 
-                                                width={el.width} 
-                                                x={el.x}
-                                                y={el.y}
-                                                id={el.key}
-                                                key={el.key}
-                                                changeSectionLocation={this.changeSectionLocation}
-                                                changeSectionSize={this.changeSectionSize}
-                                                zIndex={5}
-                                            />                            
-                                        ))}
-                                        {/* {this.state.stickerLocations.map((el, index) => (
-                                            <AutoSizeSticker 
-                                                borderStyle={this.state.borderStyle}
-                                                sticker={el} 
-                                                rotation={el.rotation} 
-                                                height={el.height} 
-                                                width={el.width} 
-                                                x={el.x}
-                                                y={el.y}
-                                                id={el.key}
-                                                key={el.key}
-                                                changeStickerLocation={this.changeStickerLocation}
-                                                changeStickerSize={this.changeStickerSize}
-                                                zIndex={5}
-                                            />                            
-                                        ))} */}
                                     </Flex>
+                                    {this.state.textLocations.map((el, index) => (
+                                        <MinterAutoSizedText 
+                                            text={el.text} 
+                                            rotation={el.rotation} 
+                                            height={el.height} 
+                                            width={el.width} 
+                                            x={el.x}
+                                            y={el.y}
+                                            id={el.key}
+                                            key={el.key}
+                                            changeSectionLocation={this.changeSectionLocation}
+                                            changeSectionSize={this.changeSectionSize}
+                                            zIndex={5}
+                                        />                            
+                                    ))}
+                                    {/* {this.state.stickerLocations.map((el, index) => (
+                                        <AutoSizeSticker 
+                                            borderStyle={this.state.borderStyle}
+                                            sticker={el} 
+                                            rotation={el.rotation} 
+                                            height={el.height} 
+                                            width={el.width} 
+                                            x={el.x}
+                                            y={el.y}
+                                            id={el.key}
+                                            key={el.key}
+                                            changeStickerLocation={this.changeStickerLocation}
+                                            changeStickerSize={this.changeStickerSize}
+                                            zIndex={5}
+                                        />                            
+                                    ))} */}
                                 </Box>
                             </Center>
                     </ModalContent>

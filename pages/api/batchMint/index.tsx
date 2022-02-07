@@ -82,13 +82,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // fetch service metadata (contains minting index)
     try {
         const serviceMetadataCollection = client.db("primary").collection("serviceMetadata");
-        serviceMetadata = await serviceMetadataCollection.findOne({docIndex: 1}).toArray();
+        serviceMetadata = await serviceMetadataCollection.findOne({docIndex: 1});
+        console.log(serviceMetadata);
     } catch (e) {
         console.error(e);
         res.status(500).send(e.message);
     }
 
-    if (serviceMetadata.length === 1) {
+    if (serviceMetadata) {
         // if no memes, then return successful
         if (memesToMint.length == 0) {
             res.status(200).send("success, no memes in queue");
@@ -103,7 +104,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           ];
 
         // get starting tokenId
-        let tokenId = serviceMetadata[0].mintingIndex;
+        let tokenId = serviceMetadata.mintingIndex;
+        console.log(tokenId);
 
         // create array for new meme metadata so it can be inserted at once
         let newMemeMetadata = [];
@@ -118,7 +120,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             // get meme hash
             let memeHash = mintRequest.hash;
             // create withdraw blueprint
-            let blueprint = createBlueprint(mintRequest.id, memeHash, mintRequest.creatorName);
+            let blueprint = createBlueprint(mintRequest.tokenId, memeHash, mintRequest.creatorName);
+            console.log(blueprint);
             // add redirect link to new links array
             newMemeLinks.push(mintRequest.redirectLink);
             // delete link from metadata
@@ -129,7 +132,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             newMemeMetadata.push(mintRequest);
             // create mint token object
             const mintToken = {
-                id: mintRequest.id.toString(),
+                id: mintRequest.tokenId.toString(),
                 blueprint: blueprint,
                 royalties: [ 
                     {
@@ -155,7 +158,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             if (!userIsInArray) {
                 // create user object with mint token
                 let user = {
-                    etherKey: mintRequest.creatorAddress.toLowerCase(),
+                    etherKey: mintRequest.creatorAddress,
                     tokens: [mintToken],
                 }
                 // add user to payload
