@@ -49,13 +49,12 @@ export default class FreeStyleModal extends React.Component {
             stickerLocations: [],
             layout: props.layout,
             hashCaptions: [],
-            userProfile: this.props.userProfile,
             mainCaption: "",
             memeName: "Why would I name my meme?",
             layoutWidth: layoutWidth,
             layoutHeight: layoutHeight,
-            rowWidth: layoutWidth / this.props.layout.rows,
-            columnWidth: layoutHeight / this.props.layout.columns,
+            rowHeight: layoutHeight / props.layout.rows,
+            columnWidth: layoutWidth / props.layout.columns,
             selectedOptions: 0,
         };
 
@@ -63,6 +62,7 @@ export default class FreeStyleModal extends React.Component {
         if (typeof(Storage) !== "undefined") {
             // Code for localStorage/sessionStorage.
             this.token = localStorage.getItem("token");
+            this.state.userProfile = JSON.parse(localStorage.getItem("userProfile"));
         }
 
         this.changeMemeName = this.changeMemeName.bind(this);
@@ -80,6 +80,10 @@ export default class FreeStyleModal extends React.Component {
         this.changeStickerSize = this.changeStickerSize.bind(this);
         this.changeStickerLocation = this.changeStickerLocation.bind(this);
         this.changeBorderStyle = this.changeBorderStyle.bind(this);
+
+        this.updateLayoutHeight = this.fetchLayoutHeight.bind(this);
+        this.updateGridRows = this.fetchGridRows.bind(this);
+        this.fetchSectionRowHeight = this.fetchSectionRowHeight.bind(this);
     }
 
     changeMemeName = (newMemeName) => {
@@ -97,8 +101,6 @@ export default class FreeStyleModal extends React.Component {
     }
 
     mintMeme = async () => {
-        console.log("minting...");
-        console.log(this.state);
         axios.post('/api/requestMint', {name: this.state.memeName, state: this.state, token: this.token})
             .then(function (response) {
                 console.log(response);
@@ -147,9 +149,6 @@ export default class FreeStyleModal extends React.Component {
             textLocations: newTextLocations
         }));
 
-        console.log(newTextLocations);
-        console.log(this.state.textLocations);
-
         /*eslint-disable */
         // this.state.textLocations[index].x = newX;
         // this.state.textLocations[index].y = newY;
@@ -163,13 +162,67 @@ export default class FreeStyleModal extends React.Component {
         }));
     }
 
+    fetchSectionRowHeight = (section) => {
+        if (this.state.layout.layoutIdentifier === "FS") {
+            const numRows = section.rowEnd - section.rowStart;
+            let rowHeight = this.state.layoutHeight / this.props.layout.rows;
+            if (section.imageHeight) {
+                rowHeight = section.imageHeight / numRows;
+            }
+            return rowHeight;
+        } else {
+            return this.state.rowHeight;
+        }
+    }
+
+    fetchLayoutHeight = () => {
+        if (this.state.layout.layoutIdentifier === "FS") {
+            let row = 0;
+            let layoutHeight = 0;
+            this.state.layout.layoutSections.forEach((section) => {
+                if (row <= section.rowStart) {
+                    const numRows = section.rowEnd - section.rowStart;
+                    let rowHeight = this.state.layoutHeight / this.props.layout.rows;
+                    if (section.imageHeight) {
+                        rowHeight = section.imageHeight / numRows;
+                    }
+                    layoutHeight += (rowHeight * numRows);
+                    row = section.rowEnd;
+                }
+            });
+            return layoutHeight;
+        } else {
+            return this.state.layoutHeight;
+        } 
+    }
+
+    fetchGridRows = () => {
+        if (this.state.layout.layoutIdentifier === "FS") {
+            let row = 0;
+            let rowStr = '';
+            this.state.layout.layoutSections.forEach((section) => {
+                if (row <= section.rowStart) {
+                    const numRows = section.rowEnd - section.rowStart;
+                    let rowHeight = this.state.layoutHeight / this.props.layout.rows;
+                    if (section.imageHeight) {
+                        rowHeight = section.imageHeight / numRows;
+                    }
+                    rowStr += `repeat(${numRows}, ${rowHeight}px) `;
+                    row = section.rowEnd;
+                }
+            });
+            return rowStr;            
+        } else {
+            return `repeat(${this.state.layout.rows}, ${this.state.rowHeight}px)`;
+        }
+    }
+
     addLayoutImage = (index, newSrc, newId, imageWidth, imageHeight) => {
         let newLayoutSections = this.state.layout.layoutSections;
         newLayoutSections[index].src = newSrc;
         newLayoutSections[index].uniqueId = newId;
         newLayoutSections[index].imageWidth = imageWidth;
         newLayoutSections[index].imageHeight = imageHeight;
-        console.log(newLayoutSections);
         this.setState(prevState => ({
             ...prevState,
             layout: {
@@ -227,7 +280,6 @@ export default class FreeStyleModal extends React.Component {
     }
 
     addStickerLocation = (sticker) => {
-        console.log(sticker);
         let newKey = this.state.stickerLocations.length;
         let x = this.state.layoutWidth / 2 - 100 + this.state.textLocations.length * 20;
         let y = this.state.layoutHeight / 2 - 100 + this.state.textLocations.length * 20;
@@ -280,11 +332,6 @@ export default class FreeStyleModal extends React.Component {
         }));
     }
 
-    close = () => {
-        console.log(this.state.textLocations);
-        onClose();
-    }
-
     render() {
         const { isOpen, onClose } = this.props;
         return (
@@ -329,7 +376,7 @@ export default class FreeStyleModal extends React.Component {
                                     mb={0}
                                     mt={0}
                                     width={this.state.layoutWidth + 5}
-                                    height={this.state.layoutHeight + 150}
+                                    height={this.fetchLayoutHeight() + 150}
                                     overflow="hidden"
                                     boxShadow="rgba(0, 0, 0, 0.35) 0px 5px 15px;"
                                     position="relative"
@@ -354,7 +401,12 @@ export default class FreeStyleModal extends React.Component {
                                             </Flex>
                                             <QRCode handle={this.state.userProfile?.handle} memeIndex={this.state.userProfile?.memeIndex} width={150} height={150} style={{marginRight: 0, width: 150, height: 150}}/>                           
                                         </Flex>
-                                        <Grid m={0} p={0} templateColumns={`repeat(${this.state.layout.columns}, ${this.state.columnWidth}px)`} templateRows={`repeat(${this.state.layout.rows}, ${this.state.rowWidth}px)`} gap="0">
+                                        <Grid 
+                                            m={0} 
+                                            p={0}
+                                            templateColumns={`repeat(${this.state.layout.columns}, ${this.state.columnWidth}px)`} 
+                                            templateRows={this.fetchGridRows()}
+                                            gap="0">
                                             {this.state.layout.layoutSections.map((el, index) => {
                                                 return (
                                                     <LayoutSection 
@@ -364,7 +416,7 @@ export default class FreeStyleModal extends React.Component {
                                                         addLayoutImage={this.addLayoutImage} 
                                                         removeLayoutImage={this.removeLayoutImage} 
                                                         layoutIndex={index} 
-                                                        rowWidth={this.state.rowWidth} 
+                                                        rowWidth={this.fetchSectionRowHeight(el)} 
                                                         colWidth={this.state.columnWidth}
                                                         layoutBorderColor={this.state.layoutBorderStyle.color}
                                                         layoutBorderThickness={this.state.layoutBorderStyle.thickness}

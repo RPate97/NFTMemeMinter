@@ -5,7 +5,7 @@ import withAuth from "middleware/auth";
 const handler = async (req, res) => {
     const address = req.user;
     if (!address) {
-        res.status(401).json({ error: 'did not send user address' });
+        return res.status(401).json({ error: 'did not send user address' });
     }
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     
@@ -23,6 +23,7 @@ const handler = async (req, res) => {
         res.status(500).json({ error: e.message });
     } finally {
         await client.close();
+        return res;
     }
 }
 

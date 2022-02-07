@@ -12,7 +12,7 @@ export const LayoutOptions = ({userProfile}) => {
     return (
         <Flex flexDirection="column">
             <Text color="white" fontSize="3xl" ml={5} mb={0} fontFamily="space_monoregular">
-                Start a Dynasty
+                Create a $TICKER
             </Text>
             <Flex         
                 alignContent="start"   

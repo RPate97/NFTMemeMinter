@@ -40,7 +40,7 @@ export const Gallery = ({account, deactivate, userProfile}) => {
                 <LayoutOptions userProfile={userProfile} />
                 <Flex flexDirection="column">
                     <Text color="white" fontSize="3xl" ml={5} mb={0} noOfLines={1} fontFamily="space_monoregular">
-                        Use a Dynasty
+                        Use a $TICKER
                     </Text>
                     <Box
                         padding={2}
