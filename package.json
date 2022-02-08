@@ -16,7 +16,7 @@
     "@ethersproject/units": "^5.4.0",
     "@google-cloud/storage": "^5.14.5",
     "@imtbl/imlogging": "^1.0.37",
-    "@imtbl/imx-sdk": "^1.3.4",
+    "@imtbl/imx-sdk": "^1.3.39",
     "@material-ui/core": "^4.12.3",
     "@metamask/jazzicon": "^2.0.0",
     "@pinata/sdk": "^1.1.23",

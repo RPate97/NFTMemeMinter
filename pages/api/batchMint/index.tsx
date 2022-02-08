@@ -46,6 +46,10 @@ async function mintNFTs(payload: ImmutableMethodParams.ImmutableOffchainMintV2Pa
         await waitForTransaction(Promise.resolve(registerImxResult.tx_hash));
     }
 
+    console.log(payload[0])
+    console.log(payload[0].users[0]);
+    console.log(payload[0].users[0].tokens[0]);
+
     const result = await minter.mintV2(payload);
     console.log(result);
     return result;
@@ -60,7 +64,7 @@ function toHex(str: string): string {
 }
 
 function createBlueprint(tokenId: Number, hash: string, creatorName: string) {
-    return toHex(`{${tokenId}}:{${hash}:${creatorName}}`);
+    return `{${tokenId}}:{${hash}:${creatorName}}`;
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -120,7 +124,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             // get meme hash
             let memeHash = mintRequest.hash;
             // create withdraw blueprint
-            let blueprint = createBlueprint(mintRequest.tokenId, memeHash, mintRequest.creatorName);
+            let blueprint = createBlueprint(mintRequest.tokenId, memeHash, mintRequest.creator);
             console.log(blueprint);
             // add redirect link to new links array
             newMemeLinks.push(mintRequest.redirectLink);
@@ -136,20 +140,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 blueprint: blueprint,
                 royalties: [ 
                     {
-                        recipient: process.env.DANKMINTER_ROYALTY_ADDRESS,
+                        recipient: process.env.DANKMINTER_ROYALTY_ADDRESS.toLowerCase(),
                         percentage: 10,
                     },
-                    {
-                        recipient: mintRequest.creatorAddress,
-                        percentage: 5,
-                    }
+                    // {
+                    //     recipient: mintRequest.creatorAddress.toLowerCase(),
+                    //     percentage: 5,
+                    // }
                 ],
             };  
             let userIsInArray = false;
             // if user in payload users array
             payload[0].users.forEach((user) => {
                 // add mint token object to user in payload user token array
-                if (user.etherKey === mintRequest.creatorAddress) {
+                if (user.etherKey === mintRequest.creatorAddress.toLowerCase()) {
                     user.tokens.push(mintToken);
                     userIsInArray = true;
                 }
@@ -158,7 +162,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             if (!userIsInArray) {
                 // create user object with mint token
                 let user = {
-                    etherKey: mintRequest.creatorAddress,
+                    etherKey: mintRequest.creatorAddress.toLowerCase(),
                     tokens: [mintToken],
                 }
                 // add user to payload
@@ -170,6 +174,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         });
 
         try {
+            console.log(payload);
             // send mintV2 request
             const mintRes = await mintNFTs(payload);
             console.log(`${mintRes.results.length} NFTs successfully minted`);

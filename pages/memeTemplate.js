@@ -114,8 +114,8 @@ export default class MemeMinterTemplate extends React.Component {
                                     px={0}
                                     pt={0}
                                     pb={0}
-                                    mb={0}
-                                    mt={0}
+                                    mb={4}
+                                    mt={4}
                                     width={this.state.layoutWidth + 5}
                                     height={this.fetchLayoutHeight() + 150}
                                     overflow="hidden"

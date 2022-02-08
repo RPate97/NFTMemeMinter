@@ -14,7 +14,7 @@ export const layouts = [
         ]
     },
     {
-        layoutIdentifier: "1R1L",
+        layoutIdentifier: "1T1B",
         columns: 12,
         rows: 12,
         layoutSections: [
@@ -35,7 +35,7 @@ export const layouts = [
         ]
     },
     {
-        layoutIdentifier: "1T1B",
+        layoutIdentifier: "1R1L",
         columns: 12,
         rows: 12,
         layoutSections: [
