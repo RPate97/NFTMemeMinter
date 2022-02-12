@@ -15,16 +15,26 @@ import {
     Spacer,
     Progress,
     Divider,
+    Image,
   } from "@chakra-ui/react";
   import { AppColors } from "styles/styles";
-import { SacrificeButton } from "src/components/MemeCollection/sacrifice"
-import { TipCreatorButton } from "src/components/MemeCollection/tipCreator"
-import { VoteButton } from "src/components/MemeCollection/vote"
-import { useTokenBalance } from '@usedapp/core'
+import { SacrificeButton } from "src/components/MemeCollection/sacrifice";
+import { TipCreatorButton } from "src/components/MemeCollection/tipCreator";
+import { VoteButton } from "src/components/MemeCollection/vote";
+import { useTokenBalance } from '@usedapp/core';
+import { MarketOrder, NFTMeme } from "src/utils/types";
+import { BuyButton } from "./buy-button";
 
+type Props = {
+    isOpen: boolean,
+    onClose: () => void,
+    nftMeme: NFTMeme,
+    order: MarketOrder,
+}
 
-export const MemeModal = ({userAddress, contract, isOpen, onClose, hash, score, postings, memeId, imageURI, name, description, creatorName, printNum, creationDate, totalMinted, experience, requiredExperience, danknessTier}) => {
-    let treeFiddyBalance = useTokenBalance(process.env.NEXT_PUBLIC_TREE_FIDDY_ADDRESS, userAddress);
+export const MarketMemeModal: React.FC<Props> = ({isOpen, onClose, nftMeme, order}) => {
+    const gatewayImage = nftMeme.image_url.replace('ipfs://', process.env.NEXT_PUBLIC_IMAGE_GATEWAY);
+
     return (
         <Modal isOpen={isOpen} onClose={onClose} size="md">
             <ModalOverlay />
@@ -35,7 +45,7 @@ export const MemeModal = ({userAddress, contract, isOpen, onClose, hash, score, 
                 borderColor="gray.700"
                 borderRadius="3xl">
                 <ModalHeader color="white" px={4} fontSize="lg" fontWeight="medium">
-                    {name}
+                    {nftMeme.name}
                 </ModalHeader>
                 <ModalCloseButton
                 color="white"
@@ -47,7 +57,7 @@ export const MemeModal = ({userAddress, contract, isOpen, onClose, hash, score, 
                 <ModalBody pt={0} px={4}>
                     <Flex flexDirection="column">
                         <Box borderRadius="xl" overflow="hidden">
-                            <img width={600} height={600} src={imageURI} alt={name}/>
+                            <Image src={gatewayImage} alt={nftMeme.name}/>
                         </Box>
                         <Box
                             borderRadius="3xl"
@@ -61,61 +71,49 @@ export const MemeModal = ({userAddress, contract, isOpen, onClose, hash, score, 
                             mt={3}
                         >
                             <Text color="gray.400" fontSize="sm">
-                                {description}
+                                {nftMeme.description}
                             </Text>
                             <Divider mt={3} mb={3} />
                             <Flex flexDirection="row" justifyContent="space-between" alignItems="start" mb={3}>
                                 <Flex flexDirection="column" justifyContent="space-between" alignItems="start" mb={3}>
                                     <Text color="gray.400" fontSize="sm">
-                                        Creator Name: {creatorName}
+                                        Creator Name: {nftMeme.metadata.creator}
                                     </Text>
                                     <Text color="gray.400" fontSize="sm">
-                                        Creation Date: {(new Date(creationDate)).toDateString()}
+                                        Creation Date: {(new Date(nftMeme.created_at)).toDateString()}
                                     </Text>
                                 </Flex>
                                 <Flex flexDirection="column" justifyContent="space-between" alignItems="start" mb={3}>
                                     <Text color="gray.400" fontSize="sm">
-                                        Score: {score.toString()}
+                                        Score: {nftMeme.metadata.score.toString()}
                                     </Text>
                                     <Text color="gray.400" fontSize="sm">
-                                        Print: #{printNum}
+                                        Print: #{nftMeme.metadata.tokenId}
                                     </Text>
                                     <Text color="gray.400" fontSize="sm">
-                                        Total Minted: {totalMinted}
+                                        Total Minted: 1
                                     </Text>
                                 </Flex>                                
                             </Flex>
                             <Text color="gray.400" fontSize="sm">
-                                Dankness Tier: {danknessTier.toString()}
+                                Dankness Tier: {nftMeme.metadata.dankness.toString()}
                             </Text>
-                            <Progress mb={3} size="md" value={experience} min={0} max={requiredExperience} borderRadius="lg" />
-                            <Flex flexDir="row"> 
-                                <Text color="gray.400" fontSize="sm">
-                                    Fake Internet Points: {experience.toString()}
-                                </Text>
-                                <Spacer />
-                                <Text color="gray.400" fontSize="sm">
-                                    Required: {requiredExperience.toString()}
-                                </Text>
-                            </Flex>
                         </Box>                        
                     </Flex>
                 </ModalBody>
 
                 <ModalFooter
-                justifyContent="end"
-                background="gray.900"
-                borderBottomLeftRadius="3xl"
-                borderBottomRightRadius="3xl"
-                m>
-                    <TipCreatorButton treeFiddyBalance={treeFiddyBalance} memeId={memeId}/>
-                    <SacrificeButton treeFiddyBalance={treeFiddyBalance} memeId={memeId}/>
+                    justifyContent="end"
+                    background="gray.900"
+                    borderBottomLeftRadius="3xl"
+                    borderBottomRightRadius="3xl">
+                    <BuyButton order={order} />
                     <Spacer />
-                    <VoteButton memeId={memeId} upDown={false} />
+                    <VoteButton memeId={nftMeme.token_id} upDown={false} />
                     <Text color="gray.400" fontSize="md" fontWeight="bold" ml={1} textAlign="center">
-                        {score.toString()}
+                        {nftMeme.metadata.score.toString()}
                     </Text>
-                    <VoteButton memeId={memeId} upDown={true} />
+                    <VoteButton memeId={nftMeme.token_id} upDown={true} />
                 </ModalFooter>
             </ModalContent>
         </Modal>

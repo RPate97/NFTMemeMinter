@@ -25,7 +25,7 @@ const waitForTransaction = async (promise: Promise<string>) => {
 
 async function mintNFTs(payload: ImmutableMethodParams.ImmutableOffchainMintV2ParamsTS) {
     const minter = await ImmutableXClient.build({
-        publicApiUrl: process.env.PUBLIC_API_URL,
+        publicApiUrl: process.env.NEXT_PUBLIC_API_URL,
         starkContractAddress: process.env.STARK_CONTRACT_ADDRESS,
         registrationContractAddress: process.env.REGISTRATION_ADDRESS,
         gasLimit: process.env.GAS_LIMIT,
@@ -102,7 +102,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         // create mint payload object
         let payload: ImmutableMethodParams.ImmutableOffchainMintV2ParamsTS = [
             {
-              contractAddress: process.env.DANKMINTER_COLLECTION_CONTRACT_ADDRESS,
+              contractAddress: process.env.NEXT_PUBLIC_DANKMINTER_COLLECTION_CONTRACT_ADDRESS,
               users: [],
             },
           ];

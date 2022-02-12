@@ -1,7 +1,7 @@
 import { styles } from 'styles/styles.js';
 import { Header } from 'src/components/common-ui/header';
 import { ConnectWalletButton } from 'src/components/common-ui/connect-wallet-button/index.js';
-import { MemeCollection } from 'src/components/MemeCollection/index.js';
+import { MemeCollection } from 'src/components/MemeCollection';
 
 export default function Home({account, activateBrowserWallet, deactivate, doneConnecting, setDoneConnecting, token, setToken, userProfile, setUserProfile, getUserProfile}) {
   return (

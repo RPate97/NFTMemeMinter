@@ -20,7 +20,7 @@ import {
   } from "@chakra-ui/react";
 import { AppColors } from "styles/styles";
 import { useState } from "react";
-import { DankBookTab } from "src/components/common-ui/wallet-bar/dankbook/dankbook-modal/dankbook-tab";
+import { DankBookTab } from "src/components/common-ui/wallet-bar/components/dankbook/dankbook-modal/dankbook-tab";
 
 const dankBookTabs = [
     {

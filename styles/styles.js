@@ -17,7 +17,6 @@ export const styles = {
     main: {
         flex: "1",
         display: "flex",
-        flexDirection: "column",
         // backgroundImage: "url('sand-background.jpg')",
         // backgroundImage: "linear-gradient(to top, #30cfd0 0%, #330867 100%)",
         backgroundImage: "linear-gradient(to top, #09203f 0%, #537895 100%)",

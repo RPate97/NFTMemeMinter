@@ -6,6 +6,7 @@ import { useDisclosure } from "@chakra-ui/react";
 
 export const WalletBar = ({account, deactivate, userProfile}) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
+
     return (
         <div>
             <ButtonBar handleOpenModal={onOpen} account={account} userProfile={userProfile} />

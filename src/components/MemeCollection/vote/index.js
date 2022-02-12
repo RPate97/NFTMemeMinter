@@ -1,20 +1,12 @@
-import { ethers } from "ethers";
 import { ChevronUpIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import {
     Button,
 } from "@chakra-ui/react";
-import { useContractFunction } from '@usedapp/core'
-import abi from 'contracts/dankminter-abi.json';
 import { AppColors } from "styles/styles";
 
 export const VoteButton = ({memeId, upDown}) => {
-    const CONTRACT_INTERFACE = new ethers.utils.Interface(abi);
-    const MEME_ADDRESS = process.env.NEXT_PUBLIC_DANKMINTER_ADDRESS;
-    const contract = new ethers.Contract(MEME_ADDRESS, CONTRACT_INTERFACE);
-    const { state, send } = useContractFunction(contract, 'voteOnMeme', { transactionName: 'Vote' });
-
     const vote = () => {
-        send(memeId, upDown);
+        console.log("vote");
     }   
    
     return (

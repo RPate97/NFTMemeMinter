@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Button, Box, Text } from "@chakra-ui/react";
 import { Identicon } from "src/components/common-ui/wallet-bar/identicon";
 import { CollectionButton } from "src/components/common-ui/wallet-bar/collectionButton";
@@ -9,25 +9,35 @@ import { AppColors } from "styles/styles";
 import { TossACoin } from "src/components/common-ui/wallet-bar/tossACoin";
 import { MintButton } from "src/components/common-ui/wallet-bar/mintButton";
 import { PlayerDankness } from "src/components/common-ui/wallet-bar/danknessTier"; 
-import { ImmutableXClient } from '@imtbl/imx-sdk';
-import { ERC721TokenType, ETHTokenType, Branded, EthAddressBrand } from '@imtbl/imx-sdk';
-import { DankBookButton } from './dankbook';
+import { ImmutableMethodResults, ImmutableXClient } from '@imtbl/imx-sdk';
+import { ERC721TokenType, ETHTokenType, EthAddressBrand } from '@imtbl/imx-sdk';
+import { DankBookButton } from './components/dankbook';
 import { IMXBalanceButton } from './imxBalanceButton';
 import { DiscordButton } from './discordButton';
+import { DankMarketButton } from './components/dankmarket-button';
 
 export const ButtonBar = ({handleOpenModal, userProfile, account}) => {
-    const [balances, setBalances] = useState([]);
+    const [balance, setBalance] = useState();
+
+    const fetchBalance = useCallback(async () => {
+        const client = await ImmutableXClient.build({ publicApiUrl: process.env.NEXT_PUBLIC_API_URL });
+        const balances = await client.listBalances({user: account});
+        console.log(balances);
+        balances.result.forEach((el) => {
+            if (el.symbol === "ETH") {
+                setBalance({...el});            
+            }
+        });   
+    }, [account]);
 
     useEffect(() => {
-        async function setup() {
-            const client = await ImmutableXClient.build({ publicApiUrl: process.env.NEXT_PUBLIC_IMX_API_ADDRESS });
-            const balances = await client.listBalances({user: account, symbols: ['IMX', 'ETH']});
-            setBalances(balances.result);            
+        if (account && fetchBalance) {
+            fetchBalance();
+            // setInterval(() => {
+            //     fetchBalance()
+            // }, 5000);
         }
-        if (account) {
-            setup();
-        }
-    }, [account])
+    }, [account, fetchBalance]);
 
     return (
         <div style={{position: "sticky", top: 0}}>
@@ -47,6 +57,7 @@ export const ButtonBar = ({handleOpenModal, userProfile, account}) => {
                         <Flex direction="row" mt="5">
                             <DiscordButton />
                             <DankBookButton />
+                            <DankMarketButton />
                             <MintButton />  
                             <Box
                                 ml="1.5"
@@ -57,7 +68,7 @@ export const ButtonBar = ({handleOpenModal, userProfile, account}) => {
                                 borderRadius="xl"
                                 py="0">
                                 <CollectionButton userAddress={account}/>
-                                {balances && <IMXBalanceButton imxBalance={balances.length !== 0 ? balances[0] : 0} />}
+                                <IMXBalanceButton imxBalance={balance} account={account} fetchBalance={fetchBalance} />
                                 <Button
                                     bg={AppColors.buttonBackground}
                                     border="1px solid transparent"
