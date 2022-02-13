@@ -11,13 +11,34 @@ var web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
 const fs = require("fs");
 var path = require("path");
 
+const fetchLayoutHeight = (state) => {
+    if (state.layout.layoutIdentifier === "FS") {
+        let row = 0;
+        let layoutHeight = 0;
+        state.layout.layoutSections.forEach((section) => {
+            if (row <= section.rowStart) {
+                const numRows = section.rowEnd - section.rowStart;
+                let rowHeight = state.layoutHeight / state.layout.rows;
+                if (section.imageHeight) {
+                    rowHeight = section.imageHeight / numRows;
+                }
+                layoutHeight += (rowHeight * numRows);
+                row = section.rowEnd;
+            }
+        });
+        return layoutHeight;
+    } else {
+        return state.layoutHeight;
+    } 
+}
+
 async function renderImage(state) {
     const browser = await playwright['chromium'].launch();
     // Create a page with the Open Graph image size best practise
     const page = await browser.newPage({
         viewport: {
             width: state.layoutWidth + 25,
-            height: state.layoutHeight + 170,
+            height: parseInt(fetchLayoutHeight(state)) + 170,
         }
     });
   

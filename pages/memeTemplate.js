@@ -36,13 +36,14 @@ export default class MemeMinterTemplate extends React.Component {
             let search = window.location.search;
             let jsonState = decodeURIComponent(search).replace("?state=", "");
             this.state = JSON.parse(jsonState);
+            console.log(this.state)
         }
     }
 
     fetchSectionRowHeight = (section) => {
         if (this.state.layout.layoutIdentifier === "FS") {
             const numRows = section.rowEnd - section.rowStart;
-            let rowHeight = this.state.layoutHeight / this.props.layout.rows;
+            let rowHeight = this.state.layoutHeight / this.state.layout.rows;
             if (section.imageHeight) {
                 rowHeight = section.imageHeight / numRows;
             }
@@ -59,7 +60,7 @@ export default class MemeMinterTemplate extends React.Component {
             this.state.layout.layoutSections.forEach((section) => {
                 if (row <= section.rowStart) {
                     const numRows = section.rowEnd - section.rowStart;
-                    let rowHeight = this.state.layoutHeight / this.props.layout.rows;
+                    let rowHeight = this.state.layoutHeight / this.state.layout.rows;
                     if (section.imageHeight) {
                         rowHeight = section.imageHeight / numRows;
                     }
@@ -80,7 +81,7 @@ export default class MemeMinterTemplate extends React.Component {
             this.state.layout.layoutSections.forEach((section) => {
                 if (row <= section.rowStart) {
                     const numRows = section.rowEnd - section.rowStart;
-                    let rowHeight = this.state.layoutHeight / this.props.layout.rows;
+                    let rowHeight = this.state.layoutHeight / this.state.layout.rows;
                     if (section.imageHeight) {
                         rowHeight = section.imageHeight / numRows;
                     }

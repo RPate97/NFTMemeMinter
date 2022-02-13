@@ -45,7 +45,7 @@ export const BalanceModal: React.FC<Props> = ({isOpen, onClose, balance, account
     const handleWithdraw = async () => {
         await link.prepareWithdrawal({
             type: ETHTokenType.ETH,
-            amount: '1.13', //The amount of the token to withdraw
+            amount: '3.375', //The amount of the token to withdraw
         });
         setTimeout(async () => {
             await fetchBalance();
@@ -150,7 +150,7 @@ export const BalanceModal: React.FC<Props> = ({isOpen, onClose, balance, account
                                 height="38px"
                                 onClick={handleWithdraw}>
                                 <Text color="white" fontSize="md">
-                                    Start Withdraw
+                                    Start Withdrawal
                                 </Text>                                
                             </Button> 
                             <Button

@@ -23,6 +23,7 @@ import { NFTMeme, UserProfile } from "src/utils/types";
 import { SellButton } from "./sell";
 import useAxios from 'axios-hooks';
 import { CancelSale } from "./cancel-sale";
+import { BurnNFTButton } from "./burn";
 
 type Props = {
     isOpen: boolean,
@@ -130,6 +131,7 @@ export const MemeModal: React.FC<Props> = ({isOpen, onClose, nftMeme, userProfil
                         {nftMeme.metadata.score.toString()}
                     </Text>
                     <VoteButton memeId={nftMeme.token_id} upDown={true} /> */}
+                    <BurnNFTButton tokenId={nftMeme.token_id} nftMeme={nftMeme} />
                 </ModalFooter>
             </ModalContent>
         </Modal>

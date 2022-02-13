@@ -32,9 +32,8 @@ export function MemeCollection({account, deactivate, userProfile}) {
             sx={{ columnCount: [1, 2, 3, 4], columnGap: "8px" }}
           >
             {data.result.map((el: NFTMeme) => {
-              return (
-                <CollectionMeme key={el.metadata.hash} nftMeme={el} userProfile={userProfile} />
-              )
+              console.log(el)
+              return el && el.metadata ? <CollectionMeme key={el.metadata.hash} nftMeme={el} userProfile={userProfile} /> : null;
             })}             
           </Box> : <EmptyCollection />}
         </Flex>

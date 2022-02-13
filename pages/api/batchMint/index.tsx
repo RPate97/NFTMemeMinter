@@ -133,11 +133,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 blueprint: blueprint,
                 royalties: [ 
                     {
-                        recipient: process.env.DANKMINTER_ROYALTY_ADDRESS.toLowerCase(),
+                        recipient: process.env.DANKMINTER_ROYALTY_ADDRESS,
                         percentage: 10,
                     },
                     {
-                        recipient: mintRequest.creatorAddress.toLowerCase(),
+                        recipient: mintRequest.creatorAddress,
                         percentage: 5,
                     }
                 ],
