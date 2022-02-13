@@ -30,7 +30,7 @@ export const BalanceModal: React.FC<Props> = ({isOpen, onClose, balance, account
     let imx_balance = balance ? ethers.utils.formatEther(balance.balance._hex) : 0;
     let preparing_withdrawal = balance ? ethers.utils.formatEther(balance.preparing_withdrawal._hex) : 0;
     let withdrawable = balance ? ethers.utils.formatEther(balance.withdrawable._hex) : 0;
-
+    console.log(balance);
     const link = useMemo(() => {
         return new Link(process.env.NEXT_PUBLIC_LINK_ADDRESS);
     }, []);
@@ -72,6 +72,13 @@ export const BalanceModal: React.FC<Props> = ({isOpen, onClose, balance, account
                 borderRadius="3xl">
                 <ModalHeader color="white" px={4} fontSize="lg" fontWeight="medium">
                     Balances
+                    <Text
+                        color="white"
+                        textAlign="left"
+                        fontWeight="medium"
+                        fontSize="sm">
+                        {"DankMinter uses the ImmutableX platform for gasless minting and trading. To buy NFTs, you'll need to get some crypto into IMX."}
+                    </Text>
                 </ModalHeader>
                 <ModalCloseButton
                 color="white"
@@ -96,11 +103,66 @@ export const BalanceModal: React.FC<Props> = ({isOpen, onClose, balance, account
                                 color="white"
                                 textAlign="left"
                                 fontWeight="medium"
+                                fontSize="lg"
+                                mb={1}>
+                                Need crypto?
+                            </Text>
+                            <Flex flexDirection="row" width="100%">
+                                <Button
+                                    isFullWidth={true}
+                                    bg="transparent"
+                                    border="1px solid white"
+                                    _hover={{
+                                        border: "1px",
+                                        borderStyle: "solid",
+                                        borderColor: "white",
+                                        backgroundColor: "gray.700",
+                                    }}
+                                    borderRadius="xl"
+                                    m="0px"
+                                    mr="5px"
+                                    height="38px"
+                                    onClick={handleCompleteWithdraw}>
+                                    <Text color="white" fontSize="md">
+                                        Buy with USD
+                                    </Text>                                
+                                </Button>  
+                                <Button
+                                    isFullWidth={true}
+                                    bg="transparent"
+                                    border="1px solid white"
+                                    _hover={{
+                                        border: "1px",
+                                        borderStyle: "solid",
+                                        borderColor: "white",
+                                        backgroundColor: "gray.700",
+                                    }}
+                                    borderRadius="xl"
+                                    m="0px"
+                                    ml="5px"
+                                    height="38px"
+                                    onClick={handleCompleteWithdraw}>
+                                    <Text color="white" fontSize="md">
+                                        Sell for USD
+                                    </Text>                                
+                                </Button>
+                            </Flex>
+                            <Text
+                                color="white"
+                                textAlign="left"
+                                fontWeight="medium"
+                                fontSize="lg"
+                                mt={3}>
+                                Already got some on Ethereum?
+                            </Text>
+                            <Text
+                                color="white"
+                                textAlign="left"
+                                fontWeight="medium"
                                 fontSize="md">
                                 Deposited ETH: {imx_balance}
                             </Text>
                             <Text
-                                mt={2}
                                 color="white"
                                 textAlign="left"
                                 fontWeight="medium"
@@ -108,7 +170,6 @@ export const BalanceModal: React.FC<Props> = ({isOpen, onClose, balance, account
                                 Withdrawable ETH: {withdrawable}
                             </Text>
                             <Text
-                                mt={2}
                                 color="white"
                                 textAlign="left"
                                 fontWeight="medium"
@@ -128,7 +189,7 @@ export const BalanceModal: React.FC<Props> = ({isOpen, onClose, balance, account
                                 }}
                                 borderRadius="xl"
                                 m="0px"
-                                mr="0px"
+                                mr="10px"
                                 height="38px"
                                 onClick={handleDeposit}>
                                 <Text color="white" fontSize="md">
@@ -146,7 +207,7 @@ export const BalanceModal: React.FC<Props> = ({isOpen, onClose, balance, account
                                 }}
                                 borderRadius="xl"
                                 m="0px"
-                                mr="0px"
+                                mr="10px"
                                 height="38px"
                                 onClick={handleWithdraw}>
                                 <Text color="white" fontSize="md">
@@ -171,10 +232,9 @@ export const BalanceModal: React.FC<Props> = ({isOpen, onClose, balance, account
                                     Complete Withdraw
                                 </Text>                                
                             </Button>  
-                        </Flex>
+                        </Flex> 
                     </Box>
                 </ModalBody>
-
                 <ModalFooter
                     justifyContent="end"
                     background="gray.900"
@@ -186,6 +246,7 @@ export const BalanceModal: React.FC<Props> = ({isOpen, onClose, balance, account
                         textAlign="left"
                         fontWeight="medium"
                         fontSize="md">
+                        Deposits and withdrawals must be confirmed with the Ethereum mainnet and may take up to 48 hours to be completed.  
                     </Text>
                 </ModalFooter>
             </ModalContent>

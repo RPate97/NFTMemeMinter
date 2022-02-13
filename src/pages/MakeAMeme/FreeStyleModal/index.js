@@ -27,9 +27,7 @@ import { LayoutSection } from './layoutSection';
 import QRCode from 'src/components/qrCode';
 import { MinterAutoSizedText } from 'src/components/minter-auto-sized-text';
 import { AutoSizeSticker } from './AutoSizeSticker';
-
 const axios = require('axios');
-
 export default class FreeStyleModal extends React.Component {
     constructor(props) {
         super(props);

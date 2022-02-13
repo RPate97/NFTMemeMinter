@@ -43,7 +43,7 @@ async function renderImage(state) {
     });
   
     // Generate the full URL out of the given path (GET parameter)
-    const url = "localhost:3000/memeTemplate?state=" + encodeURIComponent(JSON.stringify(state));
+    const url = `${process.env.DANKMINTER_HOST}/memeTemplate?state=${encodeURIComponent(JSON.stringify(state))}`;
     console.log(url);
     await page.goto(url, {
         timeout: 30 * 1000
@@ -240,7 +240,7 @@ const handler = async(req, res) => {
     let currentTime = Date.now();
     let metadata = createMemeMetadata(
         req.body.name, 
-        `ipfs://${ipfsHash}`, 
+        `${process.env.NEXT_PUBLIC_IMAGE_GATEWAY}${ipfsHash}`, 
         `A gloriously dank meme created by ${user.handle} and minted with DankMinter. Mint your own one-of-a-kind NFT memes at https://www.dankminter.com`,
         user.handle,
         user.address,

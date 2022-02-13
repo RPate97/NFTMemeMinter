@@ -32,13 +32,10 @@ export const DefaultPage: React.FC<Props> = (props) => {
         getUserProfile
     } = props;
 
-    console.log(getUserProfile);
     return (
         <Flex 
             flexDirection="column"
-            backgroundImage="linear-gradient(to top, #09203f 0%, #537895 100%)"
-            backgroundSize="cover"
-            backgroundAttachment="fixed"
+            backgroundColor="black"
             height="100vh"
         >
             <Header title="DankMinter"/>
