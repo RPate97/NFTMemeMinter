@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { AppColors } from "styles/styles";
 import { stickers } from "src/utils/properties";
-import { ImageButton } from "src/components/MakeAMeme/FreeStyleModal/selectImageModal/imageButton";
+import { ImageButton } from "src/pages/MakeAMeme/FreeStyleModal/selectImageModal/imageButton";
 import { LayoutSection, LayoutImage } from "src/utils/types";
 import { useState, useEffect } from "react";
 const axios = require('axios');

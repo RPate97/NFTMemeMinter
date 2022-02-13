@@ -1,5 +1,5 @@
 import { Flex, Box, Text, Grid, GridItem, Button, useDisclosure } from "@chakra-ui/react"
-import FreeStyleModal from "src/components/MakeAMeme/FreeStyleModal";
+import FreeStyleModal from "src/pages/MakeAMeme/FreeStyleModal";
 
 export const LayoutButton = ({userAddress, layout, userProfile}) => {
     const { isOpen, onOpen, onClose } = useDisclosure();

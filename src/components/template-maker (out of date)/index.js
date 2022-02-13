@@ -1,6 +1,6 @@
 import React from 'react';
-import { MinterAutoSizedText } from 'src/components/MakeAMeme/MinterModal/MinterAutoSizedText';
-import { MinterImage } from "src/components/common-ui/minter-image";
+import { MinterAutoSizedText } from 'src/pages/MakeAMeme/MinterModal/MinterAutoSizedText';
+import { MinterImage } from "src/pages/common-ui/minter-image";
 import { AppColors } from "styles/styles";
 import {
     Box,
@@ -62,7 +62,6 @@ export default class TemplateMakerModal extends React.Component {
     }
 
     changeTemplateName = (newName) => {
-        console.log(newName);
         this.setState(prevState => ({
             ...prevState,
             templateName: newName

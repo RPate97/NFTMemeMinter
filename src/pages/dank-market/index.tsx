@@ -33,6 +33,8 @@ export const DankMarket: React.FC<Props> = (props) => {
        },
     });
 
+    console.log(data);
+
     return (
         <DefaultPage
             {...props}

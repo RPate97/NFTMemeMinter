@@ -1,3 +1,3 @@
-import { MakeAMeme } from "src/components/MakeAMeme";
+import { MakeAMeme } from "src/pages/MakeAMeme";
 
 export default MakeAMeme;

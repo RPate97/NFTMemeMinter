@@ -43,8 +43,6 @@ export const ImageRequestButton: React.FC<Props> = () => {
     }
 
     const requestImage = async () => {
-        console.log("requesting image...");
-
         setLoading(true);
 
         var formData = new FormData();
@@ -56,7 +54,6 @@ export const ImageRequestButton: React.FC<Props> = () => {
             height: memeHeight,
             name: imageName,
         };
-        console.log(token);
         formData.append("imageInfo", JSON.stringify(imageInfo));
         formData.append("token", token);
 
@@ -65,7 +62,6 @@ export const ImageRequestButton: React.FC<Props> = () => {
             'Content-Type': 'multipart/form-data'
           }})
           .then(function (response) {
-                console.log(response);
                 setLoading(false);
                 setSuccessful(true);  
           })

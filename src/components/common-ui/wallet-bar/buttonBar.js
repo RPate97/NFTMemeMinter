@@ -22,7 +22,6 @@ export const ButtonBar = ({handleOpenModal, userProfile, account}) => {
     const fetchBalance = useCallback(async () => {
         const client = await ImmutableXClient.build({ publicApiUrl: process.env.NEXT_PUBLIC_API_URL });
         const balances = await client.listBalances({user: account});
-        console.log(balances);
         balances.result.forEach((el) => {
             if (el.symbol === "ETH") {
                 setBalance({...el});            

@@ -18,8 +18,6 @@ export default async function handler(req, res) {
         return res.status(500).send(e.message);
     }
 
-    console.log(id);
-
     try {
         const imageRequestCollection = client.db("primary").collection("imageRequests");
         await imageRequestCollection.findOneAndDelete({_id: new ObjectId(id)});

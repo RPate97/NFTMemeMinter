@@ -49,11 +49,11 @@ async function hashIsUnique(memeHash, client) {
         // check mint queue for hash
         const mintQueueCollection = client.db("primary").collection("mintQueue");
         const m1 = await mintQueueCollection.findOne({hash: {$eq: memeHash}});
-        if (m1?.memeHash) {
+        if (m1?.hash) {
             return false;
         } else {
             // check metadata collection for hash
-            const metadataCollection = client.db("primary").collection("metedata");
+            const metadataCollection = client.db("primary").collection("metadata");
             const m2 = await metadataCollection.findOne({hash: {$eq: memeHash}});
             if (m2?.hash) {
                 return false;
@@ -152,12 +152,10 @@ function createMemeRedirectLink(creatorName, creatorMemeIndex, memeHash) {
 }
 
 const handler = async(req, res) => {
-    console.log("in handler");
     // TODO - validate all inputs
     // connect to db
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     await client.connect();
-    console.log("connected to db");
 
     let userCollection;
     let user;
@@ -169,8 +167,6 @@ const handler = async(req, res) => {
         console.log(e);
         return res.status(404).send("user not found");
     }
-
-    console.log("got user");
 
     // get state from body
     let state = req.body.state;
@@ -188,8 +184,6 @@ const handler = async(req, res) => {
     // hash DNA
     const memeHash = hashDNA(DNA);
 
-    console.log("created dna and hash");
-
     // check if hash is unique
     const isUnique = await hashIsUnique(memeHash, client);
     if (!isUnique) {
@@ -198,8 +192,6 @@ const handler = async(req, res) => {
     }
     // render image
     const imgStream = await renderImage(state);
-
-    console.log("rendered image");
 
     // pin image file
     const options = {

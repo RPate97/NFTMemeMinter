@@ -10,7 +10,6 @@ import { NFTMeme } from "src/utils/types";
 
 export function MemeCollection({account, deactivate, userProfile}) {
   const [page, setPage] = useState(1)
-  console.log(userProfile.address);
   const [{ data, loading, error }] = useAxios({
     url: `${process.env.NEXT_PUBLIC_API_URL}/assets`,
     params: { 
@@ -34,7 +33,7 @@ export function MemeCollection({account, deactivate, userProfile}) {
           >
             {data.result.map((el: NFTMeme) => {
               return (
-                <CollectionMeme key={el.metadata.hash} nftMeme={el} />
+                <CollectionMeme key={el.metadata.hash} nftMeme={el} userProfile={userProfile} />
               )
             })}             
           </Box> : <EmptyCollection />}

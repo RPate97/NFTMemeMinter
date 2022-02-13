@@ -18,14 +18,11 @@ export const MarketMeme: React.FC<Props> = (props) => {
         url: `${process.env.NEXT_PUBLIC_API_URL}/assets/${process.env.NEXT_PUBLIC_DANKMINTER_COLLECTION_CONTRACT_ADDRESS}/${tokenId}`,
     });
 
-    console.log(data);
-
     return (
         <div>
             <Box>
                 <Button 
                     onClick={() => {
-                        console.log(data);
                         if (data) {
                             onOpen();
                         }

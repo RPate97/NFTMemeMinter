@@ -2,14 +2,14 @@ import { Button, Text } from "@chakra-ui/react";
 import { Link } from '@imtbl/imx-sdk';
 import { MarketOrder, NFTMeme } from "src/utils/types";
 import { ethers } from 'ethers';
+import { EthIcon } from "src/components/custom-icons/eth";
 
 type Props = {
     order: MarketOrder,
 };
 
 export const BuyButton: React.FC<Props> = ({order}) => {
-    console.log(order);
-
+    let price = order ? ethers.utils.formatEther(order.buy.data.quantity) : null;
     const link = new Link(process.env.NEXT_PUBLIC_LINK_ADDRESS);    
     const handleBuy = async () => {
         await link.buy({ orderIds: [order.order_id.toString()] });
@@ -30,11 +30,15 @@ export const BuyButton: React.FC<Props> = ({order}) => {
             m="0px"
             mr="5px"
             height="40px"
-            p={0}
+            p={4}
             onClick={handleBuy}>
-            <Text color="white" fontSize="md" p={4} m={0}>
+            <Text color="white" fontSize="md" pr={2} m={0}>
                 Buy
-            </Text>   
+            </Text>  
+            <Text color="gray.400" fontSize="md" fontWeight="bold" mr={2}>
+                {price}
+            </Text>
+            <EthIcon width={20} height={20} /> 
         </Button>      
     );
 }

@@ -6,12 +6,10 @@ const pinata = pinataSDK(process.env.PINATA_API_KEY, process.env.PINATA_API_SECR
 export default async function handler(req, res) {
     const template = req.body.template;
     const id = req.body.templateRequestId;
-    console.log(id);
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     let hashToUnpin = template.src.split('/ipfs/')[1];
     pinata.unpin(hashToUnpin).then(async (result) => {
         //handle results here
-        console.log(result);
         await client.connect();
         try {
             const templateRequestCollection = client.db("primary").collection("templateRequests");

@@ -23,8 +23,8 @@ import {
     ModalBody,
 } from "@chakra-ui/react";
 import { RepeatIcon, MinusIcon } from "@chakra-ui/icons";
-import { OptionButtons } from 'src/components/MakeAMeme/FreeStyleModal/optionButtons';
-import { LayoutSection } from 'src/components/MakeAMeme/FreeStyleModal/layoutSection';
+import { OptionButtons } from 'src/pages/MakeAMeme/FreeStyleModal/optionButtons';
+import { LayoutSection } from 'src/pages/MakeAMeme/FreeStyleModal/layoutSection';
 import QRCode from 'src/components/qrCode';
 import { MinterAutoSizedText } from 'src/components/minter-auto-sized-text';
 
@@ -36,7 +36,6 @@ export default class MemeMinterTemplate extends React.Component {
             let search = window.location.search;
             let jsonState = decodeURIComponent(search).replace("?state=", "");
             this.state = JSON.parse(jsonState);
-            console.log(this.state)
         }
     }
 

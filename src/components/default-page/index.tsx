@@ -31,6 +31,8 @@ export const DefaultPage: React.FC<Props> = (props) => {
         setUserProfile, 
         getUserProfile
     } = props;
+
+    console.log(getUserProfile);
     return (
         <Flex 
             flexDirection="column"

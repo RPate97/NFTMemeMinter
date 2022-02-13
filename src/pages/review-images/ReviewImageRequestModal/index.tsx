@@ -45,14 +45,12 @@ export const ReviewImageRequestModal: React.FC<Props> = ({isOpen, onClose, image
     const approveImage = async () => {
         imageRequest.name = imageName;
         setLoading(true);
-        console.log("approving...");
 
         await axios.post('/api/admin/approveImageRequest', {imageRequest: imageRequest, imageRequestId: imageRequest._id})
         .then(function (response) {
             setDidApprove(true);
             setLoading(false);
             setSuccessful(true);
-            console.log(response);
         })
         .catch(function (error) {
             setLoading(false);
@@ -62,14 +60,11 @@ export const ReviewImageRequestModal: React.FC<Props> = ({isOpen, onClose, image
 
     const denyImage = async () => {
         setLoading(true);
-        console.log("denying...");
-
         await axios.post('/api/admin/rejectImageRequest', {imageRequest: imageRequest, imageRequestId: imageRequest._id})
         .then(function (response) {
             setDidApprove(false);
             setLoading(false);
             setSuccessful(true);
-            console.log(response);
         })
         .catch(function (error) {
             setLoading(false);

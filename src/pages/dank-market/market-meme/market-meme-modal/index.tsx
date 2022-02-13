@@ -24,6 +24,7 @@ import { VoteButton } from "src/components/MemeCollection/vote";
 import { useTokenBalance } from '@usedapp/core';
 import { MarketOrder, NFTMeme } from "src/utils/types";
 import { BuyButton } from "./buy-button";
+import { ethers } from 'ethers';
 
 type Props = {
     isOpen: boolean,
@@ -82,6 +83,9 @@ export const MarketMemeModal: React.FC<Props> = ({isOpen, onClose, nftMeme, orde
                                     <Text color="gray.400" fontSize="sm">
                                         Creation Date: {(new Date(nftMeme.created_at)).toDateString()}
                                     </Text>
+                                    <Text color="gray.400" fontSize="sm">
+                                        Dankness Tier: {nftMeme.metadata.dankness.toString()}
+                                    </Text>
                                 </Flex>
                                 <Flex flexDirection="column" justifyContent="space-between" alignItems="start" mb={3}>
                                     <Text color="gray.400" fontSize="sm">
@@ -95,9 +99,6 @@ export const MarketMemeModal: React.FC<Props> = ({isOpen, onClose, nftMeme, orde
                                     </Text>
                                 </Flex>                                
                             </Flex>
-                            <Text color="gray.400" fontSize="sm">
-                                Dankness Tier: {nftMeme.metadata.dankness.toString()}
-                            </Text>
                         </Box>                        
                     </Flex>
                 </ModalBody>

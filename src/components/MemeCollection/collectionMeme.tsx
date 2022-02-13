@@ -3,18 +3,18 @@ import useAxios from 'axios-hooks';
 import { Box, Image, Button } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 import { MemeModal } from "src/components/MemeCollection/memeModal";
-import { NFTMeme } from "src/utils/types";
+import { NFTMeme, UserProfile } from "src/utils/types";
 
 type Props = {
     nftMeme: NFTMeme,
+    userProfile: UserProfile
 }
 
-export const CollectionMeme: React.FC<Props> = ({nftMeme}) => {
+export const CollectionMeme: React.FC<Props> = ({nftMeme, userProfile}) => {
     const gatewayImage = nftMeme.image_url.replace('ipfs://', process.env.NEXT_PUBLIC_IMAGE_GATEWAY);
     const { isOpen, onOpen, onClose } = useDisclosure();
-    console.log(gatewayImage);
     return (
-        <div>
+        <>
             { nftMeme && 
             <Box>
                 <Button 
@@ -47,9 +47,10 @@ export const CollectionMeme: React.FC<Props> = ({nftMeme}) => {
                     isOpen={isOpen}
                     onClose={onClose}
                     nftMeme={nftMeme}
+                    userProfile={userProfile}
                 />       
             </Box>     
             }            
-        </div>
+        </>
     );
 }

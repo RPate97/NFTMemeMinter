@@ -66,7 +66,6 @@ export default async function handler(req, res) {
         const params = new url.URLSearchParams({ src: src });
         const results = await axios.post(`${process.env.IMAGE_MATCH_BASE_URL}/search`, params.toString())
           .then(function (response) {
-            console.log(response);
             return response.result;
           })
           .catch(function (error) {

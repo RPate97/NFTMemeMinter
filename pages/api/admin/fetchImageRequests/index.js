@@ -12,14 +12,12 @@ export default async function handler(req, res) {
         await client.connect();
         const imageCollection = client.db("primary").collection("imageRequests");
         const imageRequests = await imageCollection.find().skip((page - 1) * 10).limit(10).toArray();
-        console.log(imageRequests);
         if (imageRequests) {
             res.status(200).json({ imageRequests: imageRequests });
         } else {
             res.status(404).json({ error: 'imageRequests not found' });
         }
     } catch(e) {
-        console.log(e);
         res.status(500).json({ error: e.message });
     } finally {
         await client.close();

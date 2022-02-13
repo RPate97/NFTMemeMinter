@@ -1,11 +1,11 @@
 import React from 'react';
 import { FormGroup, Label } from 'reactstrap';
 import { MinterAutoSizedText } from 'src/components/minter-auto-sized-text';
-import QRCode from '../../qrCode';
+import QRCode from 'src/components/qrCode';
 import * as htmlToImage from 'html-to-image';
 import { MinterImage } from "src/components/common-ui/minter-image";
 import { AppColors } from "styles/styles";
-import { FirstMint } from "src/components/MakeAMeme/MinterModal (out of date)/FirstMintModal";
+import { FirstMint } from "src/pages/MakeAMeme/MinterModal (out of date)/FirstMintModal";
 import {
     Box,
     Button,

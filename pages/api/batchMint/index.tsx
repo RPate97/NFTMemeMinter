@@ -46,12 +46,7 @@ async function mintNFTs(payload: ImmutableMethodParams.ImmutableOffchainMintV2Pa
         await waitForTransaction(Promise.resolve(registerImxResult.tx_hash));
     }
 
-    console.log(payload[0])
-    console.log(payload[0].users[0]);
-    console.log(payload[0].users[0].tokens[0]);
-
     const result = await minter.mintV2(payload);
-    console.log(result);
     return result;
 }
 
@@ -87,7 +82,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         const serviceMetadataCollection = client.db("primary").collection("serviceMetadata");
         serviceMetadata = await serviceMetadataCollection.findOne({docIndex: 1});
-        console.log(serviceMetadata);
     } catch (e) {
         console.error(e);
         res.status(500).send(e.message);
@@ -109,7 +103,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         // get starting tokenId
         let tokenId = serviceMetadata.mintingIndex;
-        console.log(tokenId);
 
         // create array for new meme metadata so it can be inserted at once
         let newMemeMetadata = [];
@@ -117,6 +110,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         // create array for meme links so they can be inserted at once
         let newMemeLinks = [];
 
+        let deleteFromMintQueue = [];
         // for each meme to mint
         memesToMint.forEach((mintRequest: any) => {
             // assign id
@@ -125,7 +119,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             let memeHash = mintRequest.hash;
             // create withdraw blueprint
             let blueprint = createBlueprint(mintRequest.tokenId, memeHash, mintRequest.creator);
-            console.log(blueprint);
             // add redirect link to new links array
             newMemeLinks.push(mintRequest.redirectLink);
             // delete link from metadata
@@ -143,10 +136,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                         recipient: process.env.DANKMINTER_ROYALTY_ADDRESS.toLowerCase(),
                         percentage: 10,
                     },
-                    // {
-                    //     recipient: mintRequest.creatorAddress.toLowerCase(),
-                    //     percentage: 5,
-                    // }
+                    {
+                        recipient: mintRequest.creatorAddress.toLowerCase(),
+                        percentage: 5,
+                    }
                 ],
             };  
             let userIsInArray = false;
@@ -171,13 +164,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
             // increment tokenId
             tokenId += 1;
+
+            deleteFromMintQueue.push(mintRequest._id);
         });
 
         try {
-            console.log(payload);
             // send mintV2 request
             const mintRes = await mintNFTs(payload);
-            console.log(`${mintRes.results.length} NFTs successfully minted`);
     
             const linkCollection = client.db("primary").collection("memelinks");
             const metadataCollection = client.db("primary").collection("metadata");
@@ -190,6 +183,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             await serviceMetadataCollection.updateOne({docIndex: 1}, {$inc: {mintingIndex: newMemeLinks.length}});
 
             // TODO - increment all meme lineage decendent counts
+
+            // Delete all memes that were minted from queue
+            const mintQueueCollection = client.db("primary").collection("mintQueue");
+            await mintQueueCollection.remove({ _id: { $in: deleteFromMintQueue} });
 
             // send success response
             res.status(200).send(`successfully minted ${mintRes.results.length} memes`);

@@ -9,7 +9,6 @@ const useAxios = ({ url, method, body = null, headers = null }) => {
     const fetchData = () => {
         axios.post(url, body)
             .then((res) => {
-                console.log(res.data);
                 setResponse(res.data);
             })
             .catch((err) => {

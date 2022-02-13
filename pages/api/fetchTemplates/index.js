@@ -12,7 +12,6 @@ export default async function handler(req, res) {
         await client.connect();
         const templateCollection = client.db("primary").collection("templates");
         const templates = await templateCollection.find().skip((page - 1) * 10).limit(10).toArray();
-        console.log(templates);
         if (templates) {
             res.status(200).json({ templates: templates });
         } else {

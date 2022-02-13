@@ -18,21 +18,34 @@ import {
     Image,
   } from "@chakra-ui/react";
   import { AppColors } from "styles/styles";
-import { SacrificeButton } from "src/components/MemeCollection/sacrifice";
-import { TipCreatorButton } from "src/components/MemeCollection/tipCreator";
 import { VoteButton } from "src/components/MemeCollection/vote";
-import { useTokenBalance } from '@usedapp/core';
-import { NFTMeme } from "src/utils/types";
+import { NFTMeme, UserProfile } from "src/utils/types";
 import { SellButton } from "./sell";
+import useAxios from 'axios-hooks';
+import { CancelSale } from "./cancel-sale";
 
 type Props = {
     isOpen: boolean,
     onClose: () => void,
     nftMeme: NFTMeme,
+    userProfile: UserProfile
 }
 
-export const MemeModal: React.FC<Props> = ({isOpen, onClose, nftMeme}) => {
+export const MemeModal: React.FC<Props> = ({isOpen, onClose, nftMeme, userProfile}) => {
     const gatewayImage = nftMeme.image_url.replace('ipfs://', process.env.NEXT_PUBLIC_IMAGE_GATEWAY);
+
+    const [{ data, loading, error }] = useAxios({
+        url: `${process.env.NEXT_PUBLIC_API_URL}/orders?page_size=1&user=0xC6f9519F8e2C2be0bB29A585A894912Ccea62Dc8&status=active&sell_token_id=1&sell_token_address=0xaB67F62376dA415337F4eaaBD28f0b264b7dA15A`,
+        params: { 
+          page_size: 1,
+          user: userProfile.address,
+          status: "active",
+          sell_token_id: nftMeme.token_id,
+          sell_token_address: process.env.NEXT_PUBLIC_DANKMINTER_COLLECTION_CONTRACT_ADDRESS,
+         },
+    });
+
+    console.log(data);
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} size="md">
@@ -81,6 +94,9 @@ export const MemeModal: React.FC<Props> = ({isOpen, onClose, nftMeme}) => {
                                     <Text color="gray.400" fontSize="sm">
                                         Creation Date: {(new Date(nftMeme.created_at)).toDateString()}
                                     </Text>
+                                    <Text color="gray.400" fontSize="sm">
+                                        Dankness Tier: {nftMeme.metadata.dankness.toString()}
+                                    </Text>
                                 </Flex>
                                 <Flex flexDirection="column" justifyContent="space-between" alignItems="start" mb={3}>
                                     <Text color="gray.400" fontSize="sm">
@@ -94,27 +110,26 @@ export const MemeModal: React.FC<Props> = ({isOpen, onClose, nftMeme}) => {
                                     </Text>
                                 </Flex>                                
                             </Flex>
-                            <Text color="gray.400" fontSize="sm">
-                                Dankness Tier: {nftMeme.metadata.dankness.toString()}
-                            </Text>
                         </Box>                        
                     </Flex>
                 </ModalBody>
 
                 <ModalFooter
-                    justifyContent="end"
+                    justifyContent="start"
                     background="gray.900"
                     borderBottomLeftRadius="3xl"
                     borderBottomRightRadius="3xl">
                     {/* <TipCreatorButton treeFiddyBalance={0} memeId={nftMeme.token_id}/> */}
                     {/* <SacrificeButton treeFiddyBalance={0} memeId={nftMeme.token_id}/> */}
-                    <SellButton nftMeme={nftMeme} />
-                    <Spacer />
+                    {data && data.result[0] 
+                      ? <CancelSale order={data.result[0]} />
+                      : <SellButton nftMeme={nftMeme} /> }
+                    {/* <Spacer />
                     <VoteButton memeId={nftMeme.token_id} upDown={false} />
                     <Text color="gray.400" fontSize="md" fontWeight="bold" ml={1} textAlign="center">
                         {nftMeme.metadata.score.toString()}
                     </Text>
-                    <VoteButton memeId={nftMeme.token_id} upDown={true} />
+                    <VoteButton memeId={nftMeme.token_id} upDown={true} /> */}
                 </ModalFooter>
             </ModalContent>
         </Modal>
