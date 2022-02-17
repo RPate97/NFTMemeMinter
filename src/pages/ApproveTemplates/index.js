@@ -1,5 +1,5 @@
 import styles from 'styles/Home.module.css';
-import { Gallery } from 'src/components/ApproveTemplates/Gallery';
+import { Gallery } from 'src/pages/ApproveTemplates/Gallery';
 import { Header } from "src/components/common-ui/header";
 
 export function ApproveTemplates() {
