@@ -17,7 +17,7 @@ import { ImageRequestButton } from 'src/components/image-request-button';
 import { DefaultPage } from 'components/default-page';
 import { UserProfile } from 'src/utils/types';
 
-axios.defaults.baseURL = 'http://localhost:3000';
+axios.defaults.baseURL = process.env.NEXT_PUBLIC_DANKMINTER_DOMAIN;
 
 export const Gallery = ({account, deactivate, userProfile}) => {
     const { isOpen, onOpen, onClose } = useDisclosure();

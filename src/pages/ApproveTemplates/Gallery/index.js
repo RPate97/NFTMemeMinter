@@ -8,7 +8,7 @@ import {
 import useAxios from 'axios-hooks';
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:3000';
+axios.defaults.baseURL = process.env.NEXT_PUBLIC_DANKMINTER_DOMAIN;
 
 export const Gallery = () => {
     const [page, setPage] = useState(1)
