@@ -1,5 +1,5 @@
 import React from 'react';
-import { MinterAutoSizedText } from 'src/pages/MakeAMeme/MinterModal/MinterAutoSizedText';
+import { MinterAutoSizedText } from 'src/components/MakeAMeme/MinterModal/MinterAutoSizedText';
 import { MinterImage } from "src/pages/common-ui/minter-image";
 import { AppColors } from "styles/styles";
 import {
