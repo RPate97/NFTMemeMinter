@@ -17,12 +17,6 @@ export const Gallery = () => {
       params: { page },
     })
 
-    useEffect(() => {
-        if (!loading) {
-            console.log(data);
-        }
-    }, [loading, data]);
-
     return (
         <div>  
             <main style={styles.main}>

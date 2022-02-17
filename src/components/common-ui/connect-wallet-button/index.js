@@ -87,13 +87,13 @@ export const ConnectWalletButton = ({activateBrowserWallet, account, setDoneConn
                 alignContent="center"
                 h="100vh">
                 <Spacer />
-                <h1 style={styles.walletBar.logo}>
-                    Welcome to DankMinter          
-                </h1>
+                <Text color="white" fontFamily="Pink Blue" fontSize="6xl" lineHeight="10" mb={3}>
+                    Welcome to the Dank Economy          
+                </Text>
                 <h4 style={styles.walletBar.presentedBy}>
-                    By Dank Labs
+                    Created by Dank Labs
                 </h4>   
-                <Text color="white" maxWidth={700} textAlign="center" fontSize={20} mt={3}>
+                <Text color="white" maxWidth={700} textAlign="center" fontSize={20} mt={3} fontFamily="space_monoregular">
                     The meme generator that mints unique NFTs of your memes.
                 </Text>
                 <Text color="white" maxWidth={700} textAlign="center">
@@ -105,9 +105,6 @@ export const ConnectWalletButton = ({activateBrowserWallet, account, setDoneConn
                 </Text>
                 <Button mt={1} onClick={handleConnectWallet}> Install MetaMask </Button>
                 <Spacer />
-                <Text color="white" textAlign="center">
-                    {"We cannot guarentee alternative wallets will work correctly. Improved wallet support is in our roadmap. If you have a specific wallet you would like to see, please let us know in the Discord! Thank your for your patience."}
-                </Text>
             </Flex>   
             <AuthModal nonce={nonce} authenticate={authenticate} onClose={onClose} isOpen={isOpen} tabIndex={authTabIndex} updateProfile={updateProfile} linkAccount={linkAccount} />
         </div>

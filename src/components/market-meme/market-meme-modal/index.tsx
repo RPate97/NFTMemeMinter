@@ -25,15 +25,19 @@ import { useTokenBalance } from '@usedapp/core';
 import { MarketOrder, NFTMeme } from "src/utils/types";
 import { BuyButton } from "./buy-button";
 import { ethers } from 'ethers';
+import { AxiosPromise, AxiosRequestConfig } from "axios";
+import { RefetchOptions } from "axios-hooks";
 
 type Props = {
     isOpen: boolean,
     onClose: () => void,
     nftMeme: NFTMeme,
     order: MarketOrder,
+    refetchListings: (config?: AxiosRequestConfig<any>, options?: RefetchOptions) => AxiosPromise<any>,
+    addMemeToCollection: (boughtMeme: NFTMeme) => void,
 }
 
-export const MarketMemeModal: React.FC<Props> = ({isOpen, onClose, nftMeme, order}) => {
+export const MarketMemeModal: React.FC<Props> = ({isOpen, onClose, nftMeme, order, refetchListings, addMemeToCollection}) => {
     const gatewayImage = nftMeme.image_url.replace('ipfs://', process.env.NEXT_PUBLIC_IMAGE_GATEWAY);
 
     return (
@@ -108,7 +112,12 @@ export const MarketMemeModal: React.FC<Props> = ({isOpen, onClose, nftMeme, orde
                     background="gray.900"
                     borderBottomLeftRadius="3xl"
                     borderBottomRightRadius="3xl">
-                    <BuyButton order={order} />
+                    <BuyButton 
+                        order={order} 
+                        refetchListings={refetchListings} 
+                        addMemeToCollection={addMemeToCollection} 
+                        nftMeme={nftMeme}
+                    />
                     <Spacer />
                     <VoteButton memeId={nftMeme.token_id} upDown={false} />
                     <Text color="gray.400" fontSize="md" fontWeight="bold" ml={1} textAlign="center">

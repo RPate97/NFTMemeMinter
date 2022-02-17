@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button, Box, Text, Tooltip } from "@chakra-ui/react";
 import { AppColors } from "styles/styles";
+import Image from "next/image";
 import Link from 'next/link';
 
 export const DiscordButton = () => {
@@ -11,7 +12,7 @@ export const DiscordButton = () => {
                 borderRadius="xl"
                 border="1px"
                 borderColor="gray.700"
-                label="Mint some dank ass memes.">
+                label="Wanna vibe?">
                     <Button
                         bg="transparent"
                         border="1px solid transparent"
@@ -26,11 +27,9 @@ export const DiscordButton = () => {
                         m="0px"
                         mr="5px"
                         height="40px"
-                        p={0}>
+                        px={4}>
                         <Link href='https://discord.gg/mrnCagneyr'>
-                            <Text color="white" fontSize="md" p={4} m={0}>
-                                Discord
-                            </Text>   
+                            <Image src="/icons/discord.svg" alt="Discord logo" width="100px" height="50px" />
                         </Link>
                     </Button>                          
             </Tooltip>

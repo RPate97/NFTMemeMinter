@@ -110,7 +110,6 @@ export default async function handler(req, res) {
         const addParams = new url.URLSearchParams({ src: src, filepath: `/images/${imgHash}` });
         await axios.post(`${process.env.IMAGE_MATCH_BASE_URL}/add`, addParams.toString())
           .then(function (response) {
-            console.log(response);
             return response.result;
           })
           .catch(function (error) {

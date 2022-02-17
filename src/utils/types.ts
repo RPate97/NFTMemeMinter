@@ -73,6 +73,63 @@ export type NFTMeme = {
   }
 }
 
+export type TextLocation = {
+  x: number,
+  y: number,
+  text: string,
+  rotation: number,
+  height: number, 
+  width: number,
+  key: number,
+};
+
+export type DankMemeState = {
+  borderStyle: {
+    border: string,
+    borderStyle: string,
+    borderRadius: number,
+  },
+  layoutBorderStyle: {
+    thickness: number,
+  },
+  textLocations: TextLocation[],
+  stickerLocations: any[], // necessary?
+  layout: Layout,
+  hashCaptions: string[],
+  mainCaption: string,
+  memeName: string,
+  layoutWidth: number,
+  layoutHeight: number, 
+  rowHeight: number,
+  columnWidth: number, 
+  selectedOptions: number, 
+  userProfile: UserProfile, // necessary?
+};
+
+export type DankEconomyMeme = {
+  _id: string,
+  name: string,
+  description: string,
+  creator: string,
+  creatorAddress: string,
+  dynasty: string,
+  headOfDynasty: boolean,
+  image: string,
+  DNA: string,
+  hash: string,
+  dankness: number,
+  rarity: number,
+  score: number,
+  upvotes: number,
+  downvotes: number, 
+  creationDate: number,
+  lineage: number[],
+  descendants: number,
+  quantity: number,
+  state: DankMemeState
+  tokenId: string,
+};
+
 export type UserProfile = {
   _id: string,
   address: string,
@@ -81,7 +138,6 @@ export type UserProfile = {
   memeIndex: number,
   starkPublicKey: string
 };
-
 
 // ImmutableX
 export type MarketOrder = {

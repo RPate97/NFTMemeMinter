@@ -2,7 +2,7 @@ import { styles } from 'styles/styles.js';
 import { Header } from 'src/components/common-ui/header';
 import { ConnectWalletButton } from 'src/components/common-ui/connect-wallet-button/index.js';
 import { MemeCollection } from 'src/components/MemeCollection';
-import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { UserProfile } from 'src/utils/types';
 import { DefaultPage } from 'components/default-page';
 

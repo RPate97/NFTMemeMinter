@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import useAxios from 'axios-hooks';
+import useAxios, { RefetchOptions } from 'axios-hooks';
 import { Box, Image, Button } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 import { MarketOrder, NFTMeme } from "src/utils/types";
 import { MarketMemeModal } from './market-meme-modal';
+import { AxiosPromise, AxiosRequestConfig } from 'axios';
 
 type Props = {
     order: MarketOrder,
+    refetchListings: (config?: AxiosRequestConfig<any>, options?: RefetchOptions) => AxiosPromise<any>
+    addMemeToCollection: (boughtMeme: NFTMeme) => void,
 }
 
 export const MarketMeme: React.FC<Props> = (props) => {
@@ -56,6 +59,8 @@ export const MarketMeme: React.FC<Props> = (props) => {
                     onClose={onClose}
                     nftMeme={data}
                     order={props.order}
+                    refetchListings={props.refetchListings}
+                    addMemeToCollection={props.addMemeToCollection}
                 />}      
             </Box>     
         </div>

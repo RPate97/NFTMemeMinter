@@ -11,7 +11,7 @@ export const MintButton = () => {
                 borderRadius="xl"
                 border="1px"
                 borderColor="gray.700"
-                label="Mint some dank ass memes.">
+                label="Better be good">
                     <Button
                         bg="transparent"
                         border="1px solid transparent"
@@ -24,12 +24,12 @@ export const MintButton = () => {
                         borderColor="gray.700"
                         borderRadius="xl"
                         m="0px"
-                        ml="1px"
+                        mr="5px"
                         height="40px"
                         p={0}>
                         <Link href='/mint'>
                             <Text color="white" fontSize="md" p={4} m={0}>
-                                Mint
+                                Mint Memes
                             </Text>   
                         </Link>
                     </Button>                          

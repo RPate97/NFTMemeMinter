@@ -36,7 +36,6 @@ export default class MemeMinterTemplate extends React.Component {
             let search = window.location.search;
             let jsonState = decodeURIComponent(search).replace("?state=", "");
             this.state = JSON.parse(jsonState);
-            console.log(this.state)
         }
     }
 

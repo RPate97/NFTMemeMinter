@@ -14,7 +14,7 @@ export const CollectionButton = ({userAddress}) => {
                 borderRadius="xl"
                 border="1px"
                 borderColor="gray.700"
-                label="Visit your DankMinter collection.">
+                label="This will make a fine addition to my collection">
                     <Button
                         bg="transparent"
                         border="1px solid transparent"
@@ -24,11 +24,12 @@ export const CollectionButton = ({userAddress}) => {
                             borderColor: "white",
                             backgroundColor: "gray.700",
                         }}
+                        borderColor="gray.700"
                         borderRadius="xl"
                         m="0px"
-                        mr="0px"
+                        mr="5px"
                         px={0}
-                        height="38px">
+                        height="40px">
                         <Link href='/' passHref>
                             <Text color="white" fontSize="md" py={5} px={3} m={0}>
                                 Collection

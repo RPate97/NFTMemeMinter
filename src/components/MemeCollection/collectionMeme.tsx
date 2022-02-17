@@ -16,7 +16,7 @@ export const CollectionMeme: React.FC<Props> = ({nftMeme, userProfile}) => {
     return (
         <>
             { nftMeme && 
-            <Box>
+            <Box m={2}>
                 <Button 
                     onClick={onOpen}
                     bg="transparent"
@@ -32,10 +32,11 @@ export const CollectionMeme: React.FC<Props> = ({nftMeme, userProfile}) => {
                     p={0}
                     mb={2}
                     width="fit-content"
-                    height="fit-height">
+                    height="fit-height"
+                    maxHeight="360px">
                     <Image
                         key="src"
-                        w="100%"
+                        height="350px"
                         borderRadius="xl"
                         mb={0}
                         d="inline-block"

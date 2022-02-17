@@ -14,17 +14,20 @@ import { ERC721TokenType, ETHTokenType, EthAddressBrand } from '@imtbl/imx-sdk';
 import { DankBookButton } from './components/dankbook';
 import { IMXBalanceButton } from './imxBalanceButton';
 import { DiscordButton } from './discordButton';
-import { DankMarketButton } from './components/dankmarket-button';
+import {  BuyCryptoButton } from './buy-crypto';
 
 export const ButtonBar = ({handleOpenModal, userProfile, account}) => {
-    const [balance, setBalance] = useState();
+    const [ethBalance, setEthBalance] = useState();
+    const [usdcBalance, setUSDCBalance] = useState();
 
     const fetchBalance = useCallback(async () => {
         const client = await ImmutableXClient.build({ publicApiUrl: process.env.NEXT_PUBLIC_API_URL });
-        const balances = await client.listBalances({user: account});
+        const balances = await client.listBalances({user: account}, ['ETH', 'USDC']);
         balances.result.forEach((el) => {
             if (el.symbol === "ETH") {
-                setBalance({...el});            
+                setEthBalance({...el});            
+            } else if (el.symbol === "USDC") {
+                setUSDCBalance({...el});            
             }
         });   
     }, [account]);
@@ -32,9 +35,6 @@ export const ButtonBar = ({handleOpenModal, userProfile, account}) => {
     useEffect(() => {
         if (account && fetchBalance) {
             fetchBalance();
-            // setInterval(() => {
-            //     fetchBalance()
-            // }, 5000);
         }
     }, [account, fetchBalance]);
 
@@ -55,9 +55,10 @@ export const ButtonBar = ({handleOpenModal, userProfile, account}) => {
                     <Flex direction="column" justify="end">
                         <Flex direction="row" mt="5">
                             <DiscordButton />
-                            <DankBookButton />
-                            <DankMarketButton />
+                            {/* <DankBookButton /> */}
+                            <CollectionButton userAddress={account}/>
                             <MintButton />  
+                            <BuyCryptoButton />
                             <Box
                                 ml="1.5"
                                 display="flex"
@@ -66,8 +67,7 @@ export const ButtonBar = ({handleOpenModal, userProfile, account}) => {
                                 borderColor="gray.700"
                                 borderRadius="xl"
                                 py="0">
-                                <CollectionButton userAddress={account}/>
-                                <IMXBalanceButton imxBalance={balance} account={account} fetchBalance={fetchBalance} />
+                                <IMXBalanceButton ethBalance={ethBalance} usdcBalance={usdcBalance} account={account} fetchBalance={fetchBalance} />
                                 <Button
                                     bg={AppColors.buttonBackground}
                                     border="1px solid transparent"

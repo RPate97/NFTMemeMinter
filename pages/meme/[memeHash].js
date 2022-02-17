@@ -1,14 +1,2 @@
-import React from 'react';
-import { useRouter } from 'next/router';
-import { MemeContainer } from 'src/components/MemeContainer';
-
-export default function Meme({account}) {
-  const router = useRouter();
-  const { memeHash } = router.query;
-
-  return (
-    <>
-      {memeHash ? <MemeContainer memeHash={memeHash} account={account} /> : null}
-    </>
-  )
-}
+import { Meme } from "src/pages/meme";
+export default Meme;

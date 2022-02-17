@@ -1,25 +1,30 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Box, Text, Tooltip } from "@chakra-ui/react";
+import { Button, Box, Text, Tooltip, Divider } from "@chakra-ui/react";
 import { AppColors } from "styles/styles";
-import { formatUnits } from '@ethersproject/units';
 import { BalanceModal } from "components/common-ui/wallet-bar/components/balance-modal";
-import { useDisclosure, Loader } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import { ethers } from 'ethers';
 
 const BigNumber = require('bignumber.js');
 
-export const IMXBalanceButton = ({imxBalance, account, fetchBalance}) => {
+export const IMXBalanceButton = ({ethBalance, usdcBalance, account, fetchBalance}) => {
     const [amountInEth, setAmountInEth] = useState(null);
+    const [amountInUSDC, setAmountInUSDC] = useState(null);
+    const { isOpen, onClose, onOpen } = useDisclosure();
 
     useEffect(() => {
-        if (imxBalance) {
-            setAmountInEth(ethers.utils.formatEther(imxBalance.balance._hex));
+        if (ethBalance) {
+            setAmountInEth(ethers.utils.formatEther(ethBalance.balance._hex));
         } else {
             setAmountInEth(0);
         }
-    }, [imxBalance]);
+        if (usdcBalance) {
+            setAmountInUSDC(ethers.utils.formatUnits(usdcBalance.balance._hex, 6));
+        } else {
+            setAmountInUSDC(0);
+        }
+    }, [ethBalance, usdcBalance]);
 
-    const { isOpen, onClose, onOpen } = useDisclosure();
     return (
         <>
             <Box>
@@ -28,7 +33,7 @@ export const IMXBalanceButton = ({imxBalance, account, fetchBalance}) => {
                     borderRadius="xl"
                     border="1px"
                     borderColor="gray.700"
-                    label="Your ImmutableX layer 2 ETH balance. If you have ETH in mainnet, you must transfer it to layer 2 before you can use it in DankMinter.">
+                    label="Already got crypto? Deposit from mainnet">
                     <Button
                         bg="transparent"
                         border="1px solid transparent"
@@ -46,11 +51,15 @@ export const IMXBalanceButton = ({imxBalance, account, fetchBalance}) => {
                         onClick={onOpen}>
                         <Text color="white" fontSize="md">
                             {amountInEth} ETH
+                        </Text> 
+                        <Divider orientation='vertical' borderColor="white" mx={2} /> 
+                        <Text color="white" fontSize="md">
+                            {amountInUSDC} USDC
                         </Text>                           
                     </Button>                
                 </Tooltip>
             </Box>
-            <BalanceModal isOpen={isOpen} onClose={onClose} balance={imxBalance} account={account} fetchBalance={fetchBalance} />
+            <BalanceModal isOpen={isOpen} onClose={onClose} ethBalance={ethBalance} usdcBalance={usdcBalance} account={account} fetchBalance={fetchBalance} />
         </>
     )
 }
