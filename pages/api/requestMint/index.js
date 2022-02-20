@@ -269,7 +269,7 @@ const handler = async(req, res) => {
     }
 
     await client.close();
-    return res.status(200).json({ message: "success, mint request queued", imageURI: `https://dankminter.mypinata.cloud/ipfs/${ipfsHash}`});
+    return res.status(200).json({ message: "success, mint request queued", metadata: metadata});
 }
 
 export default withAuth(handler);

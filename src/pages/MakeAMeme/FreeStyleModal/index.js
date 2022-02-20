@@ -32,6 +32,7 @@ import { LayoutSection } from './layoutSection';
 import QRCode from 'src/components/qrCode';
 import { MinterAutoSizedText } from 'src/components/minter-auto-sized-text';
 import { AutoSizeSticker } from './AutoSizeSticker';
+import { MintingMeme } from './minting-meme';
 const axios = require('axios');
 export default class FreeStyleModal extends React.Component {
     constructor(props) {
@@ -131,35 +132,13 @@ export default class FreeStyleModal extends React.Component {
                     setTimeout(() => {
                         nestedThis.setState((prevState) => ({
                             ...prevState,
+                            metadata: response.data.metadata,
                             processing: {
                                 ...prevState.processing,
-                                loadingText: "Minting NFT..."
+                                loadingText: "Minting NFT...",
+                                completed: true,
                             }
                         }));
-                        axios.post('/api/batchMint', {token: nestedThis.token})
-                            .then(function (response) {
-                                console.log(response);
-                                nestedThis.setState((prevState) => ({
-                                    ...prevState,
-                                    processing: {
-                                        ...prevState.processing,
-                                        loadingText: "Airdropping to wallet..."
-                                    }
-                                }));
-                                setTimeout(() => {
-                                    nestedThis.setState((prevState) => ({
-                                        ...prevState,
-                                        processing: {
-                                            ...prevState.processing,
-                                            loadingText: "Done",
-                                            completed: true,
-                                        }
-                                    }));
-                                }, 3000);
-                            })
-                            .catch(function (error) {
-                                console.log(error);
-                            });
                     }, 3000);
                 })
                 .catch(function (error) {
@@ -609,41 +588,7 @@ export default class FreeStyleModal extends React.Component {
                             </Text> 
                             <Spacer />
                         </Flex> 
-                        : <Flex flexDir="column" alignItems="center" justifyItem="center" height="100%">
-                            <Spacer />
-                            <CheckIcon w={10} h={10} color="green.500"/>
-                            <Text mt={5} color="white" fontSize="md" style={{
-                                color: "#ffffff",
-                                fontFamily: "SpaceMono-Regular",
-                                fontSize: 24,
-                            }}>
-                                Minting completed, you can view your new NFT meme in your collection!
-                            </Text> 
-                            <Spacer />
-                            <Box px="0" borderRadius="xl">
-                                <Button
-                                    bg="transparent"
-                                    border="1px solid transparent"
-                                    _hover={{
-                                        border: "1px",
-                                        borderStyle: "solid",
-                                        borderColor: "white",
-                                        backgroundColor: "gray.700",
-                                    }}
-                                    borderColor="gray.700"
-                                    borderRadius="xl"
-                                    m="0px"
-                                    mr="5px"
-                                    px={0}
-                                    height="40px">
-                                    <Link href='/' passHref borderRadius="xl" color="transparent">
-                                        <Text color="white" fontSize="md" py={2} px={3} m={0}>
-                                            Collection
-                                        </Text>                                      
-                                    </Link>
-                                </Button>  
-                            </Box>
-                        </Flex>}
+                        : <MintingMeme nftMetaData={this.state.metadata} />}
                     </Box>}
                 </ModalContent>
             </Modal>  

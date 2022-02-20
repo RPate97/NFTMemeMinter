@@ -34,6 +34,28 @@ export type LayoutImage = {
     name: string,
 }
 
+export type NFTMemeMetadata = {
+  DNA: string,
+  creationDate: number,
+  creator: string,
+  creatorAddress: string,
+  dankness: number,
+  descendants: number,
+  description: string,
+  downvotes: number,
+  dynasty: string,
+  hash: string,
+  headOfDynasty: boolean,
+  image: string,
+  lineage: number[],
+  name: string,
+  quantity: number,
+  rarity: number,
+  score: number,
+  tokenId: string,
+  upvotes: number,
+};
+
 export type NFTMeme = {
   collection: {
     name: string, 
@@ -50,27 +72,7 @@ export type NFTMeme = {
   updated_at: string,
   uri: string,
   user: string, 
-  metadata: {
-    DNA: string,
-    creationDate: number,
-    creator: string,
-    creatorAddress: string,
-    dankness: number,
-    descendants: number,
-    description: string,
-    downvotes: number,
-    dynasty: string,
-    hash: string,
-    headOfDynasty: boolean,
-    image: string,
-    lineage: number[],
-    name: string,
-    quantity: number,
-    rarity: number,
-    score: number,
-    tokenId: string,
-    upvotes: number,
-  }
+  metadata: NFTMemeMetadata,
 }
 
 export type TextLocation = {
