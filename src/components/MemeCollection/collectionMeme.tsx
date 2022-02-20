@@ -20,7 +20,7 @@ export const CollectionMeme: React.FC<Props> = ({nftMeme, userProfile}) => {
     return (
         <>
             { nftMeme && 
-            <Box m={2}>
+            <Box m={1}>
                 <Button 
                     onClick={onOpen}
                     bg="transparent"

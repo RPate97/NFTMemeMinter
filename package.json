@@ -56,6 +56,7 @@
     "react-dropzone": "^11.4.2",
     "react-rnd": "^10.3.4",
     "react-router-dom": "^5.2.1",
+    "react-share": "^4.4.0",
     "react-textfit": "^1.1.1",
     "reactstrap": "^8.9.0",
     "sass": "^1.42.1",
