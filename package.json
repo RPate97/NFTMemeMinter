@@ -48,6 +48,7 @@
     "qr-code-styling": "^1.6.0-rc.1",
     "re-resizable": "^6.9.0",
     "react": "17.0.2",
+    "react-amplitude-hooks": "^0.10.6",
     "react-axios": "^2.0.5",
     "react-circular-progressbar": "^2.0.4",
     "react-dom": "17.0.2",

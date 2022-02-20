@@ -1,11 +1,12 @@
 import { CollectionMeme } from "src/components/MemeCollection/collectionMeme";
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text, Link, Button, Center } from "@chakra-ui/react";
 import { EmptyCollection } from "src/components/MemeCollection/emptyCollection";
 import { NFTMeme } from "src/utils/types";
 import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { DefaultPage } from 'components/default-page';
 import { MarketOrder, UserProfile } from 'src/utils/types';
 import { MarketMeme } from 'components/market-meme';
+import { ChevronRightIcon } from "@chakra-ui/icons";
 import useAxios from 'axios-hooks';
 const axios = require('axios');
 
@@ -55,17 +56,80 @@ export const MemeCollection: React.FC<Props> = (props) => {
   
   return (
     <Flex flexDirection="column">
-      <Flex flexDirection="column">
-        <Text color="white" fontSize="4xl" ml={10} mt={3} fontFamily="space_monoregular">
-            Your Collection
-        </Text>
-        <Flex flexDirection="row" maxHeight="410">
+      <Flex flexDirection="column" width="100%">
+        <Flex flexDirection="row" alignItems="center" height="80px">
+          <Text color="white" fontSize="4xl" ml={10} mr={3} fontFamily="space_monoregular">
+              Your Collection
+          </Text>          
+          <Button
+            bg="transparent"
+            border="1px solid transparent"
+            _hover={{
+                border: "1px",
+                borderStyle: "solid",
+                borderColor: "white",
+                backgroundColor: "gray.700",
+            }}
+            borderColor="gray.700"
+            borderRadius="xl"
+            m="0px"
+            mr="5px"
+            px={0}
+            height="30px">
+            <Link href='/collection' passHref>
+                <ChevronRightIcon color="white" boxSize="2em" />                                     
+            </Link>
+        </Button> 
+        </Flex>
+        <Flex 
+          flexDirection="row" 
+          maxHeight="560"
+          alignContent="start"   
+          position="sticky"
+          top="0"
+          alignItems="center"
+          flexWrap="nowrap"
+          overflowX="scroll"
+          px="2"
+          gridGap="2"
+          css={{
+              WebkitOverflowScrolling: "touch",
+              msOverflowStyle: "-ms-autohiding-scrollbar",
+              overscrollBehaviorX: "contain",
+          }}
+          pb={5} 
+        >
           {data && data.length > 0 
             ? data.map((el: NFTMeme) => {
               return el && el.metadata ? <CollectionMeme key={el.metadata.hash} nftMeme={el} userProfile={userProfile} /> : null;
             }) 
             : <EmptyCollection />
           }
+          <Box height="350px">
+            <Flex flexDirection="column" height="100%" justifyContent="center">
+              <Button
+                bg="transparent"
+                border="1px solid transparent"
+                _hover={{
+                    border: "1px",
+                    borderStyle: "solid",
+                    borderColor: "white",
+                    backgroundColor: "gray.700",
+                }}
+                borderColor="gray.700"
+                borderRadius="xl"
+                m="0px"
+                mx={5}
+                px={0}
+                height="40px">
+                  <Link href='/' passHref>
+                      <Text color="white" fontSize="md" py={5} px={3} m={0}>
+                          View All
+                      </Text>                                      
+                  </Link>
+              </Button> 
+            </Flex>
+          </Box> 
         </Flex>
       </Flex>
       <Flex flexDirection="column">

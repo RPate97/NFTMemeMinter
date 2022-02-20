@@ -36,7 +36,8 @@ export const DefaultPage: React.FC<Props> = (props) => {
         <Flex 
             flexDirection="column"
             backgroundColor="black"
-            height="100vh"
+            height="100%"
+            width="100%"
         >
             <Header title="DankMinter"/>
             {account && doneConnecting && token && userProfile ?

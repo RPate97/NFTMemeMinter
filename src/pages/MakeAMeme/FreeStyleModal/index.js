@@ -10,8 +10,6 @@ import {
     ModalCloseButton,
     Text,
     Grid,
-    Center,
-    Spacer,
     Input,
     Slider,
     SliderTrack,
@@ -20,7 +18,14 @@ import {
     Divider,
     IconButton,
     Button,
+    Spinner,
+    Link,
+    Spacer,
+    Tooltip,
 } from "@chakra-ui/react";
+import {
+    CheckIcon,
+} from "@chakra-ui/icons";
 import { RepeatIcon, MinusIcon } from "@chakra-ui/icons";
 import { OptionButtons } from './optionButtons';
 import { LayoutSection } from './layoutSection';
@@ -54,6 +59,11 @@ export default class FreeStyleModal extends React.Component {
             rowHeight: layoutHeight / props.layout.rows,
             columnWidth: layoutWidth / props.layout.columns,
             selectedOptions: 0,
+            processing: {
+                started: false,
+                completed: false,
+                loadingText: "Rendering meme...",
+            }
         };
 
         // get token
@@ -99,13 +109,72 @@ export default class FreeStyleModal extends React.Component {
     }
 
     mintMeme = async () => {
-        axios.post('/api/requestMint', {name: this.state.memeName, state: this.state, token: this.token})
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        this.setState((prevState) => ({
+            ...prevState,
+            processing: {
+                ...prevState.processing,
+                started: true,
+            }
+        }));
+        const nestedThis = this;
+        setTimeout(() => {
+            nestedThis.setState((prevState) => ({
+                ...prevState,
+                processing: {
+                    ...prevState.processing,
+                    loadingText: "Certifying dankness..."
+                }
+            }));
+            axios.post('/api/requestMint', {name: this.state.memeName, state: this.state, token: this.token})
+                .then(function (response) {
+                    console.log(response);
+                    setTimeout(() => {
+                        nestedThis.setState((prevState) => ({
+                            ...prevState,
+                            processing: {
+                                ...prevState.processing,
+                                loadingText: "Minting NFT..."
+                            }
+                        }));
+                        axios.post('/api/batchMint', {token: nestedThis.token})
+                            .then(function (response) {
+                                console.log(response);
+                                nestedThis.setState((prevState) => ({
+                                    ...prevState,
+                                    processing: {
+                                        ...prevState.processing,
+                                        loadingText: "Airdropping to wallet..."
+                                    }
+                                }));
+                                setTimeout(() => {
+                                    nestedThis.setState((prevState) => ({
+                                        ...prevState,
+                                        processing: {
+                                            ...prevState.processing,
+                                            loadingText: "Done",
+                                            completed: true,
+                                        }
+                                    }));
+                                }, 3000);
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                    }, 3000);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            setTimeout(() => {
+                nestedThis.setState((prevState) => ({
+                    ...prevState,
+                    processing: {
+                        ...prevState.processing,
+                        loadingText: "Shitposting in the Discord..."
+                    }
+                }));
+            }, 3000);
+        }, 3000);
     };
 
     changeText = (newText, index) => {
@@ -342,7 +411,8 @@ export default class FreeStyleModal extends React.Component {
                     borderStyle="solid"
                     borderColor="gray.700"
                     alignContent="center"
-                    padding={5}>
+                    padding={5}
+                    height={this.state.processing.started === true ? "100%" : undefined}>
                     <ModalHeader color="white" px={4} fontSize="lg" fontWeight="medium">
                         <Text ml={5} color="white" fontSize="md" style={{
                             color: "#ffffff",
@@ -359,7 +429,8 @@ export default class FreeStyleModal extends React.Component {
                             color: "whiteAlpha.700",
                         }}
                     />
-                    <Flex flexDirection="column" alignItems="start">
+                    {!this.state.processing.started 
+                    ? <Flex flexDirection="column" alignItems="start">
                         <Flex flexDirection="row" alignItems="start">
                             <Flex flexDirection="column" alignItems="center">
                                 <Box
@@ -522,7 +593,58 @@ export default class FreeStyleModal extends React.Component {
                             }}>
                             Mint
                         </Button>
-                    </Flex>
+                    </Flex> 
+                    : 
+                    <Box height="100%">
+                        {!this.state.processing.completed 
+                        ? <Flex flexDir="column" alignItems="center" height="100%">
+                            <Spacer />
+                            <Spinner color="white" size="xl" />
+                            <Text mt={5} color="white" fontSize="md" style={{
+                                color: "#ffffff",
+                                fontFamily: "SpaceMono-Regular",
+                                fontSize: 24,
+                            }}>
+                                {this.state.processing.loadingText}
+                            </Text> 
+                            <Spacer />
+                        </Flex> 
+                        : <Flex flexDir="column" alignItems="center" justifyItem="center" height="100%">
+                            <Spacer />
+                            <CheckIcon w={10} h={10} color="green.500"/>
+                            <Text mt={5} color="white" fontSize="md" style={{
+                                color: "#ffffff",
+                                fontFamily: "SpaceMono-Regular",
+                                fontSize: 24,
+                            }}>
+                                Minting completed, you can view your new NFT meme in your collection!
+                            </Text> 
+                            <Spacer />
+                            <Box px="0" borderRadius="xl">
+                                <Button
+                                    bg="transparent"
+                                    border="1px solid transparent"
+                                    _hover={{
+                                        border: "1px",
+                                        borderStyle: "solid",
+                                        borderColor: "white",
+                                        backgroundColor: "gray.700",
+                                    }}
+                                    borderColor="gray.700"
+                                    borderRadius="xl"
+                                    m="0px"
+                                    mr="5px"
+                                    px={0}
+                                    height="40px">
+                                    <Link href='/' passHref borderRadius="xl" color="transparent">
+                                        <Text color="white" fontSize="md" py={2} px={3} m={0}>
+                                            Collection
+                                        </Text>                                      
+                                    </Link>
+                                </Button>  
+                            </Box>
+                        </Flex>}
+                    </Box>}
                 </ModalContent>
             </Modal>  
         )        

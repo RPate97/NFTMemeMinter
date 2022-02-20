@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import useAxios from 'axios-hooks';
-import { Box, Image, Button } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 import { MemeModal } from "src/components/MemeCollection/memeModal";
 import { NFTMeme, UserProfile } from "src/utils/types";
+import Image from "next/image";
 
 type Props = {
     nftMeme: NFTMeme,
@@ -11,6 +12,9 @@ type Props = {
 }
 
 export const CollectionMeme: React.FC<Props> = ({nftMeme, userProfile}) => {
+    const [loaded, setLoaded] = useState(false);
+    const [width, setWidth] = useState(350);
+    const [height, setHeight] = useState(350);
     const gatewayImage = nftMeme.image_url.replace('ipfs://', process.env.NEXT_PUBLIC_IMAGE_GATEWAY);
     const { isOpen, onOpen, onClose } = useDisclosure();
     return (
@@ -28,20 +32,29 @@ export const CollectionMeme: React.FC<Props> = ({nftMeme, userProfile}) => {
                         backgroundColor: "gray.700",
                     }}
                     borderRadius="xl"
+                    overflow="clip"
                     m={0}
                     p={0}
                     mb={2}
-                    width="fit-content"
-                    height="fit-height"
-                    maxHeight="360px">
+                    height={height}
+                    width={width}>
                     <Image
                         key="src"
-                        height="350px"
-                        borderRadius="xl"
-                        mb={0}
-                        d="inline-block"
+                        height={height}
+                        width={width}
                         src={gatewayImage}
                         alt={nftMeme.name}
+                        onLoadingComplete={({ naturalWidth, naturalHeight }) => {
+                            if (!loaded) {
+                                console.log("loaded");
+                                console.log(naturalWidth);
+                                console.log(naturalHeight);
+                                const ratio = (naturalWidth / naturalHeight);
+                                setLoaded(true);
+                                setWidth(350 * ratio);
+                                setHeight(350);                                
+                            }
+                        }}
                     />                
                 </Button>
                 <MemeModal 
