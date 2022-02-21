@@ -44,7 +44,7 @@ export const BuyCryptoButton = () => {
                     borderRadius="xl"
                     border="1px"
                     borderColor="gray.700"
-                    label="Taste the rainbow">
+                    label="Taste the rainbow 🍭">
                     <Flex flexDirection="row" alignItems="center">
                         {mutating && <Spinner color="white" mr={2} />}
                         <Button

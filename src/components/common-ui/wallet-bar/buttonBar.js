@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Button, Box, Text, useDisclosure } from "@chakra-ui/react";
 import { Identicon } from "src/components/common-ui/wallet-bar/identicon";
 import { CollectionButton } from "src/components/common-ui/wallet-bar/collectionButton";
-import { Flex, Spacer } from "@chakra-ui/react";
+import { Flex, Tooltip } from "@chakra-ui/react";
 import { AppColors } from "styles/styles";
 import { TossACoin } from "src/components/common-ui/wallet-bar/tossACoin";
 import { MintButton } from "src/components/common-ui/wallet-bar/mintButton";
@@ -61,30 +61,37 @@ export const ButtonBar = ({userProfile, account, deactivate}) => {
                             borderRadius="xl"
                             py="0">
                             <IMXBalanceButton ethBalance={ethBalance} usdcBalance={usdcBalance} account={account} fetchBalance={fetchBalance} />
-                            <Button
+                            <Tooltip 
                                 bg={AppColors.buttonBackground}
-                                border="1px solid transparent"
-                                _hover={{
-                                    border: "1px",
-                                    borderStyle: "solid",
-                                    borderColor: "white",
-                                    backgroundColor: "gray.700",
-                                }}
-                                onClick={onOpen}
                                 borderRadius="xl"
-                                m="0px"
-                                px={3}
-                                height="38px"
-                            >
-                                <Text color="white" fontSize="md" fontWeight="medium" mr="2">
-                                {account &&
-                                    `${account.slice(0, 6)}...${account.slice(
-                                    account.length - 4,
-                                    account.length
-                                    )}`}
-                                </Text>
-                                <Identicon account={account}/>
-                            </Button>
+                                border="1px"
+                                borderColor="gray.700"
+                                label="You are here 🎯">
+                                <Button
+                                    bg={AppColors.buttonBackground}
+                                    border="1px solid transparent"
+                                    _hover={{
+                                        border: "1px",
+                                        borderStyle: "solid",
+                                        borderColor: "white",
+                                        backgroundColor: "gray.700",
+                                    }}
+                                    onClick={onOpen}
+                                    borderRadius="xl"
+                                    m="0px"
+                                    px={3}
+                                    height="38px"
+                                >
+                                    <Text color="white" fontSize="md" fontWeight="medium" mr="2">
+                                    {account &&
+                                        `${account.slice(0, 6)}...${account.slice(
+                                        account.length - 4,
+                                        account.length
+                                        )}`}
+                                    </Text>
+                                    <Identicon account={account}/>
+                                </Button>
+                            </Tooltip>
                         </Box>                         
                     </Flex>
                 </Flex>                

@@ -33,7 +33,7 @@ export const IMXBalanceButton = ({ethBalance, usdcBalance, account, fetchBalance
                     borderRadius="xl"
                     border="1px"
                     borderColor="gray.700"
-                    label="Dolla dolla bills, ya'll">
+                    label="Dolla dolla bills, ya'll 🤑">
                     <Button
                         bg="transparent"
                         border="1px solid transparent"
