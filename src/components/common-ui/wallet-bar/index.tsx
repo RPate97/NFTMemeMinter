@@ -58,6 +58,7 @@ export const WalletBar: React.FC<Props> = ({activateBrowserWallet, account, done
             hex += ''+nonce.charCodeAt(i).toString(16);
         }
         const data = `0x${hex}`;  
+        // @ts-ignore
         web3.currentProvider.sendAsync({
             id: 1,
             method: 'personal_sign',
