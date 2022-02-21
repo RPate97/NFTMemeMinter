@@ -18,9 +18,9 @@ import {
     Image,
   } from "@chakra-ui/react";
   import { AppColors } from "styles/styles";
-import { SacrificeButton } from "src/components/MemeCollection/sacrifice";
-import { TipCreatorButton } from "src/components/MemeCollection/tipCreator";
-import { VoteButton } from "src/components/MemeCollection/vote";
+import { SacrificeButton } from "src/pages/home/collection/sacrifice";
+import { TipCreatorButton } from "src/pages/home/collection/tipCreator";
+import { VoteButton } from "src/pages/home/collection/vote";
 import { useTokenBalance } from '@usedapp/core';
 import { MarketOrder, NFTMeme } from "src/utils/types";
 import { BuyButton } from "./buy-button";
@@ -119,11 +119,6 @@ export const MarketMemeModal: React.FC<Props> = ({isOpen, onClose, nftMeme, orde
                         nftMeme={nftMeme}
                     />
                     <Spacer />
-                    <VoteButton memeId={nftMeme.token_id} upDown={false} />
-                    <Text color="gray.400" fontSize="md" fontWeight="bold" ml={1} textAlign="center">
-                        {nftMeme.metadata.score.toString()}
-                    </Text>
-                    <VoteButton memeId={nftMeme.token_id} upDown={true} />
                 </ModalFooter>
             </ModalContent>
         </Modal>

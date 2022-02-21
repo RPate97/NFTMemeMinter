@@ -41,9 +41,21 @@ export const AuthModal = ({authenticate, nonce, isOpen, onClose, tabIndex, linkA
                 />
                 <Tabs index={tabIndex}>
                     <TabList>
-                        <Tab>Sign In</Tab>
-                        <Tab>Set Handle</Tab>
-                        <Tab>Link With ImmutableX</Tab>
+                        <Tab>
+                            <Text color="white" fontSize="lg">
+                                Link Wallet
+                            </Text>
+                        </Tab>
+                        <Tab>
+                            <Text color="white" fontSize="lg">
+                                Link ImmutableX
+                            </Text>
+                        </Tab>
+                        <Tab>
+                            <Text color="white" fontSize="lg">
+                                Set Creator Handle
+                            </Text>
+                        </Tab>
                     </TabList>
                     <TabPanels p="2rem">
                         <TabPanel>

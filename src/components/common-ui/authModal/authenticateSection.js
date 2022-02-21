@@ -25,13 +25,10 @@ export const AuthenticateSection = ({authenticate, nonce}) => {
                 >
                     <Flex flexDirection="column" justifyContent="space-between" alignItems="center" mb={3} pl={5} pr={5}>
                         <Text color="white" fontSize="20" overflowWrap="anywhere" textAlign="center" mt={3}>
-                            Please sign this message to verify your identity
+                            Please sign this message to link your wallet to Dank Economy
                         </Text>
                         <Text color="white" fontSize="14" overflowWrap="anywhere" textAlign="center" mt={3}>
                             {nonce} 
-                        </Text>
-                        <Text color="white" fontSize="14" textAlign="center" mt={3}>
-                            You will need a browser based wallet to complete the sign in process. If you do not have one, we recommend installing the Metamask browser extension: https://metamask.io/
                         </Text>
                     </Flex>
                 </Box>

@@ -27,12 +27,12 @@ import {
 } from "react-share";
 import { CopyIcon, CheckIcon } from "@chakra-ui/icons";
 import { AppColors } from "styles/styles";
-import { VoteButton } from "src/components/MemeCollection/vote";
+import { VoteButton } from "src/pages/home/collection/vote";
 import { NFTMeme, NFTMemeMetadata, UserProfile } from "src/utils/types";
-import { SellButton } from "src/components/MemeCollection/sell";
+import { SellButton } from "src/pages/home/collection/sell";
 import useAxios from 'axios-hooks';
-import { CancelSale } from "src/components/MemeCollection/cancel-sale";
-import { BurnNFTButton } from "src/components/MemeCollection//burn";
+import { CancelSale } from "src/pages/home/collection/cancel-sale";
+import { BurnNFTButton } from "src/pages/home/collection/burn";
 import { useEffect, useRef, useState } from "react";
 const axios = require('axios');
 

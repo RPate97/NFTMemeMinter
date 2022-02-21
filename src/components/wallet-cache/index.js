@@ -31,12 +31,15 @@ export const WalletCache = (props) => {
     }
   
     async function getUserProfile(userToken) {
+      console.log("getting user profile...");
+      console.log(userToken);
       if (userToken) {
           const res = await axios.post('/api/fetchProfile', {token: userToken});
           setUserProfile(res.data.user);
-          localStorage.setItem("userProfile", JSON.stringify(res.data.user));
+          return res.data.user;
       } else {
           console.log("token not set");
+          return null;
       }
     }
 

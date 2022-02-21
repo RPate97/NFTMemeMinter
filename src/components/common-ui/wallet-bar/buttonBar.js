@@ -1,10 +1,9 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Button, Box, Text } from "@chakra-ui/react";
+import { Button, Box, Text, useDisclosure } from "@chakra-ui/react";
 import { Identicon } from "src/components/common-ui/wallet-bar/identicon";
 import { CollectionButton } from "src/components/common-ui/wallet-bar/collectionButton";
 import { Flex, Spacer } from "@chakra-ui/react";
-import { Logo } from "src/components/common-ui/logo";
 import { AppColors } from "styles/styles";
 import { TossACoin } from "src/components/common-ui/wallet-bar/tossACoin";
 import { MintButton } from "src/components/common-ui/wallet-bar/mintButton";
@@ -14,9 +13,11 @@ import { ERC721TokenType, ETHTokenType, EthAddressBrand } from '@imtbl/imx-sdk';
 import { DankBookButton } from './components/dankbook';
 import { IMXBalanceButton } from './imxBalanceButton';
 import { DiscordButton } from './discordButton';
-import {  BuyCryptoButton } from './buy-crypto';
+import { BuyCryptoButton } from './buy-crypto';
+import { AccountModal } from "src/components/common-ui/wallet-bar/accountModal.js";
 
-export const ButtonBar = ({handleOpenModal, userProfile, account}) => {
+export const ButtonBar = ({userProfile, account, deactivate}) => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const [ethBalance, setEthBalance] = useState();
     const [usdcBalance, setUSDCBalance] = useState();
 
@@ -39,64 +40,56 @@ export const ButtonBar = ({handleOpenModal, userProfile, account}) => {
     }, [account, fetchBalance]);
 
     return (
-        <div style={{position: "sticky", top: 0}}>
-            <Flex
-                flexDirection="row"
-                alignItems="center"
-                justifyContent="center"
-                h="75">
-                <Logo />
-                <Spacer />
-                {/* <PlayerDankness account={account} /> */}
-                {account && <Box display="flex"
-                    height="20"
-                    alignItems="start"
-                    marginRight="4">
-                    <Flex direction="column" justify="end">
-                        <Flex direction="row" mt="5">
-                            <DiscordButton />
-                            {/* <DankBookButton /> */}
-                            <CollectionButton userAddress={account}/>
-                            <MintButton />  
-                            <BuyCryptoButton />
-                            <Box
-                                ml="1.5"
-                                display="flex"
-                                alignItems="center"
-                                border="1px"
-                                borderColor="gray.700"
+        <>
+            {/* <PlayerDankness account={account} /> */}
+            {account && <Box display="flex"
+                alignItems="start"
+                marginRight="4">
+                <Flex direction="column" justify="end">
+                    <Flex direction="row">
+                        <DiscordButton />
+                        {/* <DankBookButton /> */}
+                        {/* <CollectionButton userAddress={account}/>
+                        <MintButton />   */}
+                        <BuyCryptoButton />
+                        <Box
+                            ml="1.5"
+                            display="flex"
+                            alignItems="center"
+                            border="1px"
+                            borderColor="gray.700"
+                            borderRadius="xl"
+                            py="0">
+                            <IMXBalanceButton ethBalance={ethBalance} usdcBalance={usdcBalance} account={account} fetchBalance={fetchBalance} />
+                            <Button
+                                bg={AppColors.buttonBackground}
+                                border="1px solid transparent"
+                                _hover={{
+                                    border: "1px",
+                                    borderStyle: "solid",
+                                    borderColor: "white",
+                                    backgroundColor: "gray.700",
+                                }}
+                                onClick={onOpen}
                                 borderRadius="xl"
-                                py="0">
-                                <IMXBalanceButton ethBalance={ethBalance} usdcBalance={usdcBalance} account={account} fetchBalance={fetchBalance} />
-                                <Button
-                                    bg={AppColors.buttonBackground}
-                                    border="1px solid transparent"
-                                    _hover={{
-                                        border: "1px",
-                                        borderStyle: "solid",
-                                        borderColor: "white",
-                                        backgroundColor: "gray.700",
-                                    }}
-                                    onClick={handleOpenModal}
-                                    borderRadius="xl"
-                                    m="0px"
-                                    px={3}
-                                    height="38px"
-                                >
-                                    <Text color="white" fontSize="md" fontWeight="medium" mr="2">
-                                    {account &&
-                                        `${account.slice(0, 6)}...${account.slice(
-                                        account.length - 4,
-                                        account.length
-                                        )}`}
-                                    </Text>
-                                    <Identicon account={account}/>
-                                </Button>
-                            </Box>                         
-                        </Flex>
-                    </Flex>                
-                </Box>}
-            </Flex>   
-        </div>
+                                m="0px"
+                                px={3}
+                                height="38px"
+                            >
+                                <Text color="white" fontSize="md" fontWeight="medium" mr="2">
+                                {account &&
+                                    `${account.slice(0, 6)}...${account.slice(
+                                    account.length - 4,
+                                    account.length
+                                    )}`}
+                                </Text>
+                                <Identicon account={account}/>
+                            </Button>
+                        </Box>                         
+                    </Flex>
+                </Flex>                
+            </Box>}
+            <AccountModal isOpen={isOpen} onClose={onClose} account={account} deactivate={deactivate} />
+        </>
     )
 }

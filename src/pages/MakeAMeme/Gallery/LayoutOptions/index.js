@@ -10,9 +10,9 @@ import { LayoutButton } from './layoutButton';
 
 export const LayoutOptions = ({userProfile}) => {
     return (
-        <Flex flexDirection="column">
-            <Text color="white" fontSize="3xl" ml={5} mb={0} fontFamily="space_monoregular">
-                Create a $TICKER
+        <Flex flexDirection="column" pl={5}>
+            <Text color="white" fontSize="2xl" ml={5} mb={0} fontFamily="space_monoregular">
+                New Template
             </Text>
             <Flex         
                 alignContent="start"   

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import useAxios from 'axios-hooks';
 import { Box, Button } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
-import { MemeModal } from "src/components/MemeCollection/memeModal";
+import { MemeModal } from "src/pages/home/collection/memeModal";
 import { NFTMeme, UserProfile } from "src/utils/types";
 import Image from "next/image";
 
@@ -45,10 +45,7 @@ export const CollectionMeme: React.FC<Props> = ({nftMeme, userProfile}) => {
                         src={gatewayImage}
                         alt={nftMeme.name}
                         onLoadingComplete={({ naturalWidth, naturalHeight }) => {
-                            if (!loaded) {
-                                console.log("loaded");
-                                console.log(naturalWidth);
-                                console.log(naturalHeight);
+                            if (!loaded && naturalWidth && naturalHeight) {
                                 const ratio = (naturalWidth / naturalHeight);
                                 setLoaded(true);
                                 setWidth(350 * ratio);
@@ -57,12 +54,12 @@ export const CollectionMeme: React.FC<Props> = ({nftMeme, userProfile}) => {
                         }}
                     />                
                 </Button>
-                <MemeModal 
+                {userProfile && <MemeModal 
                     isOpen={isOpen}
                     onClose={onClose}
                     nftMeme={nftMeme}
                     userProfile={userProfile}
-                />       
+                />}       
             </Box>     
             }            
         </>

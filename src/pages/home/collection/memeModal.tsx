@@ -18,7 +18,6 @@ import {
     Spinner,
   } from "@chakra-ui/react";
 import { AppColors } from "styles/styles";
-import { VoteButton } from "src/components/MemeCollection/vote";
 import { NFTMeme, UserProfile } from "src/utils/types";
 import { SellButton } from "./sell";
 import useAxios from 'axios-hooks';

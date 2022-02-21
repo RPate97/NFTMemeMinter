@@ -1,5 +1,4 @@
 import { Header } from 'src/components/common-ui/header';
-import { ConnectWalletButton } from 'src/components/common-ui/connect-wallet-button/index.js';
 import { WalletBar } from 'src/components/common-ui/wallet-bar';
 import React, { Dispatch, SetStateAction } from 'react';
 import { UserProfile } from 'src/utils/types';
@@ -15,23 +14,10 @@ type Props = {
     setToken: Dispatch<SetStateAction<string>>,
     userProfile: UserProfile,
     setUserProfile: Dispatch<SetStateAction<UserProfile | null>>,
-    getUserProfile: (userToken: string) => Promise<void>,
+    getUserProfile: (userToken: string) => Promise<UserProfile>,
 }
 
 export const DefaultPage: React.FC<Props> = (props) => {
-    const {
-        account, 
-        activateBrowserWallet, 
-        deactivate, 
-        doneConnecting, 
-        setDoneConnecting, 
-        token, 
-        setToken, 
-        userProfile, 
-        setUserProfile, 
-        getUserProfile
-    } = props;
-
     return (
         <Flex 
             flexDirection="column"
@@ -39,21 +25,9 @@ export const DefaultPage: React.FC<Props> = (props) => {
             height="100%"
             width="100%"
         >
-            <Header title="DankMinter"/>
-            {account && doneConnecting && token && userProfile ?
-                <> 
-                    <WalletBar account={account} deactivate={deactivate} userProfile={userProfile} />
-                    {props.children}
-                </>
-            : <ConnectWalletButton 
-                activateBrowserWallet={activateBrowserWallet} 
-                account={account} 
-                setDoneConnecting={setDoneConnecting} 
-                token={token} 
-                setToken={setToken} 
-                userProfile={userProfile} 
-                setUserProfile={setUserProfile} 
-                getUserProfile={getUserProfile}/>}
+            <Header title="DankMinter"/> 
+            <WalletBar {...props} />
+            {props.children}
         </Flex>
     )
 }

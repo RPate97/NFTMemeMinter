@@ -1,10 +1,10 @@
-import { styles } from 'styles/styles.js';
-import { Header } from 'src/components/common-ui/header';
-import { ConnectWalletButton } from 'src/components/common-ui/connect-wallet-button/index.js';
-import { MemeCollection } from 'src/components/MemeCollection';
-import React, { Dispatch, SetStateAction } from 'react';
-import { UserProfile } from 'src/utils/types';
+import { MemeCollection } from 'src/pages/home/collection';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { UserProfile, NFTMeme } from 'src/utils/types';
 import { DefaultPage } from 'components/default-page';
+import { MemeMarket } from './market';
+import { DankMinter } from './minter';
+const axios = require('axios');
 
 type Props = {
   account: string,
@@ -20,11 +20,36 @@ type Props = {
 }
 
 export const Home = (props) => {
+  const {account, deactivate, userProfile} = props;
+  const [page, setPage] = useState(1)
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    if (account) {
+      axios.get(`${process.env.NEXT_PUBLIC_API_URL}/assets?user=${account}&collection=${process.env.NEXT_PUBLIC_DANKMINTER_COLLECTION_CONTRACT_ADDRESS}`)
+        .then(function (response) {
+            setData((prevData) => [...response.data.result]);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+  }, [account, page]);
+
+  const addMemeToCollection = (boughtMeme: NFTMeme) => {
+    setData((prevData) => [boughtMeme, ...prevData]);
+  }
+
   return (
     <DefaultPage
       {...props}>
-        <MemeCollection 
+        <DankMinter userProfile={props.userProfile} />
+        {props.account && <MemeCollection 
           {...props}
+          data={data}
+        />}
+        <MemeMarket 
+          addMemeToCollection={addMemeToCollection}
         />
     </DefaultPage>
   )

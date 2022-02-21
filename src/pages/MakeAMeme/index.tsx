@@ -13,7 +13,7 @@ type Props = {
   setToken: Dispatch<SetStateAction<string>>,
   userProfile: UserProfile,
   setUserProfile: Dispatch<SetStateAction<UserProfile | null>>,
-  getUserProfile: (userToken: string) => Promise<void>,
+  getUserProfile: (userToken: string) => Promise<UserProfile>,
 }
 
 export const MakeAMeme: React.FC<Props> = (props) => {
